@@ -1,0 +1,156 @@
+.campaigns-page {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.campaigns-stats {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-box {
+  flex: 1;
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.stat-num {
+  display: block;
+  font-size: 36px;
+  font-weight: 600;
+  color: #667eea;
+  margin-bottom: 5px;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: #7f8c8d;
+}
+
+.campaigns-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.campaign-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.campaign-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.campaign-header {
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.campaign-header h3 {
+  font-size: 18px;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.campaign-body {
+  padding: 20px;
+}
+
+.campaign-subject {
+  color: #555;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.campaign-stats-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.mini-stat {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  color: #666;
+}
+
+.mini-stat-icon {
+  font-size: 16px;
+}
+
+.campaign-footer {
+  padding: 15px 20px;
+  border-top: 1px solid #eee;
+  display: flex;
+  gap: 10px;
+}
+
+.campaign-modal {
+  max-width: 700px;
+}
+
+.user-select-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.user-select-list {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.user-checkbox {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.user-checkbox:hover {
+  background: #f8f9fa;
+}
+
+.user-checkbox input[type="checkbox"] {
+  width: auto;
+  margin-right: 10px;
+  margin-bottom: 0;
+}
+
+.user-checkbox span {
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .campaigns-stats {
+    flex-direction: column;
+  }
+
+  .campaigns-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .campaign-stats-row {
+    grid-template-columns: 1fr;
+  }
+}
+
