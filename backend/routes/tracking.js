@@ -9,50 +9,64 @@ const TRACKING_PIXEL = Buffer.from(
   'base64'
 );
 
-// Mail açılma tracking
+// Mail açılma tracking - Mail açıldığında otomatik çalışır
 router.get('/open/:campaignId/:userId', async (req, res) => {
   try {
     const { campaignId, userId } = req.params;
     const ipAddress = req.ip || req.connection.remoteAddress;
     const userAgent = req.get('user-agent');
     
-    // Event kaydet (duplicate kontrolü ile)
-    const existingEvent = await Event.findOne({
-      campaignId,
-      userId,
-      type: 'open'
-    });
+    console.log(`📧 Tracking pixel yüklendi - Campaign: ${campaignId}, User: ${userId}`);
     
-    if (!existingEvent) {
-      await Event.create({
+    // Event kaydet (duplicate kontrolü ile - her açılış bir kere kaydedilir)
+    try {
+      const existingEvent = await Event.findOne({
         campaignId,
         userId,
-        type: 'open',
-        ipAddress,
-        userAgent,
-        timestamp: new Date()
+        type: 'open'
       });
       
-      // Kampanya istatistiklerini güncelle
-      await Campaign.findByIdAndUpdate(campaignId, {
-        $inc: { 'stats.opened': 1 }
-      });
+      if (!existingEvent) {
+        await Event.create({
+          campaignId,
+          userId,
+          type: 'open',
+          ipAddress,
+          userAgent,
+          timestamp: new Date()
+        });
+        
+        // Kampanya istatistiklerini güncelle
+        await Campaign.findByIdAndUpdate(campaignId, {
+          $inc: { 'stats.opened': 1 }
+        });
+        
+        console.log(`✅ Mail açıldı olarak kaydedildi - Campaign: ${campaignId}, User: ${userId}`);
+      } else {
+        console.log(`⚠️ Bu mail daha önce açılmış - Campaign: ${campaignId}, User: ${userId}`);
+      }
+    } catch (error) {
+      console.error('❌ Event kaydetme hatası:', error.message);
     }
     
-    // 1x1 transparent pixel döndür
+    // 1x1 transparent pixel döndür (cache-bypass başlıkları ile)
+    res.writeHead(200, {
+      'Content-Type': 'image/gif',
+      'Content-Length': TRACKING_PIXEL.length,
+      'Cache-Control': 'no-store, no-cache, must-revalidate, private, max-age=0',
+      'Pragma': 'no-cache',
+      'Expires': '0',
+      'Access-Control-Allow-Origin': '*'
+    });
+    res.end(TRACKING_PIXEL);
+  } catch (error) {
+    console.error('❌ Tracking hatası:', error.message);
+    // Hata durumunda da pixel döndür (tracking hatası kullanıcıya gösterilmemeli)
     res.writeHead(200, {
       'Content-Type': 'image/gif',
       'Content-Length': TRACKING_PIXEL.length,
       'Cache-Control': 'no-store, no-cache, must-revalidate, private',
       'Pragma': 'no-cache'
-    });
-    res.end(TRACKING_PIXEL);
-  } catch (error) {
-    console.error('Tracking hatası:', error.message);
-    // Hata durumunda da pixel döndür (tracking hatası kullanıcıya gösterilmemeli)
-    res.writeHead(200, {
-      'Content-Type': 'image/gif',
-      'Content-Length': TRACKING_PIXEL.length
     });
     res.end(TRACKING_PIXEL);
   }

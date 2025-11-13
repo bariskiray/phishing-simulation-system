@@ -166,7 +166,7 @@ npm run dev:full
 
 ## 📊 API Endpoints
 
-### Kullanıcılar
+### Kullanıcılar‚
 - `GET /api/users` - Tüm kullanıcıları listele
 - `POST /api/users` - Yeni kullanıcı ekle
 - `DELETE /api/users/:id` - Kullanıcı sil

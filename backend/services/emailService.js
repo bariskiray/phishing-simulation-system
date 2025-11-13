@@ -15,21 +15,38 @@ const createTransporter = () => {
   });
 };
 
-// Tracking pixel ekle
+// Tracking pixel ekle - Mail açıldığında otomatik olarak yüklenir
 const addTrackingPixel = (htmlContent, campaignId, userId) => {
-  // Cache-busting için timestamp ekle
-  const timestamp = Date.now();
-  const trackingUrl = `${process.env.TRACKING_URL}/track/open/${campaignId}/${userId}?t=${timestamp}`;
-  // Gmail için görünür olmayan pixel - alt attribute ekleyerek spam filtrelerinden kaçınıyoruz
-  const trackingPixel = `<img src="${trackingUrl}" width="1" height="1" alt="" style="display:block!important;width:1px!important;height:1px!important;border:0!important;margin:0!important;padding:0!important;" />`;
+  // Her yüklenişte farklı URL için random değer ekle (cache bypass için)
+  const uniqueId = `${Date.now()}-${Math.random().toString(36).substring(7)}`;
+  const trackingUrl = `${process.env.TRACKING_URL}/track/open/${campaignId}/${userId}?t=${uniqueId}`;
   
-  // Body kapanış tagından önce ekle
-  if (htmlContent.includes('</body>')) {
-    return htmlContent.replace('</body>', `${trackingPixel}</body>`);
+  console.log(`🎯 Tracking pixel oluşturuluyor: ${trackingUrl}`);
+  
+  // Email başına görünür (ama çok küçük) bir spacer ekle - bu görsellerin yüklenmesini tetikler
+  const trackingElements = `
+    <!-- Email Spacer - Görsel yüklemeyi tetikler -->
+    <div style="width:100%;height:1px;margin:0;padding:0;font-size:0;line-height:0;">
+      <img src="${trackingUrl}" width="1" height="1" border="0" alt="" style="display:block;width:1px;height:1px;margin:0;padding:0;" />
+    </div>
+  `;
+  
+  // Body açılış tagından hemen sonra ekle (en üstte olsun)
+  if (htmlContent.includes('<body>')) {
+    console.log('✅ Tracking pixel <body> tagından sonra eklendi');
+    return htmlContent.replace('<body>', `<body>${trackingElements}`);
+  } else if (htmlContent.includes('<body')) {
+    // style attribute'u varsa
+    const bodyTagMatch = htmlContent.match(/<body[^>]*>/i);
+    if (bodyTagMatch) {
+      console.log('✅ Tracking pixel <body ...> tagından sonra eklendi');
+      return htmlContent.replace(bodyTagMatch[0], `${bodyTagMatch[0]}${trackingElements}`);
+    }
   }
   
-  // Body tag yoksa sonuna ekle
-  return htmlContent + trackingPixel;
+  // Body tag yoksa en başa ekle
+  console.log('⚠️ <body> tag bulunamadı, pixel en başa eklendi');
+  return trackingElements + htmlContent;
 };
 
 // Linkleri trackable yap
@@ -62,17 +79,32 @@ const applyTemplate = (body, template = 'basic', phishingUrl = '') => {
 <html>
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-    .content { background: #f9f9f9; padding: 20px; border-radius: 5px; }
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; background: white; }
+    .logo { text-align: center; padding: 30px 0; }
+    .logo img { max-width: 150px; height: auto; }
+    .header { text-align: center; padding: 20px 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 5px 5px 0 0; }
+    .header-text { color: white; font-size: 24px; font-weight: bold; margin: 0; }
+    .content { background: #f9f9f9; padding: 20px; border-radius: 0 0 5px 5px; }
+    .footer { text-align: center; padding: 20px 0; font-size: 12px; color: #999; }
   </style>
 </head>
 <body>
   <div class="container">
+    <div class="logo">
+      <img src="https://via.placeholder.com/150x50/667eea/ffffff?text=Security+Alert" alt="Logo" />
+    </div>
+    <div class="header">
+      <h1 class="header-text">🔐 Güvenlik Bildirimi</h1>
+    </div>
     <div class="content">
       ${body}
       ${phishingButton}
+    </div>
+    <div class="footer">
+      <p>Bu e-posta güvenlik departmanı tarafından gönderilmiştir.</p>
     </div>
   </div>
 </body>
@@ -82,19 +114,34 @@ const applyTemplate = (body, template = 'basic', phishingUrl = '') => {
 <html>
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-    .content { background: #fff3cd; padding: 20px; border-radius: 5px; border-left: 4px solid #ff6b6b; }
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; background: white; }
+    .logo { text-align: center; padding: 30px 0; }
+    .logo img { max-width: 150px; height: auto; }
+    .header { text-align: center; padding: 20px 0; background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%); border-radius: 5px 5px 0 0; }
+    .header-text { color: white; font-size: 24px; font-weight: bold; margin: 0; }
+    .content { background: #fff3cd; padding: 20px; border-radius: 0 0 5px 5px; border-left: 4px solid #ff6b6b; }
     .urgent-badge { background: #ff6b6b; color: white; padding: 5px 10px; border-radius: 3px; display: inline-block; margin-bottom: 10px; }
+    .footer { text-align: center; padding: 20px 0; font-size: 12px; color: #999; }
   </style>
 </head>
 <body>
   <div class="container">
+    <div class="logo">
+      <img src="https://via.placeholder.com/150x50/ff6b6b/ffffff?text=URGENT+WARNING" alt="Logo" />
+    </div>
+    <div class="header">
+      <h1 class="header-text">🚨 ACİL GÜVENLİK UYARISI</h1>
+    </div>
     <div class="content">
-      <div class="urgent-badge">🔴 ACİL</div>
+      <div class="urgent-badge">🔴 ACİL İŞLEM GEREKLİ</div>
       ${body}
       ${phishingButton}
+    </div>
+    <div class="footer">
+      <p>Bu e-posta güvenlik departmanı tarafından gönderilmiştir.</p>
     </div>
   </div>
 </body>
@@ -116,6 +163,10 @@ const sendEmail = async (campaign, user) => {
     // Tracking pixel ve linkler ekle
     htmlContent = addTrackingPixel(htmlContent, campaign._id, user._id);
     htmlContent = makeLinksTrackable(htmlContent, campaign._id, user._id);
+    
+    // Debug: Tracking URL'ini logla
+    console.log(`📧 Mail gönderiliyor - To: ${user.email}`);
+    console.log(`🔗 Tracking URL: ${process.env.TRACKING_URL}/track/open/${campaign._id}/${user._id}`);
     
     const mailOptions = {
       from: process.env.SMTP_USER,
