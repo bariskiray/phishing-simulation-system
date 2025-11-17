@@ -38,7 +38,7 @@ Güvenlik farkındalığı eğitimi için kapsamlı phishing simülasyon ve anal
 ### 1. Depoyu Klonlayın
 
 ```bash
-cd cyberSecurityProject
+cd phishing-simulation-system
 ```
 
 ### 2. Backend Kurulumu
