@@ -5,17 +5,25 @@ const Event = require('../models/Event');
 const User = require('../models/User');
 
 // Redis configuration
-const redisConfig = {
-  host: process.env.REDIS_HOST || 'localhost',
-  port: process.env.REDIS_PORT || 6379,
-  password: process.env.REDIS_PASSWORD || undefined,
-  maxRetriesPerRequest: null,
-  enableReadyCheck: false
-};
+// Render.com veya production için REDIS_URL kullanılır (örn: redis://red-xxx:6379)
+// Local development için REDIS_HOST/PORT/PASSWORD kullanılır
+let redisConnection;
+
+if (process.env.REDIS_URL) {
+  // Production: Redis URL kullan (Render.com, Heroku, vb.)
+  redisConnection = process.env.REDIS_URL;
+} else {
+  // Local development: Host/Port/Password kullan
+  redisConnection = {
+    host: process.env.REDIS_HOST || 'localhost',
+    port: parseInt(process.env.REDIS_PORT) || 6379,
+    password: process.env.REDIS_PASSWORD || undefined
+  };
+}
 
 // Create email queue with Bull
 const emailQueue = new Queue('email-sending', {
-  redis: redisConfig,
+  redis: redisConnection,
   defaultJobOptions: {
     attempts: 3, // 3 deneme
     backoff: {
