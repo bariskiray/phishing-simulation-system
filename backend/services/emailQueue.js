@@ -6,44 +6,68 @@ const User = require('../models/User');
 
 // Redis configuration
 console.log('🔧 Redis Configuration Starting...');
-console.log('📝 REDIS_URL exists:', !!process.env.REDIS_URL);
+console.log('📝 Environment check:');
+console.log('   - REDIS_URL exists:', !!process.env.REDIS_URL);
+console.log('   - REDIS_HOST:', process.env.REDIS_HOST || 'not set');
+console.log('   - NODE_ENV:', process.env.NODE_ENV);
 
-let redisOptions;
+let redisConfig;
 
 if (process.env.REDIS_URL) {
-  console.log('🔗 Using REDIS_URL:', process.env.REDIS_URL.substring(0, 40) + '...');
+  const redisUrl = process.env.REDIS_URL;
+  console.log('🔗 REDIS_URL value:', redisUrl.substring(0, 50) + '...');
   
-  // Upstash veya TLS gerektiren Redis için (rediss://)
-  if (process.env.REDIS_URL.startsWith('rediss://')) {
-    console.log('🔒 TLS Redis detected (Upstash)');
-    redisOptions = {
-      redis: process.env.REDIS_URL,
+  // Parse URL manually for Bull
+  const url = require('url');
+  const parsedUrl = url.parse(redisUrl);
+  
+  console.log('📋 Parsed Redis URL:');
+  console.log('   - Protocol:', parsedUrl.protocol);
+  console.log('   - Host:', parsedUrl.hostname);
+  console.log('   - Port:', parsedUrl.port);
+  
+  const isTLS = parsedUrl.protocol === 'rediss:';
+  
+  if (isTLS) {
+    console.log('🔒 TLS/SSL Redis detected (Upstash)');
+  } else {
+    console.log('🔓 Standard Redis detected');
+  }
+  
+  // Bull Queue için Redis config
+  redisConfig = {
+    host: parsedUrl.hostname,
+    port: parseInt(parsedUrl.port) || 6379,
+    password: parsedUrl.auth ? parsedUrl.auth.split(':')[1] : undefined,
+    ...(isTLS && {
       tls: {
         rejectUnauthorized: false
       }
-    };
-  } else {
-    // Normal Redis URL (redis://)
-    console.log('🔓 Standard Redis URL detected');
-    redisOptions = {
-      redis: process.env.REDIS_URL
-    };
-  }
+    })
+  };
+  
+  console.log('✅ Redis config created:', {
+    host: redisConfig.host,
+    port: redisConfig.port,
+    hasTLS: !!redisConfig.tls,
+    hasPassword: !!redisConfig.password
+  });
 } else {
   // Local development
-  console.log('🏠 Using Local Redis: localhost:6379');
-  redisOptions = {
-    redis: {
-      host: process.env.REDIS_HOST || 'localhost',
-      port: parseInt(process.env.REDIS_PORT) || 6379,
-      password: process.env.REDIS_PASSWORD || undefined
-    }
+  console.log('🏠 Using Local Redis Configuration');
+  redisConfig = {
+    host: process.env.REDIS_HOST || 'localhost',
+    port: parseInt(process.env.REDIS_PORT) || 6379,
+    password: process.env.REDIS_PASSWORD || undefined
   };
+  console.log('   - Host:', redisConfig.host);
+  console.log('   - Port:', redisConfig.port);
 }
 
 // Create email queue with Bull
+console.log('🚀 Creating Bull Queue with config...');
 const emailQueue = new Queue('email-sending', {
-  ...redisOptions,
+  redis: redisConfig,
   defaultJobOptions: {
     attempts: 3,
     backoff: {
@@ -59,7 +83,7 @@ const emailQueue = new Queue('email-sending', {
   }
 });
 
-console.log('✅ Email Queue initialized');
+console.log('✅ Email Queue initialized successfully');
 
 // SMTP Transporter oluştur
 const createTransporter = () => {
