@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Campaign = require('../models/Campaign');
 const User = require('../models/User');
-const { sendCampaignEmails } = require('../services/emailService');
+const { sendCampaignEmails, sendCampaignEmailsViaQueue } = require('../services/emailService');
 const cron = require('node-cron');
 
 // Aktif cron job'ları saklamak için
@@ -150,7 +150,7 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-// Kampanya gönder
+// Kampanya gönder (Queue üzerinden - ÖNERİLEN)
 router.post('/:id/send', async (req, res) => {
   try {
     const campaign = await Campaign.findById(req.params.id);
@@ -169,6 +169,9 @@ router.post('/:id/send', async (req, res) => {
       });
     }
     
+    // Priority parametresi (opsiyonel)
+    const priority = req.body.priority || 'normal'; // 'high', 'normal', 'low'
+    
     // Periyodik kampanya ise cron job oluştur
     if (campaign.isRecurring && campaign.recurringPattern) {
       const cronPattern = getCronPattern(campaign.recurringPattern);
@@ -178,10 +181,10 @@ router.post('/:id/send', async (req, res) => {
         activeCronJobs.get(campaign._id.toString()).stop();
       }
       
-      // Yeni cron job oluştur
+      // Yeni cron job oluştur (Queue kullanarak)
       const job = cron.schedule(cronPattern, async () => {
-        console.log(`Periyodik kampanya gönderiliyor: ${campaign.name}`);
-        await sendCampaignEmails(campaign._id);
+        console.log(`Periyodik kampanya kuyruğa ekleniyor: ${campaign.name}`);
+        await sendCampaignEmailsViaQueue(campaign._id, priority);
       });
       
       activeCronJobs.set(campaign._id.toString(), job);
@@ -191,21 +194,58 @@ router.post('/:id/send', async (req, res) => {
       
       res.json({
         success: true,
-        message: 'Periyodik kampanya zamanlandı',
+        message: 'Periyodik kampanya zamanlandı (Queue üzerinden)',
         pattern: campaign.recurringPattern
       });
     } else {
-      // Tek seferlik gönderim
-      const result = await sendCampaignEmails(campaign._id);
+      // Tek seferlik gönderim - Queue üzerinden
+      const result = await sendCampaignEmailsViaQueue(campaign._id, priority);
       
       res.json({
         success: true,
-        message: 'Kampanya gönderildi',
+        message: 'Kampanya kuyruğa eklendi',
         data: result
       });
     }
   } catch (error) {
     console.error('Kampanya gönderim hatası:', error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Kampanya gönderilemedi',
+      error: error.message
+    });
+  }
+});
+
+// Kampanya gönder (ESKİ YÖNTEM - Direkt gönderim, geriye dönük uyumluluk için)
+router.post('/:id/send-direct', async (req, res) => {
+  try {
+    const campaign = await Campaign.findById(req.params.id);
+    
+    if (!campaign) {
+      return res.status(404).json({
+        success: false,
+        message: 'Kampanya bulunamadı'
+      });
+    }
+    
+    if (campaign.targetUsers.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Kampanyada hedef kullanıcı yok'
+      });
+    }
+    
+    // Direkt gönderim (Queue kullanmadan)
+    const result = await sendCampaignEmails(campaign._id);
+    
+    res.json({
+      success: true,
+      message: 'Kampanya direkt gönderildi (Queue kullanılmadı)',
+      data: result
+    });
+  } catch (error) {
+    console.error('Kampanya direkt gönderim hatası:', error.message);
     res.status(500).json({
       success: false,
       message: 'Kampanya gönderilemedi',

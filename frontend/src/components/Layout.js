@@ -36,6 +36,12 @@ function Layout({ children }) {
             </Link>
           </li>
           <li>
+            <Link to="/scheduled-campaigns" className={isActive('/scheduled-campaigns')}>
+              <span className="icon">⏰</span>
+              Zamanlanmış Kampanyalar
+            </Link>
+          </li>
+          <li>
             <Link to="/reports" className={isActive('/reports')}>
               <span className="icon">📈</span>
               Raporlar

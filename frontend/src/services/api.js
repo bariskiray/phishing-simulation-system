@@ -36,5 +36,15 @@ export const getCampaignEvents = (id, type) => {
 };
 export const getUserReport = (id) => api.get(`/reports/user/${id}`);
 
+// Scheduled Campaigns API
+export const getScheduledCampaigns = () => api.get('/scheduled-campaigns');
+export const getScheduledCampaign = (id) => api.get(`/scheduled-campaigns/${id}`);
+export const createScheduledCampaign = (data) => api.post('/scheduled-campaigns', data);
+export const updateScheduledCampaign = (id, data) => api.put(`/scheduled-campaigns/${id}`, data);
+export const deleteScheduledCampaign = (id) => api.delete(`/scheduled-campaigns/${id}`);
+export const startScheduledCampaign = (id) => api.post(`/scheduled-campaigns/${id}/start`);
+export const stopScheduledCampaign = (id) => api.post(`/scheduled-campaigns/${id}/stop`);
+export const executeScheduledCampaign = (id) => api.post(`/scheduled-campaigns/${id}/execute`);
+
 export default api;
 

@@ -11,6 +11,10 @@ Güvenlik farkındalığı eğitimi için kapsamlı phishing simülasyon ve anal
 - **Risk Analizi**: Kullanıcı risk seviyesi belirleme
 - **Modern Dashboard**: React tabanlı kullanıcı dostu arayüz
 - **Periyodik Kampanyalar**: Otomatik tekrarlayan kampanya desteği
+- **✨ Redis Queue Sistemi**: Bull ile asenkron email gönderimi
+- **🔄 Otomatik Retry**: Başarısız emailler için otomatik yeniden deneme
+- **⚡ Rate Limiting**: SMTP provider limitlerini aşmayan akıllı gönderim
+- **📊 Queue Monitoring**: Bull Board ile gerçek zamanlı job takibi
 
 ## 🏗️ Teknoloji Stack
 
@@ -19,6 +23,8 @@ Güvenlik farkındalığı eğitimi için kapsamlı phishing simülasyon ve anal
 - MongoDB & Mongoose
 - Nodemailer (SMTP)
 - Node-cron (periyodik görevler)
+- Redis & Bull (Queue sistemi)
+- Bull Board (Queue monitoring)
 
 ### Frontend
 - React 18
@@ -31,6 +37,7 @@ Güvenlik farkındalığı eğitimi için kapsamlı phishing simülasyon ve anal
 
 - Node.js (v14 veya üzeri)
 - MongoDB (v4.4 veya üzeri)
+- Redis (v6.0 veya üzeri) - **YENİ!**
 - SMTP sunucu erişimi (Gmail, Outlook vb.)
 
 ## 🚀 Kurulum
@@ -68,7 +75,24 @@ sudo systemctl start mongod
 docker run -d -p 27017:27017 --name mongodb mongo
 ```
 
-### 5. Ortam Değişkenlerini Ayarlayın
+### 5. Redis'i Kurun ve Başlatın (YENİ!)
+
+```bash
+# macOS için:
+brew install redis
+brew services start redis
+
+# veya Docker ile:
+docker run -d -p 6379:6379 --name redis redis:alpine
+
+# Redis bağlantısını test edin:
+redis-cli ping
+# Yanıt: PONG
+```
+
+**Detaylı Redis kurulum rehberi için**: [REDIS_SETUP.md](REDIS_SETUP.md)
+
+### 6. Ortam Değişkenlerini Ayarlayın
 
 `.env` dosyasını düzenleyin ve kendi bilgilerinizi girin:
 
@@ -79,6 +103,15 @@ MONGODB_URI=mongodb://localhost:27017/phishing-sim
 # Server
 PORT=5000
 NODE_ENV=development
+
+# Redis (YENİ!)
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_PASSWORD=
+
+# Email Queue Rate Limiting (YENİ!)
+EMAIL_RATE_LIMIT_PER_SECOND=5
+EMAIL_RATE_LIMIT_PER_MINUTE=100
 
 # SMTP (Gmail örneği)
 SMTP_HOST=smtp.gmail.com
@@ -122,6 +155,20 @@ Frontend `http://localhost:3000` adresinde çalışacaktır.
 ```bash
 npm run dev:full
 ```
+
+### 📊 Queue Monitoring Dashboard (YENİ!)
+
+Bull Board monitoring dashboard'una erişim:
+
+```
+http://localhost:5000/admin/queues
+```
+
+Bu dashboard'da şunları görebilirsiniz:
+- Bekleyen, işleniyor, tamamlanan ve başarısız joblar
+- Her job'un detaylı durumu
+- Retry sayıları ve hata logları
+- Gerçek zamanlı queue istatistikleri
 
 ## 📖 Kullanım Kılavuzu
 
@@ -174,8 +221,21 @@ npm run dev:full
 ### Kampanyalar
 - `GET /api/campaigns` - Kampanyaları listele
 - `POST /api/campaigns` - Yeni kampanya oluştur
-- `POST /api/campaigns/:id/send` - Kampanya gönder
+- `POST /api/campaigns/:id/send` - Kampanya gönder (Queue ile - önerilir)
+- `POST /api/campaigns/:id/send-direct` - Direkt gönder (Queue kullanmadan)
 - `GET /api/campaigns/:id` - Kampanya detayı
+
+### Queue Yönetimi (YENİ!)
+- `GET /api/queue/stats` - Queue istatistikleri
+- `GET /api/queue/jobs` - Tüm jobları listele
+- `GET /api/queue/jobs/:jobId` - Job detayı
+- `GET /api/queue/campaign/:campaignId` - Kampanya jobları
+- `POST /api/queue/jobs/:jobId/retry` - Job'u yeniden dene
+- `DELETE /api/queue/jobs/:jobId` - Job'u sil
+- `POST /api/queue/clean` - Queue'yu temizle
+- `POST /api/queue/pause` - Queue'yu duraklat
+- `POST /api/queue/resume` - Queue'yu devam ettir
+- `POST /api/queue/retry-failed` - Başarısız jobları yeniden dene
 
 ### Raporlar
 - `GET /api/reports` - Genel rapor
@@ -198,16 +258,34 @@ Dashboard, kampanya yönetimi ve detaylı raporlama özellikleri modern ve kulla
 sudo systemctl status mongod
 ```
 
+### Redis Bağlantı Hatası (YENİ!)
+```bash
+# Redis'in çalıştığından emin olun
+redis-cli ping
+
+# Çalışmıyorsa başlatın:
+brew services start redis
+# veya
+docker start redis
+```
+
 ### SMTP Gönderim Hatası
 - SMTP bilgilerinin doğru olduğundan emin olun
 - Gmail kullanıyorsanız "Daha az güvenli uygulama erişimi" ayarını kontrol edin
 - App Password kullanın
+
+### Queue İşlenmiyor
+- Redis bağlantısını kontrol edin
+- Bull Board dashboard'undan queue durumunu kontrol edin
+- Server loglarını inceleyin
+- Failed jobları Bull Board'dan retry edin
 
 ### Port Zaten Kullanımda
 ```bash
 # Portu kullanan işlemi bulun ve durdurun
 lsof -ti:5000 | xargs kill -9
 lsof -ti:3000 | xargs kill -9
+lsof -ti:6379 | xargs kill -9  # Redis portu
 ```
 
 ## 📝 Lisans

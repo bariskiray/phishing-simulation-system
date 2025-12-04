@@ -9,20 +9,27 @@
     "client": "cd frontend && npm start",
     "dev:full": "concurrently \"npm run dev\" \"npm run client\""
   },
-  "keywords": ["phishing", "security", "awareness"],
+  "keywords": [
+    "phishing",
+    "security",
+    "awareness"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2",
-    "mongoose": "^7.6.3",
-    "nodemailer": "^6.9.7",
+    "@bull-board/api": "^6.14.2",
+    "@bull-board/express": "^6.14.2",
+    "bull": "^4.16.5",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
-    "node-cron": "^3.0.2"
+    "express": "^4.18.2",
+    "ioredis": "^5.8.2",
+    "mongoose": "^7.6.3",
+    "node-cron": "^3.0.2",
+    "nodemailer": "^6.9.7"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1",
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.0.1"
   }
 }
-

@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
 import Campaigns from './pages/Campaigns';
 import CampaignDetail from './pages/CampaignDetail';
+import ScheduledCampaigns from './pages/ScheduledCampaigns';
 import Reports from './pages/Reports';
 import './App.css';
 
@@ -17,6 +18,7 @@ function App() {
           <Route path="/users" element={<Users />} />
           <Route path="/campaigns" element={<Campaigns />} />
           <Route path="/campaigns/:id" element={<CampaignDetail />} />
+          <Route path="/scheduled-campaigns" element={<ScheduledCampaigns />} />
           <Route path="/reports" element={<Reports />} />
         </Routes>
       </Layout>
