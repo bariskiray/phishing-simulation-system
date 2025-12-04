@@ -30,7 +30,7 @@ const campaignSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['draft', 'scheduled', 'processing', 'sent', 'completed'],
+    enum: ['draft', 'scheduled', 'sent', 'completed'],
     default: 'draft'
   },
   isRecurring: {

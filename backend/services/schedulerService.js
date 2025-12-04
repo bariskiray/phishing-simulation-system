@@ -1,7 +1,7 @@
 const cron = require('node-cron');
 const ScheduledCampaign = require('../models/ScheduledCampaign');
 const Campaign = require('../models/Campaign');
-const { sendCampaignEmailsViaQueue } = require('./emailService');
+const { sendCampaignEmails } = require('./emailService');
 
 // Aktif cron job'ları saklamak için Map
 const activeCronJobs = new Map();
@@ -119,14 +119,14 @@ const executeCampaign = async (scheduledCampaignId) => {
     
     console.log(`📧 Yeni kampanya oluşturuldu: ${campaign._id}`);
     
-    // Mail gönderimini başlat (Queue üzerinden)
-    const result = await sendCampaignEmailsViaQueue(campaign._id, 'normal');
+    // Mail gönderimini başlat
+    const result = await sendCampaignEmails(campaign._id);
     
-    console.log(`✅ Kampanya kuyruğa eklendi: ${result.totalJobs} email job oluşturuldu`);
+    console.log(`✅ Kampanya gönderildi: ${result.sent} başarılı, ${result.failed} başarısız`);
     
     // ScheduledCampaign istatistiklerini güncelle
     scheduledCampaign.stats.totalCampaigns += 1;
-    // Not: totalSent queue'dan email gönderildikçe güncellenecek
+    scheduledCampaign.stats.totalSent += result.sent;
     scheduledCampaign.lastRun = new Date();
     
     // Sonraki çalışma zamanını hesapla

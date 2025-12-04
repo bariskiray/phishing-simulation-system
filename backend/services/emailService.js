@@ -192,7 +192,7 @@ const sendEmail = async (campaign, user) => {
   }
 };
 
-// Kampanya mail gönderimi (Queue kullanarak - ESKİ YÖNTEM DEPRECATED)
+// Kampanya mail gönderimi
 const sendCampaignEmails = async (campaignId) => {
   try {
     const campaign = await Campaign.findById(campaignId).populate('targetUsers');
@@ -233,28 +233,9 @@ const sendCampaignEmails = async (campaignId) => {
   }
 };
 
-// YENİ: Queue tabanlı kampanya gönderimi
-const sendCampaignEmailsViaQueue = async (campaignId, priority = 'normal') => {
-  try {
-    const { addCampaignToQueue } = require('./emailQueue');
-    
-    const result = await addCampaignToQueue(campaignId, priority);
-    
-    return {
-      success: true,
-      message: 'Kampanya emailları kuyruğa eklendi',
-      ...result
-    };
-  } catch (error) {
-    console.error('Kampanya kuyruğa eklenirken hata:', error.message);
-    throw error;
-  }
-};
-
 module.exports = {
   sendEmail,
-  sendCampaignEmails, // Deprecated - geriye dönük uyumluluk için korundu
-  sendCampaignEmailsViaQueue, // YENİ: Queue tabanlı gönderim (ÖNER İLEN)
+  sendCampaignEmails,
   addTrackingPixel,
   makeLinksTrackable
 };
