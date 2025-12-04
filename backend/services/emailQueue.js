@@ -5,39 +5,61 @@ const Event = require('../models/Event');
 const User = require('../models/User');
 
 // Redis configuration
-// Render.com veya production için REDIS_URL kullanılır (örn: redis://red-xxx:6379)
-// Local development için REDIS_HOST/PORT/PASSWORD kullanılır
-let redisConnection;
+console.log('🔧 Redis Configuration Starting...');
+console.log('📝 REDIS_URL exists:', !!process.env.REDIS_URL);
+
+let redisOptions;
 
 if (process.env.REDIS_URL) {
-  // Production: Redis URL kullan (Render.com, Heroku, vb.)
-  redisConnection = process.env.REDIS_URL;
+  console.log('🔗 Using REDIS_URL:', process.env.REDIS_URL.substring(0, 40) + '...');
+  
+  // Upstash veya TLS gerektiren Redis için (rediss://)
+  if (process.env.REDIS_URL.startsWith('rediss://')) {
+    console.log('🔒 TLS Redis detected (Upstash)');
+    redisOptions = {
+      redis: process.env.REDIS_URL,
+      tls: {
+        rejectUnauthorized: false
+      }
+    };
+  } else {
+    // Normal Redis URL (redis://)
+    console.log('🔓 Standard Redis URL detected');
+    redisOptions = {
+      redis: process.env.REDIS_URL
+    };
+  }
 } else {
-  // Local development: Host/Port/Password kullan
-  redisConnection = {
-    host: process.env.REDIS_HOST || 'localhost',
-    port: parseInt(process.env.REDIS_PORT) || 6379,
-    password: process.env.REDIS_PASSWORD || undefined
+  // Local development
+  console.log('🏠 Using Local Redis: localhost:6379');
+  redisOptions = {
+    redis: {
+      host: process.env.REDIS_HOST || 'localhost',
+      port: parseInt(process.env.REDIS_PORT) || 6379,
+      password: process.env.REDIS_PASSWORD || undefined
+    }
   };
 }
 
 // Create email queue with Bull
 const emailQueue = new Queue('email-sending', {
-  redis: redisConnection,
+  ...redisOptions,
   defaultJobOptions: {
-    attempts: 3, // 3 deneme
+    attempts: 3,
     backoff: {
       type: 'exponential',
-      delay: 2000 // İlk deneme 2 saniye sonra, sonraki denemeler exponential artar
+      delay: 2000
     },
-    removeOnComplete: false, // Başarılı jobları sakla (monitoring için)
-    removeOnFail: false // Başarısız jobları sakla (debugging için)
+    removeOnComplete: false,
+    removeOnFail: false
   },
   limiter: {
-    max: parseInt(process.env.EMAIL_RATE_LIMIT_PER_SECOND) || 5, // Saniyede maksimum 5 email
-    duration: 1000 // 1 saniye
+    max: parseInt(process.env.EMAIL_RATE_LIMIT_PER_SECOND) || 5,
+    duration: 1000
   }
 });
+
+console.log('✅ Email Queue initialized');
 
 // SMTP Transporter oluştur
 const createTransporter = () => {
