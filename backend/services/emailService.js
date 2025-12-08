@@ -4,38 +4,42 @@ const Event = require('../models/Event');
 
 // SMTP Transporter oluştur
 const createTransporter = () => {
-  // SendGrid kullanımı (production için önerilir)
-  if (process.env.SENDGRID_API_KEY) {
-    return nodemailer.createTransport({
-      host: 'smtp.sendgrid.net',
-      port: 587,
-      secure: false,
-      auth: {
-        user: 'apikey',
-        pass: process.env.SENDGRID_API_KEY
-      },
-      connectionTimeout: 10000, // 10 saniye
-      greetingTimeout: 10000,
-      socketTimeout: 10000
-    });
-  }
-  
-  // Normal SMTP kullanımı (local development için)
-  return nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+  const config = {
+    host: process.env.SMTP_HOST,
     port: parseInt(process.env.SMTP_PORT) || 587,
     secure: process.env.SMTP_SECURE === 'true',
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS
     },
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 10000,
+    // Render.com için timeout ayarları
+    connectionTimeout: 60000, // 60 saniye
+    greetingTimeout: 30000, // 30 saniye
+    socketTimeout: 60000, // 60 saniye
+    // Connection pool ayarları
+    pool: true,
+    maxConnections: 5,
+    maxMessages: 100,
+    rateDelta: 1000,
+    rateLimit: 5,
+    // TLS ayarları
     tls: {
-      rejectUnauthorized: false
-    }
+      rejectUnauthorized: process.env.NODE_ENV === 'production' ? false : true,
+      ciphers: 'SSLv3'
+    },
+    // Debug için
+    debug: process.env.NODE_ENV !== 'production',
+    logger: process.env.NODE_ENV !== 'production'
+  };
+  
+  console.log('📧 SMTP Config:', {
+    host: config.host,
+    port: config.port,
+    secure: config.secure,
+    user: config.auth.user
   });
+  
+  return nodemailer.createTransporter(config);
 };
 
 // Tracking pixel ekle - Mail açıldığında otomatik olarak yüklenir
@@ -192,7 +196,7 @@ const sendEmail = async (campaign, user) => {
     console.log(`🔗 Tracking URL: ${process.env.TRACKING_URL}/track/open/${campaign._id}/${user._id}`);
     
     const mailOptions = {
-      from: process.env.SENDGRID_VERIFIED_SENDER || process.env.SMTP_USER,
+      from: process.env.SMTP_USER,
       to: user.email,
       subject: campaign.subject,
       html: htmlContent

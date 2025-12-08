@@ -72,33 +72,6 @@ docker run -d -p 27017:27017 --name mongodb mongo
 
 `.env` dosyasını düzenleyin ve kendi bilgilerinizi girin:
 
-#### Seçenek 1: SendGrid (Production için ÖNERİLİR - Render ile çalışır)
-
-```env
-# MongoDB
-MONGODB_URI=mongodb://localhost:27017/phishing-sim
-
-# Server
-PORT=5000
-NODE_ENV=development
-
-# SendGrid (Ücretsiz 100 email/gün)
-SENDGRID_API_KEY=sizin-sendgrid-api-key
-SENDGRID_VERIFIED_SENDER=dogrulanmis-email@domain.com
-
-# URLs
-FRONTEND_URL=http://localhost:3000
-TRACKING_URL=http://localhost:5000
-```
-
-**SendGrid Kurulumu**:
-1. [SendGrid](https://sendgrid.com/) ücretsiz hesap oluşturun
-2. API Key oluşturun: Settings > API Keys > Create API Key
-3. Sender doğrulayın: Settings > Sender Authentication > Verify Single Sender
-4. API Key ve doğrulanmış email adresinizi `.env` dosyasına ekleyin
-
-#### Seçenek 2: Gmail SMTP (Sadece Local için)
-
 ```env
 # MongoDB
 MONGODB_URI=mongodb://localhost:27017/phishing-sim
@@ -120,8 +93,6 @@ TRACKING_URL=http://localhost:5000
 ```
 
 **Not**: Gmail kullanıyorsanız, [App Password](https://support.google.com/accounts/answer/185833) oluşturmanız gerekir.
-
-⚠️ **Önemli**: Render, Heroku gibi cloud platformlar SMTP portlarını kısıtlar. Production için mutlaka SendGrid kullanın!
 
 ## 💻 Kullanım
 
@@ -227,25 +198,44 @@ Dashboard, kampanya yönetimi ve detaylı raporlama özellikleri modern ve kulla
 sudo systemctl status mongod
 ```
 
-### SMTP Gönderim Hatası
-
-**"Connection timeout" Hatası (Production)**:
-- Cloud platformlar (Render, Heroku) SMTP portlarını engeller
-- **Çözüm**: SendGrid kullanın (ücretsiz)
-  ```env
-  SENDGRID_API_KEY=your-key-here
-  SENDGRID_VERIFIED_SENDER=verified@email.com
-  ```
-
-**Local Development SMTP Sorunları**:
+### SMTP Gönderim Hatası - Yerel Geliştirme
 - SMTP bilgilerinin doğru olduğundan emin olun
 - Gmail kullanıyorsanız "Daha az güvenli uygulama erişimi" ayarını kontrol edin
 - App Password kullanın
 
-**SendGrid ile Hala Sorun Yaşıyorsanız**:
-- API Key'in doğru kopyalandığını kontrol edin
-- Sender email adresinizin SendGrid'de doğrulandığından emin olun
-- Render environment variables'ı kontrol edin
+### ⚠️ Render.com SMTP "Connection Timeout" Hatası
+
+**Sorun**: Production'da (Render.com) mail gönderirken "Connection timeout" hatası alınıyor.
+
+**Çözüm 1 - Port 465 Kullanın (ÖNERİLEN)** ✅
+
+Render.com Dashboard → Environment Variables:
+```env
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=465
+SMTP_SECURE=true
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-gmail-app-password
+NODE_ENV=production
+```
+
+**Çözüm 2 - SendGrid Kullanın (Ücretsiz & Güvenilir)**
+
+1. SendGrid'e kaydolun: https://sendgrid.com/
+2. API Key oluşturun
+3. Environment Variables:
+```env
+SMTP_HOST=smtp.sendgrid.net
+SMTP_PORT=465
+SMTP_SECURE=true
+SMTP_USER=apikey
+SMTP_PASS=your-sendgrid-api-key
+```
+
+**Not**: 
+- Render.com Port 587'yi bazen engelliyor
+- Gmail App Password için: Google Account → Security → 2-Step Verification → App Passwords
+- Detaylı bilgi için `DEPLOYMENT_NOTES.md` dosyasına bakın
 
 ### Port Zaten Kullanımda
 ```bash
