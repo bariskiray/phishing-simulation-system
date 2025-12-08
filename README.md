@@ -198,44 +198,10 @@ Dashboard, kampanya yönetimi ve detaylı raporlama özellikleri modern ve kulla
 sudo systemctl status mongod
 ```
 
-### SMTP Gönderim Hatası - Yerel Geliştirme
+### SMTP Gönderim Hatası
 - SMTP bilgilerinin doğru olduğundan emin olun
 - Gmail kullanıyorsanız "Daha az güvenli uygulama erişimi" ayarını kontrol edin
 - App Password kullanın
-
-### ⚠️ Render.com SMTP "Connection Timeout" Hatası
-
-**Sorun**: Production'da (Render.com) mail gönderirken "Connection timeout" hatası alınıyor.
-
-**Çözüm 1 - Port 465 Kullanın (ÖNERİLEN)** ✅
-
-Render.com Dashboard → Environment Variables:
-```env
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=465
-SMTP_SECURE=true
-SMTP_USER=your-email@gmail.com
-SMTP_PASS=your-gmail-app-password
-NODE_ENV=production
-```
-
-**Çözüm 2 - SendGrid Kullanın (Ücretsiz & Güvenilir)**
-
-1. SendGrid'e kaydolun: https://sendgrid.com/
-2. API Key oluşturun
-3. Environment Variables:
-```env
-SMTP_HOST=smtp.sendgrid.net
-SMTP_PORT=465
-SMTP_SECURE=true
-SMTP_USER=apikey
-SMTP_PASS=your-sendgrid-api-key
-```
-
-**Not**: 
-- Render.com Port 587'yi bazen engelliyor
-- Gmail App Password için: Google Account → Security → 2-Step Verification → App Passwords
-- Detaylı bilgi için `DEPLOYMENT_NOTES.md` dosyasına bakın
 
 ### Port Zaten Kullanımda
 ```bash
