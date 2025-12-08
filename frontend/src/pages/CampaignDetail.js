@@ -207,6 +207,7 @@ function CampaignDetail() {
 function getStatusColor(status) {
   const colors = {
     'draft': 'secondary',
+    'processing': 'warning-processing',
     'scheduled': 'info',
     'sent': 'success',
     'completed': 'success'
@@ -217,6 +218,7 @@ function getStatusColor(status) {
 function getStatusText(status) {
   const texts = {
     'draft': 'Taslak',
+    'processing': 'İşleniyor',
     'scheduled': 'Zamanlandı',
     'sent': 'Gönderildi',
     'completed': 'Tamamlandı'

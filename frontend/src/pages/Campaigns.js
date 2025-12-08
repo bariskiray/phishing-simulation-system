@@ -157,6 +157,10 @@ function Campaigns() {
           <span className="stat-label">Taslak</span>
         </div>
         <div className="stat-box">
+          <span className="stat-num">{campaigns.filter(c => c.status === 'processing').length}</span>
+          <span className="stat-label">İşleniyor</span>
+        </div>
+        <div className="stat-box">
           <span className="stat-num">{campaigns.filter(c => c.status === 'sent').length}</span>
           <span className="stat-label">Gönderildi</span>
         </div>
@@ -340,6 +344,7 @@ function Campaigns() {
 function getStatusColor(status) {
   const colors = {
     'draft': 'secondary',
+    'processing': 'warning-processing',
     'scheduled': 'info',
     'sent': 'success',
     'completed': 'success'
@@ -350,6 +355,7 @@ function getStatusColor(status) {
 function getStatusText(status) {
   const texts = {
     'draft': 'Taslak',
+    'processing': 'İşleniyor',
     'scheduled': 'Zamanlandı',
     'sent': 'Gönderildi',
     'completed': 'Tamamlandı'

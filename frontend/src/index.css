@@ -154,6 +154,27 @@ table tr:hover {
   color: #0c5460;
 }
 
+.badge-secondary {
+  background: #e2e3e5;
+  color: #383d41;
+}
+
+.badge-warning-processing {
+  background: #fff3cd;
+  color: #856404;
+  animation: pulse 2s infinite;
+  position: relative;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
 .loading {
   text-align: center;
   padding: 40px;
