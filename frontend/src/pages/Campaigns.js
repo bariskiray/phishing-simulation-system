@@ -10,6 +10,7 @@ function Campaigns() {
   const [showModal, setShowModal] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [sendingCampaignId, setSendingCampaignId] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     subject: '',
@@ -66,11 +67,15 @@ function Campaigns() {
     }
 
     try {
-      await sendCampaign(id);
-      setSuccess('Kampanya gönderiliyor...');
-      loadData();
+      setSendingCampaignId(id);
+      setError('');
+      const response = await sendCampaign(id);
+      setSuccess(`Kampanya başarıyla gönderildi! ${response.data.data.sent} e-posta gönderildi.`);
+      await loadData();
+      setSendingCampaignId(null);
     } catch (error) {
       setError(error.response?.data?.message || 'Kampanya gönderilemedi');
+      setSendingCampaignId(null);
     }
   };
 
@@ -205,13 +210,15 @@ function Campaigns() {
                   <button
                     className="btn btn-success btn-sm"
                     onClick={() => handleSend(campaign._id, campaign.name)}
+                    disabled={sendingCampaignId === campaign._id}
                   >
-                    Gönder
+                    {sendingCampaignId === campaign._id ? 'Gönderiliyor...' : 'Gönder'}
                   </button>
                 )}
                 <button
                   className="btn btn-danger btn-sm"
                   onClick={() => handleDelete(campaign._id, campaign.name)}
+                  disabled={sendingCampaignId === campaign._id}
                 >
                   Sil
                 </button>

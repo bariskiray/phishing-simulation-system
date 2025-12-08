@@ -198,10 +198,15 @@ router.post('/:id/send', async (req, res) => {
       // Tek seferlik gönderim
       const result = await sendCampaignEmails(campaign._id);
       
+      // Güncellenmiş kampanyayı getir
+      const updatedCampaign = await Campaign.findById(campaign._id)
+        .populate('targetUsers', 'name email group');
+      
       res.json({
         success: true,
         message: 'Kampanya gönderildi',
-        data: result
+        data: result,
+        campaign: updatedCampaign
       });
     }
   } catch (error) {
