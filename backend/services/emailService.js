@@ -4,13 +4,36 @@ const Event = require('../models/Event');
 
 // SMTP Transporter oluştur
 const createTransporter = () => {
+  // SendGrid kullanımı (production için önerilir)
+  if (process.env.SENDGRID_API_KEY) {
+    return nodemailer.createTransport({
+      host: 'smtp.sendgrid.net',
+      port: 587,
+      secure: false,
+      auth: {
+        user: 'apikey',
+        pass: process.env.SENDGRID_API_KEY
+      },
+      connectionTimeout: 10000, // 10 saniye
+      greetingTimeout: 10000,
+      socketTimeout: 10000
+    });
+  }
+  
+  // Normal SMTP kullanımı (local development için)
   return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
+    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    port: parseInt(process.env.SMTP_PORT) || 587,
     secure: process.env.SMTP_SECURE === 'true',
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS
+    },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 10000,
+    tls: {
+      rejectUnauthorized: false
     }
   });
 };
@@ -169,7 +192,7 @@ const sendEmail = async (campaign, user) => {
     console.log(`🔗 Tracking URL: ${process.env.TRACKING_URL}/track/open/${campaign._id}/${user._id}`);
     
     const mailOptions = {
-      from: process.env.SMTP_USER,
+      from: process.env.SENDGRID_VERIFIED_SENDER || process.env.SMTP_USER,
       to: user.email,
       subject: campaign.subject,
       html: htmlContent
