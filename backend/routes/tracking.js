@@ -9,97 +9,13 @@ const TRACKING_PIXEL = Buffer.from(
   'base64'
 );
 
-// Bot ve prefetch detection - Email client'ların otomatik görselleri önden yüklemesini tespit eder
+// Bot ve prefetch detection - DEVRE DIŞI
+// NOT: Gmail/Outlook proxy'leri eski tarayıcı UA'ları kullandığı için
+// bu kontrol gerçek mail açılmalarını engelliyordu.
+// Şimdilik tüm açılmalar kaydediliyor.
 const isBotOrPrefetch = (userAgent) => {
-  if (!userAgent) {
-    return false; // User-agent yoksa bot olarak işaretleme
-  }
-  
-  const userAgentLower = userAgent.toLowerCase();
-  
-  // Bilinen bot, crawler patternleri (Email client proxy'leri HARİÇ - onlar meşru)
-  const botPatterns = [
-    // NOT: Gmail/Outlook/Yahoo proxy'leri beyaz listede - normal email açılmaları
-    // 'googleimageproxy',   // Gmail - KABUL EDİLİYOR
-    // 'outlookimageproxy',  // Outlook - KABUL EDİLİYOR
-    // 'yahooimageproxy',    // Yahoo - KABUL EDİLİYOR
-    'bot',                   // Genel bot pattern
-    'crawler',               // Genel crawler pattern
-    'spider',                // Genel spider pattern
-    'preview',               // Email preview servisleri
-    'prefetch',              // Prefetch servisleri
-    'prerender',             // Prerender servisleri
-    'link preview',          // Link preview generatorları
-    'mailgunvalidation',     // Mailgun doğrulama servisi
-    'wget',                  // wget tool
-    'curl',                  // curl tool
-    'python-requests',       // Python requests library
-    'axios',                 // Axios library
-    'scanner',               // Security scanners
-    'monitoring',            // Monitoring servisleri
-    'headless'               // Headless browser'lar
-  ];
-  
-  // Pattern matching ile bot kontrolü
-  if (botPatterns.some(pattern => userAgentLower.includes(pattern))) {
-    return true;
-  }
-  
-  // Eski tarayıcı versiyonları kontrolü (Gmail/email scanning bot'ları eski UA kullanır)
-  const browserVersionPatterns = [
-    { name: 'chrome', regex: /chrome\/(\d+)/i, minVersion: 90 },
-    { name: 'firefox', regex: /firefox\/(\d+)/i, minVersion: 90 },
-    { name: 'edge', regex: /edge\/(\d+)/i, minVersion: 90 },
-    { name: 'edg', regex: /edg\/(\d+)/i, minVersion: 90 }, // Yeni Edge
-    { name: 'safari', regex: /version\/(\d+).*safari/i, minVersion: 14 }
-  ];
-  
-  for (const browser of browserVersionPatterns) {
-    const match = userAgent.match(browser.regex);
-    if (match) {
-      const version = parseInt(match[1], 10);
-      if (version < browser.minVersion) {
-        console.log(`🤖 Eski tarayıcı tespit edildi: ${browser.name} v${version} (min: ${browser.minVersion})`);
-        return true; // Eski tarayıcı = muhtemelen bot
-      }
-    }
-  }
-  
+  // Tüm açılmaları kabul et - filtreleme devre dışı
   return false;
-};
-
-// Zaman bazlı validasyon - Gönderimden çok kısa süre sonraki açılmaları filtreler
-const isValidOpenTime = async (campaignId, userId) => {
-  try {
-    // Mail gönderim eventini bul
-    const sentEvent = await Event.findOne({
-      campaignId,
-      userId,
-      type: 'sent'
-    }).sort({ timestamp: -1 }); // En son gönderilen
-    
-    if (!sentEvent) {
-      console.log(`⚠️ Sent event bulunamadı - Campaign: ${campaignId}, User: ${userId}`);
-      return true; // Sent event yoksa normal devam et
-    }
-    
-    const now = new Date();
-    const sentTime = new Date(sentEvent.timestamp);
-    const timeDiffSeconds = (now - sentTime) / 1000;
-    
-    // İlk 1 saniye içinde açılma = otomatik prefetch olabilir
-    const MIN_VALID_TIME_SECONDS = 1;
-    
-    if (timeDiffSeconds < MIN_VALID_TIME_SECONDS) {
-      console.log(`🤖 Çok erken açılma tespit edildi (${timeDiffSeconds.toFixed(2)}s) - Muhtemelen prefetch`);
-      return false; // Geçersiz açılma
-    }
-    
-    return true; // Geçerli açılma
-  } catch (error) {
-    console.error('⚠️ Zaman validasyonu hatası:', error.message);
-    return true; // Hata durumunda normal devam et
-  }
 };
 
 // Mail açılma tracking - Mail açıldığında otomatik çalışır
@@ -112,38 +28,6 @@ router.get('/open/:campaignId/:userId', async (req, res) => {
     console.log(`📧 Tracking pixel yüklendi - Campaign: ${campaignId}, User: ${userId}`);
     console.log(`🔍 User-Agent: ${userAgent}`);
     console.log(`🌐 IP Address: ${ipAddress}`);
-    
-    // Bot/prefetch kontrolü
-    const isBot = isBotOrPrefetch(userAgent);
-    if (isBot) {
-      console.log(`🤖 Bot/Prefetch tespit edildi, kayıt yapılmıyor - UA: ${userAgent}`);
-      // Pixel döndür ama kaydetme (botlar için sessiz fail)
-      res.writeHead(200, {
-        'Content-Type': 'image/gif',
-        'Content-Length': TRACKING_PIXEL.length,
-        'Cache-Control': 'no-store, no-cache, must-revalidate, private, max-age=0',
-        'Pragma': 'no-cache',
-        'Expires': '0',
-        'Access-Control-Allow-Origin': '*'
-      });
-      return res.end(TRACKING_PIXEL);
-    }
-    
-    // Zaman bazlı validasyon
-    const isValidTime = await isValidOpenTime(campaignId, userId);
-    if (!isValidTime) {
-      console.log(`⏱️ Erken açılma tespit edildi (prefetch olabilir), kayıt yapılmıyor`);
-      // Pixel döndür ama kaydetme
-      res.writeHead(200, {
-        'Content-Type': 'image/gif',
-        'Content-Length': TRACKING_PIXEL.length,
-        'Cache-Control': 'no-store, no-cache, must-revalidate, private, max-age=0',
-        'Pragma': 'no-cache',
-        'Expires': '0',
-        'Access-Control-Allow-Origin': '*'
-      });
-      return res.end(TRACKING_PIXEL);
-    }
     
     // Event kaydet (duplicate kontrolü ile - her açılış bir kere kaydedilir)
     try {

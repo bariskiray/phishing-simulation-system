@@ -2,71 +2,6 @@ const nodemailer = require('nodemailer');
 const Campaign = require('../models/Campaign');
 const Event = require('../models/Event');
 
-// Profesyonel SVG Logo'lar (Base64 encoded)
-// Basic template için - Güvenlik temalı (Shield + Lock)
-const SECURITY_LOGO_SVG = `data:image/svg+xml;base64,${Buffer.from(`
-<svg width="200" height="60" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
-    </linearGradient>
-    <filter id="shadow">
-      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.3"/>
-    </filter>
-  </defs>
-  
-  <!-- Shield Background -->
-  <path d="M 25 10 L 40 10 L 45 15 L 45 35 C 45 40 40 45 32.5 50 C 25 45 20 40 20 35 L 20 15 Z" 
-        fill="url(#shieldGrad)" filter="url(#shadow)"/>
-  
-  <!-- Lock Icon -->
-  <rect x="27" y="28" width="11" height="10" rx="1" fill="white" opacity="0.9"/>
-  <path d="M 28.5 28 L 28.5 24 C 28.5 22 30 20 32.5 20 C 35 20 36.5 22 36.5 24 L 36.5 28" 
-        stroke="white" stroke-width="2" fill="none" opacity="0.9"/>
-  <circle cx="32.5" cy="32.5" r="1.5" fill="#667eea"/>
-  
-  <!-- Text -->
-  <text x="52" y="28" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#667eea">
-    SecureAlert
-  </text>
-  <text x="52" y="42" font-family="Arial, sans-serif" font-size="11" fill="#764ba2" opacity="0.8">
-    Security Platform
-  </text>
-</svg>
-`).toString('base64')}`;
-
-// Urgent template için - Uyarı temalı (Warning Shield)
-const URGENT_LOGO_SVG = `data:image/svg+xml;base64,${Buffer.from(`
-<svg width="200" height="60" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="warningGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#ee5a52;stop-opacity:1" />
-    </linearGradient>
-    <filter id="shadow2">
-      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.3"/>
-    </filter>
-  </defs>
-  
-  <!-- Warning Shield -->
-  <path d="M 25 10 L 40 10 L 45 15 L 45 35 C 45 40 40 45 32.5 50 C 25 45 20 40 20 35 L 20 15 Z" 
-        fill="url(#warningGrad)" filter="url(#shadow2)"/>
-  
-  <!-- Exclamation Mark -->
-  <rect x="31" y="22" width="3" height="12" rx="1.5" fill="white"/>
-  <circle cx="32.5" cy="38" r="2" fill="white"/>
-  
-  <!-- Text -->
-  <text x="52" y="28" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#ff6b6b">
-    URGENT
-  </text>
-  <text x="52" y="42" font-family="Arial, sans-serif" font-size="11" fill="#ee5a52" opacity="0.8">
-    Security Alert
-  </text>
-</svg>
-`).toString('base64')}`;
-
 // SMTP Transporter oluştur
 const createTransporter = () => {
   return nodemailer.createTransport({
@@ -129,215 +64,385 @@ const makeLinksTrackable = (htmlContent, campaignId, userId) => {
 
 // Mail şablonu uygula
 const applyTemplate = (body, template = 'basic', phishingUrl = '') => {
-  // Eğer phishing URL varsa, button ekle
+  // Eğer phishing URL varsa, button ekle (table-based for email compatibility)
   const phishingButton = phishingUrl ? `
-    <div style="text-align: center; margin-top: 30px;">
-      <a href="${phishingUrl}" style="display: inline-block; padding: 15px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
-        Hesabımı Doğrula
-      </a>
-    </div>
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-top: 30px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+            <tr>
+              <td style="border-radius: 8px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">
+                <a href="${phishingUrl}" target="_blank" style="display: inline-block; padding: 16px 36px; font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; color: #ffffff; text-decoration: none; border-radius: 8px;">
+                  ✓ Hesabımı Doğrula
+                </a>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
   ` : '';
 
   const templates = {
     basic: `
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="x-apple-disable-message-reformatting">
   <meta name="color-scheme" content="light">
   <meta name="supported-color-schemes" content="light">
+  <title>Güvenlik Bildirimi</title>
   <!--[if mso]>
   <style type="text/css">
-    body, table, td {font-family: Arial, sans-serif !important;}
+    body, table, td, p, a, span {font-family: Arial, sans-serif !important;}
+    .button-td { padding: 0 !important; }
+    .button-a { padding: 16px 36px !important; }
   </style>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
   <![endif]-->
   <style>
-    body { 
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; 
-      line-height: 1.6; 
-      color: #333; 
-      margin: 0; 
-      padding: 0; 
-      background-color: #f5f5f5;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+    * { box-sizing: border-box; }
+    body {
+      margin: 0 !important;
+      padding: 0 !important;
+      width: 100% !important;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+      background-color: #f0f2f5;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     }
-    .container { 
-      max-width: 600px; 
-      margin: 0 auto; 
-      padding: 20px; 
-      background: white; 
-    }
-    .logo { 
-      text-align: center; 
-      padding: 40px 20px 30px 20px;
-      background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
-    }
-    .logo img { 
-      max-width: 200px; 
-      height: auto;
-      display: inline-block;
-    }
-    .header { 
-      text-align: center; 
-      padding: 30px 20px; 
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-      border-radius: 8px 8px 0 0;
-      box-shadow: 0 4px 6px rgba(102, 126, 234, 0.1);
-    }
-    .header-text { 
-      color: white; 
-      font-size: 24px; 
-      font-weight: 700; 
-      margin: 0;
-      letter-spacing: -0.5px;
-    }
-    .content { 
-      background: #f9f9f9; 
-      padding: 30px 25px; 
-      border-radius: 0 0 8px 8px;
-      border-left: 4px solid #667eea;
-    }
-    .footer { 
-      text-align: center; 
-      padding: 25px 20px; 
-      font-size: 12px; 
-      color: #999;
-      background: #fafafa;
-      border-top: 1px solid #e5e5e5;
-    }
-    @media only screen and (max-width: 600px) {
-      .container { padding: 10px !important; }
-      .header-text { font-size: 20px !important; }
-      .content { padding: 20px 15px !important; }
+    table { border-collapse: collapse !important; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
+    a { text-decoration: none; }
+    .email-container { max-width: 600px; margin: 0 auto; }
+    @media only screen and (max-width: 620px) {
+      .email-container { width: 100% !important; margin: auto !important; }
+      .fluid { max-width: 100% !important; height: auto !important; }
+      .stack-column { display: block !important; width: 100% !important; }
+      .stack-column-center { text-align: center !important; }
+      .mobile-padding { padding-left: 20px !important; padding-right: 20px !important; }
     }
   </style>
 </head>
-<body>
-  <div class="container">
-    <div class="logo" role="img" aria-label="SecureAlert Logo">
-      <img src="${SECURITY_LOGO_SVG}" alt="SecureAlert - Security Platform" width="200" height="60" style="border: none; display: inline-block;" />
-    </div>
-    <div class="header">
-      <h1 class="header-text">🔐 Güvenlik Bildirimi</h1>
-    </div>
-    <div class="content">
-      ${body}
-      ${phishingButton}
-    </div>
-    <div class="footer">
-      <p style="margin: 0; line-height: 1.5;">Bu e-posta güvenlik departmanı tarafından gönderilmiştir.</p>
-    </div>
-  </div>
+<body style="margin: 0; padding: 0; background-color: #f0f2f5;">
+  <center style="width: 100%; background-color: #f0f2f5;">
+    <!--[if mso | IE]>
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f0f2f5;">
+    <tr>
+    <td>
+    <![endif]-->
+
+    <!-- Email Body -->
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="margin: 0 auto;" class="email-container">
+      
+      <!-- Spacer -->
+      <tr>
+        <td style="padding: 30px 0 20px 0;">&nbsp;</td>
+      </tr>
+
+      <!-- Logo Section -->
+      <tr>
+        <td style="background-color: #ffffff; padding: 35px 40px; text-align: center; border-radius: 16px 16px 0 0;">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+              <td align="center">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                  <tr>
+                    <td style="font-size: 42px; line-height: 1; padding-right: 12px; vertical-align: middle;">🛡️</td>
+                    <td style="vertical-align: middle; text-align: left;">
+                      <span style="font-family: Arial, sans-serif; font-size: 24px; font-weight: 700; color: #667eea; display: block; line-height: 1.2;">SecureAlert</span>
+                      <span style="font-family: Arial, sans-serif; font-size: 12px; color: #8b5cf6; letter-spacing: 1px; text-transform: uppercase;">Security Platform</span>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- Header Section with Gradient -->
+      <tr>
+        <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 35px 40px; text-align: center;">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+              <td>
+                <span style="font-size: 36px; display: block; margin-bottom: 10px;">🔐</span>
+                <h1 style="margin: 0; font-family: Arial, sans-serif; font-size: 26px; font-weight: 700; color: #ffffff; letter-spacing: -0.5px;">
+                  Güvenlik Bildirimi
+                </h1>
+                <p style="margin: 10px 0 0 0; font-family: Arial, sans-serif; font-size: 14px; color: rgba(255,255,255,0.85);">
+                  Hesap güvenliğiniz için önemli bilgilendirme
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- Content Section -->
+      <tr>
+        <td style="background-color: #ffffff; padding: 40px;">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+              <td style="font-family: Arial, sans-serif; font-size: 15px; line-height: 1.7; color: #374151;">
+                ${body}
+                ${phishingButton}
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- Divider -->
+      <tr>
+        <td style="background-color: #ffffff; padding: 0 40px;">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+              <td style="border-top: 1px solid #e5e7eb; padding: 0;"></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- Footer Section -->
+      <tr>
+        <td style="background-color: #ffffff; padding: 30px 40px; border-radius: 0 0 16px 16px;">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+              <td style="text-align: center;">
+                <p style="margin: 0 0 10px 0; font-family: Arial, sans-serif; font-size: 13px; color: #6b7280;">
+                  Bu e-posta güvenlik departmanı tarafından gönderilmiştir.
+                </p>
+                <p style="margin: 0; font-family: Arial, sans-serif; font-size: 12px; color: #9ca3af;">
+                  © 2024 SecureAlert. Tüm hakları saklıdır.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- Spacer -->
+      <tr>
+        <td style="padding: 30px 0;">&nbsp;</td>
+      </tr>
+
+    </table>
+
+    <!--[if mso | IE]>
+    </td>
+    </tr>
+    </table>
+    <![endif]-->
+  </center>
 </body>
 </html>`,
     urgent: `
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="x-apple-disable-message-reformatting">
   <meta name="color-scheme" content="light">
   <meta name="supported-color-schemes" content="light">
+  <title>ACİL Güvenlik Uyarısı</title>
   <!--[if mso]>
   <style type="text/css">
-    body, table, td {font-family: Arial, sans-serif !important;}
+    body, table, td, p, a, span {font-family: Arial, sans-serif !important;}
+    .button-td { padding: 0 !important; }
+    .button-a { padding: 16px 36px !important; }
   </style>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
   <![endif]-->
   <style>
-    body { 
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; 
-      line-height: 1.6; 
-      color: #333; 
-      margin: 0; 
-      padding: 0; 
-      background-color: #fff5f5;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+    * { box-sizing: border-box; }
+    body {
+      margin: 0 !important;
+      padding: 0 !important;
+      width: 100% !important;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+      background-color: #fef2f2;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     }
-    .container { 
-      max-width: 600px; 
-      margin: 0 auto; 
-      padding: 20px; 
-      background: white; 
-    }
-    .logo { 
-      text-align: center; 
-      padding: 40px 20px 30px 20px;
-      background: linear-gradient(to bottom, #ffffff 0%, #fff5f5 100%);
-    }
-    .logo img { 
-      max-width: 200px; 
-      height: auto;
-      display: inline-block;
-    }
-    .header { 
-      text-align: center; 
-      padding: 30px 20px; 
-      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%); 
-      border-radius: 8px 8px 0 0;
-      box-shadow: 0 4px 6px rgba(255, 107, 107, 0.2);
-    }
-    .header-text { 
-      color: white; 
-      font-size: 24px; 
-      font-weight: 700; 
-      margin: 0;
-      letter-spacing: -0.5px;
-    }
-    .content { 
-      background: #fff3cd; 
-      padding: 30px 25px; 
-      border-radius: 0 0 8px 8px; 
-      border-left: 5px solid #ff6b6b;
-      box-shadow: inset 0 2px 4px rgba(255, 107, 107, 0.05);
-    }
-    .urgent-badge { 
-      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
-      color: white; 
-      padding: 8px 16px; 
-      border-radius: 20px; 
-      display: inline-block; 
-      margin-bottom: 15px;
-      font-weight: 700;
-      font-size: 13px;
-      letter-spacing: 0.5px;
-      box-shadow: 0 2px 4px rgba(255, 107, 107, 0.3);
-    }
-    .footer { 
-      text-align: center; 
-      padding: 25px 20px; 
-      font-size: 12px; 
-      color: #999;
-      background: #fafafa;
-      border-top: 1px solid #ffe5e5;
-    }
-    @media only screen and (max-width: 600px) {
-      .container { padding: 10px !important; }
-      .header-text { font-size: 20px !important; }
-      .content { padding: 20px 15px !important; }
-      .urgent-badge { font-size: 12px !important; padding: 6px 12px !important; }
+    table { border-collapse: collapse !important; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
+    a { text-decoration: none; }
+    .email-container { max-width: 600px; margin: 0 auto; }
+    @media only screen and (max-width: 620px) {
+      .email-container { width: 100% !important; margin: auto !important; }
+      .fluid { max-width: 100% !important; height: auto !important; }
+      .stack-column { display: block !important; width: 100% !important; }
+      .stack-column-center { text-align: center !important; }
+      .mobile-padding { padding-left: 20px !important; padding-right: 20px !important; }
     }
   </style>
 </head>
-<body>
-  <div class="container">
-    <div class="logo" role="img" aria-label="Urgent Security Alert Logo">
-      <img src="${URGENT_LOGO_SVG}" alt="URGENT - Security Alert" width="200" height="60" style="border: none; display: inline-block;" />
-    </div>
-    <div class="header">
-      <h1 class="header-text">🚨 ACİL GÜVENLİK UYARISI</h1>
-    </div>
-    <div class="content">
-      <div class="urgent-badge">🔴 ACİL İŞLEM GEREKLİ</div>
-      ${body}
-      ${phishingButton}
-    </div>
-    <div class="footer">
-      <p style="margin: 0; line-height: 1.5;">Bu e-posta güvenlik departmanı tarafından gönderilmiştir.</p>
-    </div>
-  </div>
+<body style="margin: 0; padding: 0; background-color: #fef2f2;">
+  <center style="width: 100%; background-color: #fef2f2;">
+    <!--[if mso | IE]>
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #fef2f2;">
+    <tr>
+    <td>
+    <![endif]-->
+
+    <!-- Email Body -->
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="margin: 0 auto;" class="email-container">
+      
+      <!-- Spacer -->
+      <tr>
+        <td style="padding: 30px 0 20px 0;">&nbsp;</td>
+      </tr>
+
+      <!-- Urgent Banner -->
+      <tr>
+        <td style="background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); padding: 12px 20px; text-align: center; border-radius: 16px 16px 0 0;">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+              <td align="center">
+                <span style="font-family: Arial, sans-serif; font-size: 13px; font-weight: 700; color: #ffffff; letter-spacing: 2px; text-transform: uppercase;">
+                  ⚠️ ACİL İŞLEM GEREKLİ ⚠️
+                </span>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- Logo Section -->
+      <tr>
+        <td style="background-color: #ffffff; padding: 30px 40px; text-align: center; border-left: 4px solid #dc2626; border-right: 4px solid #dc2626;">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+              <td align="center">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                  <tr>
+                    <td style="font-size: 42px; line-height: 1; padding-right: 12px; vertical-align: middle;">🚨</td>
+                    <td style="vertical-align: middle; text-align: left;">
+                      <span style="font-family: Arial, sans-serif; font-size: 24px; font-weight: 700; color: #dc2626; display: block; line-height: 1.2;">URGENT</span>
+                      <span style="font-family: Arial, sans-serif; font-size: 12px; color: #ef4444; letter-spacing: 1px; text-transform: uppercase;">Security Alert</span>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- Header Section with Gradient -->
+      <tr>
+        <td style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); padding: 35px 40px; text-align: center; border-left: 4px solid #dc2626; border-right: 4px solid #dc2626;">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+              <td>
+                <span style="font-size: 40px; display: block; margin-bottom: 10px;">🔔</span>
+                <h1 style="margin: 0; font-family: Arial, sans-serif; font-size: 26px; font-weight: 700; color: #ffffff; letter-spacing: -0.5px;">
+                  ACİL GÜVENLİK UYARISI
+                </h1>
+                <p style="margin: 10px 0 0 0; font-family: Arial, sans-serif; font-size: 14px; color: rgba(255,255,255,0.9);">
+                  Hesabınızda şüpheli aktivite tespit edildi
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- Warning Box -->
+      <tr>
+        <td style="background-color: #fef3c7; padding: 20px 40px; border-left: 4px solid #dc2626; border-right: 4px solid #dc2626;">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+              <td style="background-color: #fffbeb; border: 2px solid #f59e0b; border-radius: 8px; padding: 15px 20px;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                  <tr>
+                    <td style="width: 30px; vertical-align: top; font-size: 20px;">⏰</td>
+                    <td style="font-family: Arial, sans-serif; font-size: 14px; color: #92400e; line-height: 1.5;">
+                      <strong>Dikkat:</strong> Bu işlem 24 saat içinde tamamlanmalıdır, aksi takdirde hesabınız geçici olarak askıya alınabilir.
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- Content Section -->
+      <tr>
+        <td style="background-color: #ffffff; padding: 35px 40px; border-left: 4px solid #dc2626; border-right: 4px solid #dc2626;">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+              <td style="font-family: Arial, sans-serif; font-size: 15px; line-height: 1.7; color: #374151;">
+                ${body}
+                ${phishingButton}
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- Divider -->
+      <tr>
+        <td style="background-color: #ffffff; padding: 0 40px; border-left: 4px solid #dc2626; border-right: 4px solid #dc2626;">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+              <td style="border-top: 1px solid #fecaca; padding: 0;"></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- Footer Section -->
+      <tr>
+        <td style="background-color: #ffffff; padding: 30px 40px; border-radius: 0 0 16px 16px; border-left: 4px solid #dc2626; border-right: 4px solid #dc2626; border-bottom: 4px solid #dc2626;">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+              <td style="text-align: center;">
+                <p style="margin: 0 0 10px 0; font-family: Arial, sans-serif; font-size: 13px; color: #6b7280;">
+                  Bu e-posta güvenlik departmanı tarafından gönderilmiştir.
+                </p>
+                <p style="margin: 0; font-family: Arial, sans-serif; font-size: 12px; color: #9ca3af;">
+                  © 2024 SecureAlert. Tüm hakları saklıdır.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- Spacer -->
+      <tr>
+        <td style="padding: 30px 0;">&nbsp;</td>
+      </tr>
+
+    </table>
+
+    <!--[if mso | IE]>
+    </td>
+    </tr>
+    </table>
+    <![endif]-->
+  </center>
 </body>
 </html>`,
     custom: body + phishingButton // Custom template için direkt body'yi kullan
