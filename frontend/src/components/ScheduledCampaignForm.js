@@ -4,6 +4,7 @@ import {
   createScheduledCampaign,
   updateScheduledCampaign
 } from '../services/api';
+import { emailTemplates, categoryColors } from '../data/emailTemplates';
 import './ScheduledCampaignForm.css';
 
 const ScheduledCampaignForm = ({ campaign, onSuccess, onCancel }) => {
@@ -28,6 +29,7 @@ const ScheduledCampaignForm = ({ campaign, onSuccess, onCancel }) => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [selectedEmailTemplate, setSelectedEmailTemplate] = useState('empty');
 
   useEffect(() => {
     fetchUsers();
@@ -99,6 +101,21 @@ const ScheduledCampaignForm = ({ campaign, onSuccess, onCancel }) => {
       setFormData(prev => ({ ...prev, targetUsers: [] }));
     } else {
       setFormData(prev => ({ ...prev, targetUsers: users.map(u => u._id) }));
+    }
+  };
+
+  const handleEmailTemplateSelect = (templateId) => {
+    setSelectedEmailTemplate(templateId);
+    const template = emailTemplates.find(t => t.id === templateId);
+    if (template) {
+      setFormData(prev => ({
+        ...prev,
+        campaignTemplate: {
+          ...prev.campaignTemplate,
+          subject: template.subject,
+          body: template.body
+        }
+      }));
     }
   };
 
@@ -278,7 +295,38 @@ const ScheduledCampaignForm = ({ campaign, onSuccess, onCancel }) => {
           <h3>Mail İçeriği</h3>
           
           <div className="form-group">
-            <label htmlFor="template">Şablon *</label>
+            <label>Mail Taslağı Seçin</label>
+            <p className="form-hint">Hazır bir taslak seçin veya boş başlayın. Seçtikten sonra içeriği düzenleyebilirsiniz.</p>
+            <div className="email-templates-grid">
+              {emailTemplates.map(template => {
+                const colors = categoryColors[template.category];
+                return (
+                  <div
+                    key={template.id}
+                    className={`email-template-card ${selectedEmailTemplate === template.id ? 'selected' : ''}`}
+                    onClick={() => handleEmailTemplateSelect(template.id)}
+                    style={{
+                      '--card-bg': colors.bg,
+                      '--card-border': colors.border,
+                      '--card-text': colors.text
+                    }}
+                  >
+                    <div className="template-icon">{template.icon}</div>
+                    <div className="template-info">
+                      <span className="template-name">{template.name}</span>
+                      <span className="template-category">{template.categoryLabel}</span>
+                    </div>
+                    {selectedEmailTemplate === template.id && (
+                      <div className="template-check">✓</div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="template">Görsel Şablon *</label>
             <select
               id="template"
               name="template"
