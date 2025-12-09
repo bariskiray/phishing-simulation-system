@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer');
 const Campaign = require('../models/Campaign');
 const Event = require('../models/Event');
+const { addEmailJob, getEmailQueue } = require('./queueService');
 
 // SMTP Transporter oluştur
 const createTransporter = () => {
@@ -491,7 +492,7 @@ const sendEmail = async (campaign, user) => {
   }
 };
 
-// Kampanya mail gönderimi
+// Kampanya mail gönderimi (Queue destekli)
 const sendCampaignEmails = async (campaignId) => {
   try {
     const campaign = await Campaign.findById(campaignId).populate('targetUsers');
@@ -503,29 +504,76 @@ const sendCampaignEmails = async (campaignId) => {
     if (campaign.status === 'sent') {
       throw new Error('Kampanya zaten gönderilmiş');
     }
+
+    // Queue aktif mi kontrol et
+    const emailQueue = getEmailQueue();
     
-    const results = [];
-    
-    for (const user of campaign.targetUsers) {
-      const result = await sendEmail(campaign, user);
-      results.push(result);
+    if (emailQueue) {
+      // QUEUE MODU: Asenkron gönderim
+      console.log(`📬 Queue modu aktif - ${campaign.targetUsers.length} mail sıraya alınıyor...`);
       
-      // Rate limiting için kısa bekleme
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // HTML içeriğini hazırla (template uygula)
+      const htmlContent = applyTemplate(campaign.body, campaign.template, campaign.phishingUrl);
+      
+      const campaignData = {
+        subject: campaign.subject,
+        htmlContent,
+        template: campaign.template,
+        phishingUrl: campaign.phishingUrl
+      };
+      
+      // Her kullanıcı için queue'ya job ekle
+      const jobPromises = campaign.targetUsers.map(user => 
+        addEmailJob(
+          campaignId,
+          user._id.toString(),
+          user.email,
+          campaignData
+        )
+      );
+      
+      await Promise.all(jobPromises);
+      
+      // Kampanya durumunu güncelle
+      campaign.status = 'sent';
+      await campaign.save();
+      
+      console.log(`✅ ${campaign.targetUsers.length} mail sıraya alındı`);
+      
+      return {
+        success: true,
+        queued: campaign.targetUsers.length,
+        mode: 'async',
+        message: `${campaign.targetUsers.length} mail gönderim kuyruğuna alındı`
+      };
+    } else {
+      // FALLBACK MODU: Senkron gönderim (Redis yoksa)
+      console.log(`📧 Fallback modu - ${campaign.targetUsers.length} mail senkron gönderiliyor...`);
+      
+      const results = [];
+      
+      for (const user of campaign.targetUsers) {
+        const result = await sendEmail(campaign, user);
+        results.push(result);
+        
+        // Rate limiting için kısa bekleme
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+      
+      // Kampanya istatistiklerini güncelle
+      const successCount = results.filter(r => r.success).length;
+      campaign.stats.sent = successCount;
+      campaign.status = 'sent';
+      await campaign.save();
+      
+      return {
+        success: true,
+        sent: successCount,
+        failed: results.length - successCount,
+        mode: 'sync',
+        results
+      };
     }
-    
-    // Kampanya istatistiklerini güncelle
-    const successCount = results.filter(r => r.success).length;
-    campaign.stats.sent = successCount;
-    campaign.status = 'sent';
-    await campaign.save();
-    
-    return {
-      success: true,
-      sent: successCount,
-      failed: results.length - successCount,
-      results
-    };
   } catch (error) {
     console.error('Kampanya gönderim hatası:', error.message);
     throw error;
@@ -536,6 +584,7 @@ module.exports = {
   sendEmail,
   sendCampaignEmails,
   addTrackingPixel,
-  makeLinksTrackable
+  makeLinksTrackable,
+  applyTemplate
 };
 

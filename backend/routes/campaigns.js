@@ -3,6 +3,7 @@ const router = express.Router();
 const Campaign = require('../models/Campaign');
 const User = require('../models/User');
 const { sendCampaignEmails } = require('../services/emailService');
+const { getCampaignQueueStatus, getQueueStats } = require('../services/queueService');
 const cron = require('node-cron');
 
 // Aktif cron job'ları saklamak için
@@ -247,6 +248,61 @@ router.post('/:id/stop', async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Kampanya durdurulamadı'
+    });
+  }
+});
+
+// Kampanya queue durumu
+router.get('/:id/queue-status', async (req, res) => {
+  try {
+    const campaignId = req.params.id;
+    
+    // Kampanya var mı kontrol et
+    const campaign = await Campaign.findById(campaignId);
+    if (!campaign) {
+      return res.status(404).json({
+        success: false,
+        message: 'Kampanya bulunamadı'
+      });
+    }
+    
+    // Queue durumunu al
+    const queueStatus = await getCampaignQueueStatus(campaignId);
+    
+    res.json({
+      success: true,
+      data: {
+        campaign: {
+          id: campaign._id,
+          name: campaign.name,
+          status: campaign.status,
+          stats: campaign.stats
+        },
+        queue: queueStatus
+      }
+    });
+  } catch (error) {
+    console.error('Queue durum hatası:', error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Queue durumu alınamadı'
+    });
+  }
+});
+
+// Genel queue istatistikleri
+router.get('/queue/stats', async (req, res) => {
+  try {
+    const stats = await getQueueStats();
+    res.json({
+      success: true,
+      data: stats
+    });
+  } catch (error) {
+    console.error('Queue istatistik hatası:', error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Queue istatistikleri alınamadı'
     });
   }
 });
