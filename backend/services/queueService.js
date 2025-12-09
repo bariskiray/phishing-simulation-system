@@ -5,6 +5,7 @@ const getRedisConfig = () => {
   const redisUrl = process.env.REDIS_URL;
   
   if (!redisUrl) {
+    console.warn('⚠️ REDIS_URL tanımlı değil. Queue sistemi devre dışı.');
     return null;
   }
 
@@ -22,54 +23,40 @@ const getRedisConfig = () => {
   return {};
 };
 
-// Email Queue - lazy initialization
+// Email Queue oluştur
 let emailQueue = null;
-let workerStarted = false;
 
-// Queue'nun aktif olup olmadığını kontrol et
-const isQueueAvailable = () => {
-  return !!process.env.REDIS_URL;
-};
-
-// Lazy queue başlatma - sadece gerektiğinde çağrılır
-const getOrCreateQueue = () => {
-  // Zaten varsa döndür
-  if (emailQueue) {
-    return emailQueue;
-  }
-
+const initializeQueue = () => {
   const redisUrl = process.env.REDIS_URL;
   
   if (!redisUrl) {
-    console.warn('⚠️ REDIS_URL tanımlı değil. Queue sistemi devre dışı.');
+    console.warn('⚠️ REDIS_URL tanımlı değil. Email queue başlatılamadı.');
     return null;
   }
 
   try {
-    console.log('🚀 Email Queue başlatılıyor (lazy init)...');
-    
     const redisConfig = getRedisConfig();
     
     emailQueue = new Queue('email-sending', redisUrl, {
       ...redisConfig,
       defaultJobOptions: {
-        attempts: 3,
+        attempts: 3, // 3 deneme hakkı
         backoff: {
           type: 'exponential',
-          delay: 2000
+          delay: 2000 // 2s, 4s, 8s
         },
-        removeOnComplete: 50,
-        removeOnFail: 20
+        removeOnComplete: 100, // Son 100 başarılı job'ı tut
+        removeOnFail: 50 // Son 50 başarısız job'ı tut
       },
       limiter: {
-        max: 50,
-        duration: 60000
+        max: 50, // Maksimum 50 job
+        duration: 60000 // dakikada (rate limiting)
       },
       settings: {
-        stalledInterval: 60000, // 60 saniye - daha az polling
-        lockDuration: 30000,
-        lockRenewTime: 15000,
-        drainDelay: 5
+        stalledInterval: 30000, // 30 saniye (varsayılan 30s)
+        lockDuration: 30000, // 30 saniye
+        lockRenewTime: 15000, // 15 saniye
+        drainDelay: 5 // 5ms
       }
     });
 
@@ -88,8 +75,6 @@ const getOrCreateQueue = () => {
 
     emailQueue.on('completed', (job, result) => {
       console.log(`✅ Job #${job.id} tamamlandı - ${job.data.userEmail}`);
-      // Tüm işler bittiyse auto-shutdown zamanlayıcısını başlat
-      checkAndScheduleShutdown();
     });
 
     emailQueue.on('failed', (job, error) => {
@@ -108,93 +93,19 @@ const getOrCreateQueue = () => {
   }
 };
 
-// Auto-shutdown: Tüm işler bitince 2 dakika sonra queue'yu kapat
-let shutdownTimer = null;
-
-const checkAndScheduleShutdown = async () => {
-  if (!emailQueue) return;
-  
-  try {
-    const [waiting, active, delayed] = await Promise.all([
-      emailQueue.getWaitingCount(),
-      emailQueue.getActiveCount(),
-      emailQueue.getDelayedCount()
-    ]);
-    
-    const pendingJobs = waiting + active + delayed;
-    
-    if (pendingJobs === 0) {
-      // Önceki timer varsa iptal et
-      if (shutdownTimer) {
-        clearTimeout(shutdownTimer);
-      }
-      
-      // 2 dakika sonra queue'yu kapat
-      console.log('⏱️ Tüm işler tamamlandı. 2 dakika sonra queue kapatılacak...');
-      shutdownTimer = setTimeout(async () => {
-        if (emailQueue) {
-          const [w, a, d] = await Promise.all([
-            emailQueue.getWaitingCount(),
-            emailQueue.getActiveCount(),
-            emailQueue.getDelayedCount()
-          ]);
-          
-          // Hala boşsa kapat
-          if (w + a + d === 0) {
-            console.log('😴 Queue boşta, kapatılıyor...');
-            await emailQueue.close();
-            emailQueue = null;
-            workerStarted = false;
-            console.log('✅ Queue kapatıldı. Sonraki kampanyada tekrar başlayacak.');
-          }
-        }
-      }, 2 * 60 * 1000); // 2 dakika
-    } else {
-      // İş varsa timer'ı iptal et
-      if (shutdownTimer) {
-        clearTimeout(shutdownTimer);
-        shutdownTimer = null;
-      }
-    }
-  } catch (error) {
-    console.error('Shutdown check hatası:', error.message);
-  }
-};
-
-// Worker'ı başlat (lazy)
-const ensureWorkerStarted = () => {
-  if (workerStarted || !emailQueue) return;
-  
-  const { startEmailWorker } = require('../workers/emailWorker');
-  startEmailWorker();
-  workerStarted = true;
-};
-
 // Queue'ya email job'ı ekle
 const addEmailJob = async (campaignId, userId, userEmail, campaignData) => {
-  // Lazy init: Queue yoksa oluştur
-  const queue = getOrCreateQueue();
-  
-  if (!queue) {
-    throw new Error('Email queue başlatılamadı. REDIS_URL kontrol edin.');
-  }
-  
-  // Worker'ı başlat (henüz başlamadıysa)
-  ensureWorkerStarted();
-  
-  // Auto-shutdown timer'ı iptal et (yeni iş geldi)
-  if (shutdownTimer) {
-    clearTimeout(shutdownTimer);
-    shutdownTimer = null;
+  if (!emailQueue) {
+    throw new Error('Email queue başlatılmamış. REDIS_URL kontrol edin.');
   }
 
-  const job = await queue.add({
+  const job = await emailQueue.add({
     campaignId,
     userId,
     userEmail,
     campaignData
   }, {
-    jobId: `${campaignId}-${userId}`
+    jobId: `${campaignId}-${userId}` // Unique job ID
   });
 
   return job;
@@ -205,7 +116,7 @@ const getQueueStats = async () => {
   if (!emailQueue) {
     return {
       isActive: false,
-      message: 'Queue başlatılmamış (lazy mode - kampanya gönderildiğinde başlar)'
+      message: 'Queue başlatılmamış'
     };
   }
 
@@ -267,22 +178,14 @@ const clearQueue = async () => {
 
 // Queue'yu kapat (graceful shutdown)
 const closeQueue = async () => {
-  if (shutdownTimer) {
-    clearTimeout(shutdownTimer);
-    shutdownTimer = null;
-  }
-  
   if (emailQueue) {
     await emailQueue.close();
-    emailQueue = null;
-    workerStarted = false;
     console.log('👋 Email queue kapatıldı');
   }
 };
 
 module.exports = {
-  isQueueAvailable,
-  getOrCreateQueue,
+  initializeQueue,
   getEmailQueue: () => emailQueue,
   addEmailJob,
   getQueueStats,

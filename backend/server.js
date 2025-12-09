@@ -4,7 +4,8 @@ const cors = require('cors');
 const connectDB = require('./config/database');
 const { initializeScheduledCampaigns } = require('./services/schedulerService');
 const { protect } = require('./middleware/auth');
-const { isQueueAvailable, getEmailQueue, getQueueStats, getOrCreateQueue } = require('./services/queueService');
+const { initializeQueue, getEmailQueue, getQueueStats } = require('./services/queueService');
+const { startEmailWorker } = require('./workers/emailWorker');
 
 // Bull Board imports
 const { createBullBoard } = require('@bull-board/api');
@@ -16,41 +17,36 @@ const app = express();
 // MongoDB bağlantısı
 connectDB();
 
-// NOT: Queue artık lazy başlatılıyor - kampanya gönderildiğinde otomatik başlar
-// initializeQueue() kaldırıldı - Redis komutlarını azaltmak için
+// Email Queue başlat
+initializeQueue();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Bull Board Dashboard - Lazy setup
-let bullBoardSetup = false;
-const setupBullBoard = () => {
-  if (bullBoardSetup) return;
+// Bull Board Dashboard (Queue varsa)
+const emailQueue = getEmailQueue();
+if (emailQueue) {
+  const serverAdapter = new ExpressAdapter();
+  serverAdapter.setBasePath('/admin/queues');
   
-  const queue = getEmailQueue();
-  if (queue) {
-    const serverAdapter = new ExpressAdapter();
-    serverAdapter.setBasePath('/admin/queues');
-    
-    createBullBoard({
-      queues: [new BullAdapter(queue)],
-      serverAdapter
-    });
-    
-    app.use('/admin/queues', protect, serverAdapter.getRouter());
-    bullBoardSetup = true;
-    console.log('📊 Bull Board: /admin/queues adresinde aktif');
-  }
-};
+  createBullBoard({
+    queues: [new BullAdapter(emailQueue)],
+    serverAdapter
+  });
+  
+  // Bull Board route (auth ile korumalı)
+  app.use('/admin/queues', protect, serverAdapter.getRouter());
+  console.log('📊 Bull Board: /admin/queues adresinde aktif');
+}
 
 // Public Routes (authentication gerektirmeyen)
 app.get('/', (req, res) => {
   res.json({ message: 'Phishing Simülasyon Sistemi API' });
 });
 
-// Queue durumu endpoint'i
+// Queue durumu endpoint'i (public - health check için)
 app.get('/api/queue/status', async (req, res) => {
   try {
     const stats = await getQueueStats();
@@ -58,18 +54,6 @@ app.get('/api/queue/status', async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
-});
-
-// Bull Board'a manuel erişim - queue yoksa başlat
-app.get('/admin/queues', protect, (req, res, next) => {
-  if (!bullBoardSetup) {
-    // Queue'yu başlat ve Bull Board'u kur
-    const queue = getOrCreateQueue();
-    if (queue) {
-      setupBullBoard();
-    }
-  }
-  next();
 });
 
 // Auth routes (public)
@@ -99,11 +83,9 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, async () => {
   console.log(`Server ${PORT} portunda çalışıyor...`);
   
-  // Queue durumunu bildir
-  if (isQueueAvailable()) {
-    console.log('📬 Email Queue: REDIS_URL tanımlı - kampanya gönderiminde lazy başlayacak');
-  } else {
-    console.log('📧 Email Queue: REDIS_URL yok - sync mod aktif');
+  // Email Worker'ı başlat (Queue varsa)
+  if (getEmailQueue()) {
+    startEmailWorker();
   }
   
   // Zamanlanmış kampanyaları başlat
