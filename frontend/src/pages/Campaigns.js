@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getCampaigns, createCampaign, deleteCampaign, sendCampaign, getUsers } from '../services/api';
+import { emailTemplates, categoryColors } from '../data/emailTemplates';
 import './Campaigns.css';
 
 function Campaigns() {
@@ -11,6 +12,7 @@ function Campaigns() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [sendingCampaignId, setSendingCampaignId] = useState(null);
+  const [selectedEmailTemplate, setSelectedEmailTemplate] = useState('empty');
   const [formData, setFormData] = useState({
     name: '',
     subject: '',
@@ -70,7 +72,11 @@ function Campaigns() {
       setSendingCampaignId(id);
       setError('');
       const response = await sendCampaign(id);
-      setSuccess(`Kampanya başarıyla gönderildi! ${response.data.data.sent} e-posta gönderildi.`);
+      const result = response.data.data;
+      // Queue modu (async) veya sync modu için uygun mesaj
+      const emailCount = result.queued || result.sent || 0;
+      const modeText = result.mode === 'async' ? 'kuyruğa alındı' : 'gönderildi';
+      setSuccess(`Kampanya başarıyla ${modeText}! ${emailCount} e-posta ${modeText}.`);
       await loadData();
       setSendingCampaignId(null);
     } catch (error) {
@@ -122,7 +128,20 @@ function Campaigns() {
     }
   };
 
+  const handleEmailTemplateSelect = (templateId) => {
+    setSelectedEmailTemplate(templateId);
+    const template = emailTemplates.find(t => t.id === templateId);
+    if (template) {
+      setFormData({
+        ...formData,
+        subject: template.subject,
+        body: template.body
+      });
+    }
+  };
+
   const resetForm = () => {
+    setSelectedEmailTemplate('empty');
     setFormData({
       name: '',
       subject: '',
@@ -243,6 +262,37 @@ function Campaigns() {
               <button className="modal-close" onClick={() => setShowModal(false)}>×</button>
             </div>
             <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label>Mail Taslağı Seçin</label>
+                <p className="form-hint">Hazır bir taslak seçin veya boş başlayın. Seçtikten sonra içeriği düzenleyebilirsiniz.</p>
+                <div className="email-templates-grid">
+                  {emailTemplates.map(template => {
+                    const colors = categoryColors[template.category];
+                    return (
+                      <div
+                        key={template.id}
+                        className={`email-template-card ${selectedEmailTemplate === template.id ? 'selected' : ''}`}
+                        onClick={() => handleEmailTemplateSelect(template.id)}
+                        style={{
+                          '--card-bg': colors.bg,
+                          '--card-border': colors.border,
+                          '--card-text': colors.text
+                        }}
+                      >
+                        <div className="template-icon">{template.icon}</div>
+                        <div className="template-info">
+                          <span className="template-name">{template.name}</span>
+                          <span className="template-category">{template.categoryLabel}</span>
+                        </div>
+                        {selectedEmailTemplate === template.id && (
+                          <div className="template-check">✓</div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
               <div className="form-group">
                 <label>Kampanya Adı *</label>
                 <input

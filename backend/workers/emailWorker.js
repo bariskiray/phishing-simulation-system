@@ -61,7 +61,8 @@ const startEmailWorker = () => {
     return;
   }
 
-  emailQueue.process(async (job) => {
+  // Concurrency: 1 - tek seferde 1 job işle (Redis komutlarını azaltır)
+  emailQueue.process(1, async (job) => {
     const { campaignId, userId, userEmail, campaignData } = job.data;
     
     console.log(`📧 Mail gönderiliyor: ${userEmail} (Job #${job.id})`);

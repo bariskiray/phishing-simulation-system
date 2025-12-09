@@ -51,6 +51,12 @@ const initializeQueue = () => {
       limiter: {
         max: 50, // Maksimum 50 job
         duration: 60000 // dakikada (rate limiting)
+      },
+      settings: {
+        stalledInterval: 30000, // 30 saniye (varsayılan 30s)
+        lockDuration: 30000, // 30 saniye
+        lockRenewTime: 15000, // 15 saniye
+        drainDelay: 5 // 5ms
       }
     });
 
