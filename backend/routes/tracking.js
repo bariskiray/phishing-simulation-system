@@ -17,13 +17,12 @@ const isBotOrPrefetch = (userAgent) => {
   
   const userAgentLower = userAgent.toLowerCase();
   
-  // Bilinen bot, crawler ve email client proxy patternleri
+  // Bilinen bot, crawler patternleri (Email client proxy'leri HARİÇ - onlar meşru)
   const botPatterns = [
-    'googleimageproxy',      // Gmail görselleri proxy üzerinden yükler
-    'outlookimageproxy',     // Outlook görselleri proxy üzerinden yükler
-    'yahooimageproxy',       // Yahoo görselleri proxy üzerinden yükler
-    'apple mail',            // Apple Mail bazı durumlarda prefetch yapar
-    'protonmail imageproxy', // ProtonMail proxy'si
+    // NOT: Gmail/Outlook/Yahoo proxy'leri beyaz listede - normal email açılmaları
+    // 'googleimageproxy',   // Gmail - KABUL EDİLİYOR
+    // 'outlookimageproxy',  // Outlook - KABUL EDİLİYOR
+    // 'yahooimageproxy',    // Yahoo - KABUL EDİLİYOR
     'bot',                   // Genel bot pattern
     'crawler',               // Genel crawler pattern
     'spider',                // Genel spider pattern
@@ -36,9 +35,9 @@ const isBotOrPrefetch = (userAgent) => {
     'curl',                  // curl tool
     'python-requests',       // Python requests library
     'axios',                 // Axios library
-    'http',                  // Generic HTTP client
     'scanner',               // Security scanners
-    'monitoring'             // Monitoring servisleri
+    'monitoring',            // Monitoring servisleri
+    'headless'               // Headless browser'lar
   ];
   
   // Pattern matching ile bot kontrolü
