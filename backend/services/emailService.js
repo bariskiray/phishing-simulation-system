@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 const Campaign = require('../models/Campaign');
 const Event = require('../models/Event');
-const { addEmailJob, getEmailQueue } = require('./queueService');
+const { addEmailJob, isQueueAvailable } = require('./queueService');
 
 // SMTP Transporter oluştur
 const createTransporter = () => {
@@ -505,10 +505,10 @@ const sendCampaignEmails = async (campaignId) => {
       throw new Error('Kampanya zaten gönderilmiş');
     }
 
-    // Queue aktif mi kontrol et
-    const emailQueue = getEmailQueue();
+    // Queue kullanılabilir mi kontrol et (REDIS_URL tanımlı mı)
+    const queueAvailable = isQueueAvailable();
     
-    if (emailQueue) {
+    if (queueAvailable) {
       // QUEUE MODU: Asenkron gönderim
       console.log(`📬 Queue modu aktif - ${campaign.targetUsers.length} mail sıraya alınıyor...`);
       
