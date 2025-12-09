@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 const Campaign = require('../models/Campaign');
 const Event = require('../models/Event');
-const { addEmailJob, getEmailQueue } = require('./queueService');
+const { addEmailJob, hasQueue, createQueue, startProcessing, getEmailQueue } = require('./queueService');
 
 // SMTP Transporter oluştur
 const createTransporter = () => {
@@ -492,7 +492,59 @@ const sendEmail = async (campaign, user) => {
   }
 };
 
-// Kampanya mail gönderimi (Queue destekli)
+// Email işleme fonksiyonu (worker için)
+const processEmailJob = async (job) => {
+  const { campaignId, userId, userEmail, campaignData } = job.data;
+  
+  console.log(`📧 Mail gönderiliyor: ${userEmail}`);
+  
+  try {
+    const User = require('../models/User');
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new Error(`Kullanıcı bulunamadı: ${userId}`);
+    }
+
+    const campaign = await Campaign.findById(campaignId);
+    if (!campaign) {
+      throw new Error(`Kampanya bulunamadı: ${campaignId}`);
+    }
+
+    const transporter = createTransporter();
+    
+    let htmlContent = campaignData.htmlContent;
+    htmlContent = addTrackingPixel(htmlContent, campaignId, userId);
+    htmlContent = makeLinksTrackable(htmlContent, campaignId, userId);
+    
+    const mailOptions = {
+      from: process.env.SMTP_USER,
+      to: user.email,
+      subject: campaignData.subject,
+      html: htmlContent
+    };
+    
+    await transporter.sendMail(mailOptions);
+    
+    await Event.create({
+      userId: user._id,
+      campaignId: campaign._id,
+      type: 'sent',
+      timestamp: new Date()
+    });
+    
+    await Campaign.findByIdAndUpdate(campaignId, {
+      $inc: { 'stats.sent': 1 }
+    });
+    
+    console.log(`✅ Mail gönderildi: ${userEmail}`);
+    return { success: true, email: userEmail };
+  } catch (error) {
+    console.error(`❌ Mail hatası (${userEmail}):`, error.message);
+    throw error;
+  }
+};
+
+// Kampanya mail gönderimi (On-demand Queue)
 const sendCampaignEmails = async (campaignId) => {
   try {
     const campaign = await Campaign.findById(campaignId).populate('targetUsers');
@@ -505,14 +557,18 @@ const sendCampaignEmails = async (campaignId) => {
       throw new Error('Kampanya zaten gönderilmiş');
     }
 
-    // Queue aktif mi kontrol et
-    const emailQueue = getEmailQueue();
-    
-    if (emailQueue) {
-      // QUEUE MODU: Asenkron gönderim
-      console.log(`📬 Queue modu aktif - ${campaign.targetUsers.length} mail sıraya alınıyor...`);
+    // Redis var mı kontrol et
+    if (hasQueue()) {
+      // ON-DEMAND QUEUE MODU
+      console.log(`📬 On-demand Queue - ${campaign.targetUsers.length} mail için Redis başlatılıyor...`);
       
-      // HTML içeriğini hazırla (template uygula)
+      // Queue'yu oluştur (henüz yoksa)
+      createQueue();
+      
+      // Worker'ı başlat
+      startProcessing(processEmailJob);
+      
+      // HTML içeriğini hazırla
       const htmlContent = applyTemplate(campaign.body, campaign.template, campaign.phishingUrl);
       
       const campaignData = {
@@ -523,28 +579,26 @@ const sendCampaignEmails = async (campaignId) => {
       };
       
       // Her kullanıcı için queue'ya job ekle
-      const jobPromises = campaign.targetUsers.map(user => 
-        addEmailJob(
+      for (const user of campaign.targetUsers) {
+        await addEmailJob(
           campaignId,
           user._id.toString(),
           user.email,
           campaignData
-        )
-      );
-      
-      await Promise.all(jobPromises);
+        );
+      }
       
       // Kampanya durumunu güncelle
       campaign.status = 'sent';
       await campaign.save();
       
-      console.log(`✅ ${campaign.targetUsers.length} mail sıraya alındı`);
+      console.log(`✅ ${campaign.targetUsers.length} mail sıraya alındı - İşlem başladı`);
       
       return {
         success: true,
         queued: campaign.targetUsers.length,
         mode: 'async',
-        message: `${campaign.targetUsers.length} mail gönderim kuyruğuna alındı`
+        message: `${campaign.targetUsers.length} mail gönderiliyor (Redis otomatik kapanacak)`
       };
     } else {
       // FALLBACK MODU: Senkron gönderim (Redis yoksa)
