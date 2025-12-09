@@ -42,7 +42,31 @@ const isBotOrPrefetch = (userAgent) => {
   ];
   
   // Pattern matching ile bot kontrolü
-  return botPatterns.some(pattern => userAgentLower.includes(pattern));
+  if (botPatterns.some(pattern => userAgentLower.includes(pattern))) {
+    return true;
+  }
+  
+  // Eski tarayıcı versiyonları kontrolü (Gmail/email scanning bot'ları eski UA kullanır)
+  const browserVersionPatterns = [
+    { name: 'chrome', regex: /chrome\/(\d+)/i, minVersion: 90 },
+    { name: 'firefox', regex: /firefox\/(\d+)/i, minVersion: 90 },
+    { name: 'edge', regex: /edge\/(\d+)/i, minVersion: 90 },
+    { name: 'edg', regex: /edg\/(\d+)/i, minVersion: 90 }, // Yeni Edge
+    { name: 'safari', regex: /version\/(\d+).*safari/i, minVersion: 14 }
+  ];
+  
+  for (const browser of browserVersionPatterns) {
+    const match = userAgent.match(browser.regex);
+    if (match) {
+      const version = parseInt(match[1], 10);
+      if (version < browser.minVersion) {
+        console.log(`🤖 Eski tarayıcı tespit edildi: ${browser.name} v${version} (min: ${browser.minVersion})`);
+        return true; // Eski tarayıcı = muhtemelen bot
+      }
+    }
+  }
+  
+  return false;
 };
 
 // Zaman bazlı validasyon - Gönderimden çok kısa süre sonraki açılmaları filtreler
