@@ -3,6 +3,7 @@ const router = express.Router();
 const Campaign = require('../models/Campaign');
 const Event = require('../models/Event');
 const User = require('../models/User');
+const { generatePDF, generateCSV } = require('../services/exportService');
 
 // Kampanya raporu
 router.get('/:campaignId', async (req, res) => {
@@ -279,6 +280,191 @@ router.get('/user/:userId', async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Kullanıcı raporu oluşturulamadı'
+    });
+  }
+});
+
+// PDF Export
+router.get('/:campaignId/export/pdf', async (req, res) => {
+  try {
+    const { campaignId } = req.params;
+    
+    const campaign = await Campaign.findById(campaignId)
+      .populate('targetUsers', 'name email group');
+    
+    if (!campaign) {
+      return res.status(404).json({
+        success: false,
+        message: 'Kampanya bulunamadı'
+      });
+    }
+    
+    // Event istatistikleri
+    const events = await Event.find({ campaignId }).populate('userId', 'name email');
+    
+    // Kullanıcı bazlı analiz
+    const userStats = {};
+    campaign.targetUsers.forEach(user => {
+      userStats[user._id] = {
+        user: {
+          name: user.name,
+          email: user.email,
+          group: user.group
+        },
+        sent: false,
+        opened: false,
+        clicked: false,
+        openCount: 0,
+        clickCount: 0,
+        events: []
+      };
+    });
+    
+    events.forEach(event => {
+      const userId = event.userId._id.toString();
+      if (userStats[userId]) {
+        userStats[userId].events.push({
+          type: event.type,
+          timestamp: event.timestamp
+        });
+        
+        if (event.type === 'sent') {
+          userStats[userId].sent = true;
+        } else if (event.type === 'open') {
+          userStats[userId].opened = true;
+          userStats[userId].openCount++;
+        } else if (event.type === 'click') {
+          userStats[userId].clicked = true;
+          userStats[userId].clickCount++;
+        }
+      }
+    });
+    
+    // Özet istatistikler
+    const summary = {
+      totalTargets: campaign.targetUsers.length,
+      sent: campaign.stats.sent,
+      opened: campaign.stats.opened,
+      clicked: campaign.stats.clicked,
+      openRate: campaign.stats.sent > 0 
+        ? ((campaign.stats.opened / campaign.stats.sent) * 100).toFixed(2) 
+        : 0,
+      clickRate: campaign.stats.sent > 0 
+        ? ((campaign.stats.clicked / campaign.stats.sent) * 100).toFixed(2) 
+        : 0,
+      clickThroughRate: campaign.stats.opened > 0
+        ? ((campaign.stats.clicked / campaign.stats.opened) * 100).toFixed(2)
+        : 0
+    };
+    
+    // Risk seviyesi hesaplama
+    const riskUsers = Object.values(userStats).filter(u => u.clicked);
+    const riskLevel = riskUsers.length / campaign.targetUsers.length;
+    
+    let riskAssessment = 'Düşük';
+    if (riskLevel > 0.5) {
+      riskAssessment = 'Yüksek';
+    } else if (riskLevel > 0.25) {
+      riskAssessment = 'Orta';
+    }
+    
+    const reportData = {
+      campaign: {
+        id: campaign._id,
+        name: campaign.name,
+        subject: campaign.subject,
+        status: campaign.status,
+        sendDate: campaign.sendDate,
+        createdAt: campaign.createdAt
+      },
+      summary,
+      riskAssessment,
+      riskLevel: (riskLevel * 100).toFixed(2) + '%',
+      userStats: Object.values(userStats)
+    };
+    
+    const pdfBuffer = await generatePDF(reportData);
+    
+    const fileName = `kampanya-raporu-${campaign.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-${Date.now()}.pdf`;
+    
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+    res.setHeader('Content-Length', pdfBuffer.length);
+    
+    res.send(pdfBuffer);
+  } catch (error) {
+    console.error('PDF export hatası:', error.message);
+    res.status(500).json({
+      success: false,
+      message: 'PDF oluşturulamadı'
+    });
+  }
+});
+
+// CSV Export
+router.get('/:campaignId/export/csv', async (req, res) => {
+  try {
+    const { campaignId } = req.params;
+    
+    const campaign = await Campaign.findById(campaignId)
+      .populate('targetUsers', 'name email group');
+    
+    if (!campaign) {
+      return res.status(404).json({
+        success: false,
+        message: 'Kampanya bulunamadı'
+      });
+    }
+    
+    // Event istatistikleri
+    const events = await Event.find({ campaignId }).populate('userId', 'name email');
+    
+    // Kullanıcı bazlı analiz
+    const userStats = {};
+    campaign.targetUsers.forEach(user => {
+      userStats[user._id] = {
+        user: {
+          name: user.name,
+          email: user.email,
+          group: user.group
+        },
+        sent: false,
+        opened: false,
+        clicked: false,
+        openCount: 0,
+        clickCount: 0
+      };
+    });
+    
+    events.forEach(event => {
+      const userId = event.userId._id.toString();
+      if (userStats[userId]) {
+        if (event.type === 'sent') {
+          userStats[userId].sent = true;
+        } else if (event.type === 'open') {
+          userStats[userId].opened = true;
+          userStats[userId].openCount++;
+        } else if (event.type === 'click') {
+          userStats[userId].clicked = true;
+          userStats[userId].clickCount++;
+        }
+      }
+    });
+    
+    const csvData = generateCSV(Object.values(userStats), campaign);
+    
+    const fileName = `kampanya-raporu-${campaign.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-${Date.now()}.csv`;
+    
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+    
+    // BOM for Excel UTF-8 support
+    res.send('\ufeff' + csvData);
+  } catch (error) {
+    console.error('CSV export hatası:', error.message);
+    res.status(500).json({
+      success: false,
+      message: 'CSV oluşturulamadı'
     });
   }
 });

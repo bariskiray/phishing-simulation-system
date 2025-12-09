@@ -69,6 +69,12 @@ export const getCampaignEvents = (id, type) => {
 };
 export const getUserReport = (id) => api.get(`/reports/user/${id}`);
 
+// Export API
+export const exportCampaignPDF = (id) => 
+  api.get(`/reports/${id}/export/pdf`, { responseType: 'blob' });
+export const exportCampaignCSV = (id) => 
+  api.get(`/reports/${id}/export/csv`, { responseType: 'blob' });
+
 // Scheduled Campaigns API
 export const getScheduledCampaigns = () => api.get('/scheduled-campaigns');
 export const getScheduledCampaign = (id) => api.get(`/scheduled-campaigns/${id}`);

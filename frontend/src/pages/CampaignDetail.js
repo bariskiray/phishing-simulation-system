@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getCampaign, getCampaignReport } from '../services/api';
+import { getCampaign, getCampaignReport, exportCampaignPDF, exportCampaignCSV } from '../services/api';
 import './CampaignDetail.css';
 
 function CampaignDetail() {
@@ -8,10 +8,58 @@ function CampaignDetail() {
   const [campaign, setCampaign] = useState(null);
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [exportingPDF, setExportingPDF] = useState(false);
+  const [exportingCSV, setExportingCSV] = useState(false);
 
   useEffect(() => {
     loadCampaignData();
   }, [id]);
+
+  const handleExportPDF = async () => {
+    try {
+      setExportingPDF(true);
+      const response = await exportCampaignPDF(id);
+      
+      // Blob'dan dosya indirme
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `kampanya-raporu-${campaign.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('PDF export hatası:', error);
+      alert('PDF oluşturulurken bir hata oluştu');
+    } finally {
+      setExportingPDF(false);
+    }
+  };
+
+  const handleExportCSV = async () => {
+    try {
+      setExportingCSV(true);
+      const response = await exportCampaignCSV(id);
+      
+      // Blob'dan dosya indirme
+      const blob = new Blob([response.data], { type: 'text/csv;charset=utf-8' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `kampanya-raporu-${campaign.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('CSV export hatası:', error);
+      alert('CSV oluşturulurken bir hata oluştu');
+    } finally {
+      setExportingCSV(false);
+    }
+  };
 
   const loadCampaignData = async () => {
     try {
@@ -47,9 +95,27 @@ function CampaignDetail() {
           <h1>{campaign.name}</h1>
           <p>{campaign.subject}</p>
         </div>
-        <span className={`badge badge-${getStatusColor(campaign.status)}`}>
-          {getStatusText(campaign.status)}
-        </span>
+        <div className="header-actions">
+          <div className="export-buttons">
+            <button 
+              className="btn btn-export btn-pdf"
+              onClick={handleExportPDF}
+              disabled={exportingPDF}
+            >
+              {exportingPDF ? 'Oluşturuluyor...' : '📄 PDF İndir'}
+            </button>
+            <button 
+              className="btn btn-export btn-csv"
+              onClick={handleExportCSV}
+              disabled={exportingCSV}
+            >
+              {exportingCSV ? 'Oluşturuluyor...' : '📊 CSV İndir'}
+            </button>
+          </div>
+          <span className={`badge badge-${getStatusColor(campaign.status)}`}>
+            {getStatusText(campaign.status)}
+          </span>
+        </div>
       </div>
 
       <div className="stats-overview">
