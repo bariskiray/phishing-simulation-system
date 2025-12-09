@@ -64,8 +64,8 @@ const isValidOpenTime = async (campaignId, userId) => {
     const sentTime = new Date(sentEvent.timestamp);
     const timeDiffSeconds = (now - sentTime) / 1000;
     
-    // İlk 5 saniye içinde açılma = otomatik prefetch olabilir
-    const MIN_VALID_TIME_SECONDS = 5;
+    // İlk 1 saniye içinde açılma = otomatik prefetch olabilir
+    const MIN_VALID_TIME_SECONDS = 1;
     
     if (timeDiffSeconds < MIN_VALID_TIME_SECONDS) {
       console.log(`🤖 Çok erken açılma tespit edildi (${timeDiffSeconds.toFixed(2)}s) - Muhtemelen prefetch`);
