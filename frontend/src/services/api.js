@@ -9,6 +9,39 @@ const api = axios.create({
   },
 });
 
+// Request interceptor - Her isteğe JWT token ekle
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Response interceptor - 401 hatalarını yakala
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response?.status === 401) {
+      // Token geçersiz veya süresi dolmuş
+      localStorage.removeItem('token');
+      
+      // Login sayfasında değilsek yönlendir
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 // Users API
 export const getUsers = () => api.get('/users');
 export const getUser = (id) => api.get(`/users/${id}`);
@@ -47,4 +80,3 @@ export const stopScheduledCampaign = (id) => api.post(`/scheduled-campaigns/${id
 export const executeScheduledCampaign = (id) => api.post(`/scheduled-campaigns/${id}/execute`);
 
 export default api;
-

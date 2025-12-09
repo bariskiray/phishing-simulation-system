@@ -11,6 +11,7 @@ Güvenlik farkındalığı eğitimi için kapsamlı phishing simülasyon ve anal
 - **Risk Analizi**: Kullanıcı risk seviyesi belirleme
 - **Modern Dashboard**: React tabanlı kullanıcı dostu arayüz
 - **Periyodik Kampanyalar**: Otomatik tekrarlayan kampanya desteği
+- **JWT Authentication**: Güvenli admin girişi ve oturum yönetimi
 
 ## 🏗️ Teknoloji Stack
 
@@ -19,6 +20,8 @@ Güvenlik farkındalığı eğitimi için kapsamlı phishing simülasyon ve anal
 - MongoDB & Mongoose
 - Nodemailer (SMTP)
 - Node-cron (periyodik görevler)
+- JWT (JSON Web Token) Authentication
+- bcryptjs (şifre hashleme)
 
 ### Frontend
 - React 18
@@ -90,6 +93,10 @@ SMTP_PASS=sizin-uygulama-sifreniz
 # URLs
 FRONTEND_URL=http://localhost:3000
 TRACKING_URL=http://localhost:5000
+
+# JWT Authentication
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+JWT_EXPIRE=7d
 ```
 
 **Not**: Gmail kullanıyorsanız, [App Password](https://support.google.com/accounts/answer/185833) oluşturmanız gerekir.
@@ -124,6 +131,17 @@ npm run dev:full
 ```
 
 ## 📖 Kullanım Kılavuzu
+
+### 0. İlk Giriş (Admin Kaydı)
+
+Sistem ilk kez çalıştırıldığında:
+1. `http://localhost:3000` adresine gidin
+2. Henüz admin hesabı olmadığı için kayıt formu görünecektir
+3. Kullanıcı adı, e-posta ve şifre belirleyin
+4. "Hesap Oluştur" butonuna tıklayın
+5. Artık bu bilgilerle giriş yapabilirsiniz
+
+**Not**: Güvenlik için sadece bir admin hesabı oluşturulabilir.
 
 ### 1. Kullanıcı Ekleme
 
@@ -166,7 +184,15 @@ npm run dev:full
 
 ## 📊 API Endpoints
 
-### Kullanıcılar‚
+### Authentication
+- `POST /api/auth/register` - İlk admin kaydı (sadece admin yoksa)
+- `POST /api/auth/login` - Admin girişi (JWT token döner)
+- `GET /api/auth/me` - Mevcut kullanıcı bilgisi (token gerekli)
+- `GET /api/auth/check` - Admin var mı kontrol
+
+**Not**: Aşağıdaki tüm endpoint'ler JWT token gerektirir. Header'a `Authorization: Bearer <token>` ekleyin.
+
+### Kullanıcılar
 - `GET /api/users` - Tüm kullanıcıları listele
 - `POST /api/users` - Yeni kullanıcı ekle
 - `DELETE /api/users/:id` - Kullanıcı sil

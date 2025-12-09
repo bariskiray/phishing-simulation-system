@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/database');
 const { initializeScheduledCampaigns } = require('./services/schedulerService');
+const { protect } = require('./middleware/auth');
 
 const app = express();
 
@@ -14,17 +15,22 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
+// Public Routes (authentication gerektirmeyen)
 app.get('/', (req, res) => {
   res.json({ message: 'Phishing Simülasyon Sistemi API' });
 });
 
-// Routes (sonra eklenecek)
-app.use('/api/users', require('./routes/users'));
-app.use('/api/campaigns', require('./routes/campaigns'));
-app.use('/api/scheduled-campaigns', require('./routes/scheduledCampaigns'));
-app.use('/api/reports', require('./routes/reports'));
+// Auth routes (public)
+app.use('/api/auth', require('./routes/auth'));
+
+// Tracking routes (public - email tracking için)
 app.use('/track', require('./routes/tracking'));
+
+// Protected Routes (authentication gerektiren)
+app.use('/api/users', protect, require('./routes/users'));
+app.use('/api/campaigns', protect, require('./routes/campaigns'));
+app.use('/api/scheduled-campaigns', protect, require('./routes/scheduledCampaigns'));
+app.use('/api/reports', protect, require('./routes/reports'));
 
 // Error handler middleware
 app.use((err, req, res, next) => {
@@ -48,4 +54,3 @@ app.listen(PORT, async () => {
     console.error('Zamanlanmış kampanyalar başlatılamadı:', error.message);
   }
 });
-

@@ -1,12 +1,20 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import './Layout.css';
 
 function Layout({ children }) {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
   const isActive = (path) => {
     return location.pathname === path ? 'active' : '';
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
   };
 
   return (
@@ -48,6 +56,17 @@ function Layout({ children }) {
             </Link>
           </li>
         </ul>
+        
+        <div className="sidebar-footer">
+          <div className="user-info">
+            <span className="user-icon">👤</span>
+            <span className="user-name">{user?.username || 'Admin'}</span>
+          </div>
+          <button onClick={handleLogout} className="logout-button">
+            <span className="icon">🚪</span>
+            Çıkış Yap
+          </button>
+        </div>
       </nav>
       <main className="main-content">
         {children}
@@ -57,4 +76,3 @@ function Layout({ children }) {
 }
 
 export default Layout;
-
