@@ -122,11 +122,15 @@ const executeCampaign = async (scheduledCampaignId) => {
     // Mail gönderimini başlat
     const result = await sendCampaignEmails(campaign._id);
     
-    console.log(`✅ Kampanya gönderildi: ${result.sent} başarılı, ${result.failed} başarısız`);
+    // Queue modu (async) veya sync modu kontrol et
+    const sentCount = result.mode === 'async' ? result.queued : (result.sent || 0);
+    const failedCount = result.mode === 'async' ? 0 : (result.failed || 0);
+    
+    console.log(`✅ Kampanya ${result.mode === 'async' ? 'kuyruğa alındı' : 'gönderildi'}: ${sentCount} mail`);
     
     // ScheduledCampaign istatistiklerini güncelle
     scheduledCampaign.stats.totalCampaigns += 1;
-    scheduledCampaign.stats.totalSent += result.sent;
+    scheduledCampaign.stats.totalSent += sentCount;
     scheduledCampaign.lastRun = new Date();
     
     // Sonraki çalışma zamanını hesapla
@@ -135,7 +139,13 @@ const executeCampaign = async (scheduledCampaignId) => {
     
     await scheduledCampaign.save();
     
-    return { success: true, campaignId: campaign._id, result };
+    return { 
+      success: true, 
+      campaignId: campaign._id, 
+      sent: sentCount,
+      mode: result.mode,
+      result 
+    };
   } catch (error) {
     console.error('❌ Zamanlanmış kampanya çalıştırma hatası:', error.message);
     throw error;

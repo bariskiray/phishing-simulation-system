@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 const Campaign = require('../models/Campaign');
 const Event = require('../models/Event');
-const { addEmailJob, hasQueue, createQueue, startProcessing, getEmailQueue } = require('./queueService');
+const { addEmailJob, hasQueue, setProcessFunction } = require('./queueService');
 
 // SMTP Transporter oluştur
 const createTransporter = () => {
@@ -524,17 +524,22 @@ const processEmailJob = async (job) => {
     };
     
     await transporter.sendMail(mailOptions);
+    console.log(`📤 Mail SMTP'ye gönderildi: ${userEmail}`);
     
-    await Event.create({
+    // Event kaydını oluştur ve tamamlanmasını bekle
+    const event = await Event.create({
       userId: user._id,
       campaignId: campaign._id,
       type: 'sent',
       timestamp: new Date()
     });
+    console.log(`💾 Event kaydedildi: ${userEmail} (ID: ${event._id})`);
     
+    // Kampanya istatistiğini güncelle
     await Campaign.findByIdAndUpdate(campaignId, {
       $inc: { 'stats.sent': 1 }
     });
+    console.log(`📊 Kampanya stats güncellendi: ${userEmail}`);
     
     console.log(`✅ Mail gönderildi: ${userEmail}`);
     return { success: true, email: userEmail };
@@ -543,6 +548,9 @@ const processEmailJob = async (job) => {
     throw error;
   }
 };
+
+// Process fonksiyonunu queue service'e kaydet (uygulama başladığında)
+setProcessFunction(processEmailJob);
 
 // Kampanya mail gönderimi (On-demand Queue)
 const sendCampaignEmails = async (campaignId) => {
@@ -562,12 +570,6 @@ const sendCampaignEmails = async (campaignId) => {
       // ON-DEMAND QUEUE MODU
       console.log(`📬 On-demand Queue - ${campaign.targetUsers.length} mail için Redis başlatılıyor...`);
       
-      // Queue'yu oluştur (henüz yoksa)
-      createQueue();
-      
-      // Worker'ı başlat
-      startProcessing(processEmailJob);
-      
       // HTML içeriğini hazırla
       const htmlContent = applyTemplate(campaign.body, campaign.template, campaign.phishingUrl);
       
@@ -578,7 +580,7 @@ const sendCampaignEmails = async (campaignId) => {
         phishingUrl: campaign.phishingUrl
       };
       
-      // Her kullanıcı için queue'ya job ekle
+      // Her kullanıcı için queue'ya job ekle (ilk job'da queue otomatik başlar)
       for (const user of campaign.targetUsers) {
         await addEmailJob(
           campaignId,
@@ -598,7 +600,7 @@ const sendCampaignEmails = async (campaignId) => {
         success: true,
         queued: campaign.targetUsers.length,
         mode: 'async',
-        message: `${campaign.targetUsers.length} mail gönderiliyor (Redis otomatik kapanacak)`
+        message: `${campaign.targetUsers.length} mail gönderiliyor`
       };
     } else {
       // FALLBACK MODU: Senkron gönderim (Redis yoksa)

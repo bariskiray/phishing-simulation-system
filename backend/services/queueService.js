@@ -14,30 +14,26 @@ const getRedisConfig = () => {
       redis: {
         tls: {
           rejectUnauthorized: false
-        },
-        maxRetriesPerRequest: 3,
-        enableReadyCheck: false,
-        lazyConnect: true
+        }
       }
     };
   }
 
-  return {
-    redis: {
-      maxRetriesPerRequest: 3,
-      enableReadyCheck: false,
-      lazyConnect: true
-    }
-  };
+  return {};
 };
 
-// Email Queue (on-demand - sadece kampanya gönderildiğinde aktif)
+// Email Queue (on-demand)
 let emailQueue = null;
-let isProcessing = false;
 let activeJobCount = 0;
+let processFunction = null;
 
-// Queue'yu başlat (on-demand)
-const createQueue = () => {
+// Process fonksiyonunu kaydet (emailService'den gelecek)
+const setProcessFunction = (fn) => {
+  processFunction = fn;
+};
+
+// Queue'yu oluştur ve worker'ı başlat
+const createAndStartQueue = async () => {
   const redisUrl = process.env.REDIS_URL;
   
   if (!redisUrl) {
@@ -46,7 +42,12 @@ const createQueue = () => {
   }
 
   if (emailQueue) {
-    return emailQueue; // Zaten var
+    return emailQueue;
+  }
+
+  if (!processFunction) {
+    console.error('❌ Process fonksiyonu tanımlanmamış!');
+    return null;
   }
 
   try {
@@ -60,17 +61,57 @@ const createQueue = () => {
           type: 'exponential',
           delay: 2000
         },
-        removeOnComplete: true, // Hemen sil (Redis'te tutma)
+        removeOnComplete: true,
         removeOnFail: 10
       }
     });
 
-    // Minimal event listeners
+    // Queue hazır olduğunda
+    emailQueue.on('ready', () => {
+      console.log('✅ Redis bağlantısı hazır');
+    });
+
     emailQueue.on('error', (error) => {
       console.error('❌ Queue hatası:', error.message);
     });
 
-    console.log('✅ Email Queue oluşturuldu (on-demand mod)');
+    // Worker'ı başlat
+    emailQueue.process(1, async (job) => {
+      try {
+        const result = await processFunction(job);
+        return result;
+      } catch (error) {
+        throw error;
+      }
+    });
+
+    // Job tamamlandığında
+    emailQueue.on('completed', async (job) => {
+      activeJobCount--;
+      console.log(`✅ Job tamamlandı: ${job.data.userEmail} (Kalan: ${activeJobCount})`);
+      
+      if (activeJobCount <= 0) {
+        // Tüm DB işlemlerinin tamamlanması için daha uzun bekle
+        console.log('⏳ Tüm job\'lar bitti, 5 saniye sonra queue kapatılacak...');
+        setTimeout(() => shutdownQueue(), 5000);
+      }
+    });
+
+    emailQueue.on('failed', async (job, error) => {
+      activeJobCount--;
+      console.log(`❌ Job başarısız: ${job.data.userEmail} - ${error.message} (Kalan: ${activeJobCount})`);
+      
+      if (activeJobCount <= 0) {
+        console.log('⏳ Tüm job\'lar bitti (bazıları başarısız), 5 saniye sonra queue kapatılacak...');
+        setTimeout(() => shutdownQueue(), 5000);
+      }
+    });
+
+    console.log('✅ Email Queue oluşturuldu ve worker başlatıldı');
+    
+    // Queue'nun hazır olmasını bekle
+    await emailQueue.isReady();
+    
     return emailQueue;
   } catch (error) {
     console.error('❌ Queue oluşturulamadı:', error.message);
@@ -78,58 +119,45 @@ const createQueue = () => {
   }
 };
 
-// Worker'ı başlat (on-demand)
-const startProcessing = (processFunction) => {
-  if (!emailQueue || isProcessing) return;
-  
-  isProcessing = true;
-  
-  emailQueue.process(1, processFunction);
-  
-  // Job tamamlandığında kontrol et
-  emailQueue.on('completed', async () => {
-    activeJobCount--;
-    console.log(`✅ Job tamamlandı. Kalan: ${activeJobCount}`);
-    
-    // Tüm job'lar bittiyse queue'yu kapat
-    if (activeJobCount <= 0) {
-      await shutdownQueue();
-    }
-  });
-  
-  emailQueue.on('failed', async () => {
-    activeJobCount--;
-    console.log(`❌ Job başarısız. Kalan: ${activeJobCount}`);
-    
-    if (activeJobCount <= 0) {
-      await shutdownQueue();
-    }
-  });
-  
-  console.log('🚀 Worker başlatıldı');
-};
-
-// Queue'yu kapat (Redis bağlantısını kes)
+// Queue'yu kapat
 const shutdownQueue = async () => {
   if (!emailQueue) return;
   
+  // Eğer hala aktif job varsa, kapatma
+  if (activeJobCount > 0) {
+    console.log(`⚠️ Hala ${activeJobCount} aktif job var, queue kapatılmayacak`);
+    return;
+  }
+  
   try {
-    console.log('🔌 Queue kapatılıyor (Redis bağlantısı kesiliyor)...');
+    // Queue'da bekleyen job var mı kontrol et
+    const [waiting, active] = await Promise.all([
+      emailQueue.getWaitingCount(),
+      emailQueue.getActiveCount()
+    ]);
+    
+    if (waiting > 0 || active > 0) {
+      console.log(`⚠️ Queue'da hala iş var (Bekleyen: ${waiting}, Aktif: ${active}), kapatılmayacak`);
+      return;
+    }
+    
+    console.log('🔌 Queue kapatılıyor...');
     await emailQueue.close();
     emailQueue = null;
-    isProcessing = false;
     activeJobCount = 0;
-    console.log('✅ Queue kapatıldı - Redis komutları durdu');
+    console.log('✅ Queue kapatıldı - Redis bağlantısı kesildi');
   } catch (error) {
     console.error('Queue kapatma hatası:', error.message);
+    emailQueue = null;
+    activeJobCount = 0;
   }
 };
 
-// Queue'ya email job'ı ekle (on-demand başlatır)
+// Queue'ya job ekle
 const addEmailJob = async (campaignId, userId, userEmail, campaignData) => {
   // Queue yoksa oluştur
   if (!emailQueue) {
-    createQueue();
+    await createAndStartQueue();
   }
   
   if (!emailQueue) {
@@ -151,17 +179,17 @@ const addEmailJob = async (campaignId, userId, userEmail, campaignData) => {
   return job;
 };
 
-// Queue var mı kontrol
+// Redis var mı
 const hasQueue = () => {
   return process.env.REDIS_URL ? true : false;
 };
 
 // Queue aktif mi
 const isQueueActive = () => {
-  return emailQueue !== null && isProcessing;
+  return emailQueue !== null;
 };
 
-// Queue istatistikleri (basit)
+// Queue istatistikleri
 const getQueueStats = async () => {
   if (!emailQueue) {
     return {
@@ -181,6 +209,7 @@ const getQueueStats = async () => {
       isActive: true,
       waiting,
       active,
+      pending: activeJobCount,
       total: waiting + active
     };
   } catch (error) {
@@ -199,14 +228,14 @@ const getCampaignQueueStatus = async (campaignId) => {
   };
 };
 
-// Temizlik (graceful shutdown)
+// Temizlik
 const closeQueue = async () => {
   await shutdownQueue();
 };
 
 module.exports = {
-  createQueue,
-  startProcessing,
+  setProcessFunction,
+  createAndStartQueue,
   shutdownQueue,
   getEmailQueue: () => emailQueue,
   addEmailJob,
