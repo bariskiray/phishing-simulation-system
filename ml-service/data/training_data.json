@@ -1,0 +1,3902 @@
+[
+  {
+    "userId": "user_001",
+    "riskScore": 5,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 10,
+        "clicked": 0,
+        "opened": 4
+      },
+      "urgent": {
+        "total": 5,
+        "clicked": 0,
+        "opened": 1
+      },
+      "custom": {
+        "total": 10,
+        "clicked": 0,
+        "opened": 5
+      }
+    },
+    "recentTrend": {
+      "clickRate": 0,
+      "openRate": 40.87,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 25,
+      "clickRate": 0.0,
+      "openRate": 40.0
+    },
+    "department": "HR",
+    "group": "Contractors",
+    "susceptibility": {
+      "basic": 0.49,
+      "urgent": 0.67,
+      "custom": 0.44
+    }
+  },
+  {
+    "userId": "user_002",
+    "riskScore": 72,
+    "riskCategory": "Yüksek",
+    "campaignStats": {
+      "basic": {
+        "total": 18,
+        "clicked": 8,
+        "opened": 15
+      },
+      "urgent": {
+        "total": 9,
+        "clicked": 4,
+        "opened": 6
+      },
+      "custom": {
+        "total": 6,
+        "clicked": 2,
+        "opened": 4
+      }
+    },
+    "recentTrend": {
+      "clickRate": 54.06,
+      "openRate": 70.02,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 33,
+      "clickRate": 42.42,
+      "openRate": 75.76
+    },
+    "department": "Finance",
+    "group": "Analysts",
+    "susceptibility": {
+      "basic": 0.52,
+      "urgent": 0.77,
+      "custom": 0.47
+    }
+  },
+  {
+    "userId": "user_003",
+    "riskScore": 27,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 10,
+        "clicked": 0,
+        "opened": 2
+      },
+      "urgent": {
+        "total": 8,
+        "clicked": 2,
+        "opened": 7
+      },
+      "custom": {
+        "total": 16,
+        "clicked": 3,
+        "opened": 16
+      }
+    },
+    "recentTrend": {
+      "clickRate": 14.91,
+      "openRate": 70.13,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 34,
+      "clickRate": 14.71,
+      "openRate": 73.53
+    },
+    "department": "Operations",
+    "group": "Analysts",
+    "susceptibility": {
+      "basic": 0.22,
+      "urgent": 0.67,
+      "custom": 0.33
+    }
+  },
+  {
+    "userId": "user_004",
+    "riskScore": 20,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 6,
+        "clicked": 1,
+        "opened": 6
+      },
+      "urgent": {
+        "total": 7,
+        "clicked": 1,
+        "opened": 4
+      },
+      "custom": {
+        "total": 8,
+        "clicked": 0,
+        "opened": 6
+      }
+    },
+    "recentTrend": {
+      "clickRate": 9.21,
+      "openRate": 80.32,
+      "trend": "decreasing"
+    },
+    "summary": {
+      "totalCampaigns": 21,
+      "clickRate": 9.52,
+      "openRate": 76.19
+    },
+    "department": "HR",
+    "group": "Managers",
+    "susceptibility": {
+      "basic": 0.29,
+      "urgent": 0.82,
+      "custom": 0.65
+    }
+  },
+  {
+    "userId": "user_005",
+    "riskScore": 9,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 16,
+        "clicked": 3,
+        "opened": 15
+      },
+      "urgent": {
+        "total": 3,
+        "clicked": 0,
+        "opened": 2
+      },
+      "custom": {
+        "total": 17,
+        "clicked": 1,
+        "opened": 15
+      }
+    },
+    "recentTrend": {
+      "clickRate": 10.06,
+      "openRate": 87.3,
+      "trend": "decreasing"
+    },
+    "summary": {
+      "totalCampaigns": 36,
+      "clickRate": 11.11,
+      "openRate": 88.89
+    },
+    "department": "Sales",
+    "group": "Developers",
+    "susceptibility": {
+      "basic": 0.24,
+      "urgent": 0.45,
+      "custom": 0.47
+    }
+  },
+  {
+    "userId": "user_006",
+    "riskScore": 25,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 17,
+        "clicked": 0,
+        "opened": 6
+      },
+      "urgent": {
+        "total": 11,
+        "clicked": 1,
+        "opened": 7
+      },
+      "custom": {
+        "total": 11,
+        "clicked": 0,
+        "opened": 7
+      }
+    },
+    "recentTrend": {
+      "clickRate": 2.08,
+      "openRate": 49.82,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 39,
+      "clickRate": 2.56,
+      "openRate": 51.28
+    },
+    "department": "Finance",
+    "group": "Analysts",
+    "susceptibility": {
+      "basic": 0.71,
+      "urgent": 0.9,
+      "custom": 0.67
+    }
+  },
+  {
+    "userId": "user_007",
+    "riskScore": 94,
+    "riskCategory": "Kritik",
+    "campaignStats": {
+      "basic": {
+        "total": 16,
+        "clicked": 4,
+        "opened": 5
+      },
+      "urgent": {
+        "total": 10,
+        "clicked": 7,
+        "opened": 9
+      },
+      "custom": {
+        "total": 10,
+        "clicked": 2,
+        "opened": 4
+      }
+    },
+    "recentTrend": {
+      "clickRate": 45.96,
+      "openRate": 51.26,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 36,
+      "clickRate": 36.11,
+      "openRate": 50.0
+    },
+    "department": "Finance",
+    "group": "Interns",
+    "susceptibility": {
+      "basic": 0.23,
+      "urgent": 0.37,
+      "custom": 0.69
+    }
+  },
+  {
+    "userId": "user_008",
+    "riskScore": 40,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 20,
+        "clicked": 2,
+        "opened": 5
+      },
+      "urgent": {
+        "total": 11,
+        "clicked": 4,
+        "opened": 11
+      },
+      "custom": {
+        "total": 12,
+        "clicked": 2,
+        "opened": 12
+      }
+    },
+    "recentTrend": {
+      "clickRate": 19.96,
+      "openRate": 63.75,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 43,
+      "clickRate": 18.6,
+      "openRate": 65.12
+    },
+    "department": "Operations",
+    "group": "Interns",
+    "susceptibility": {
+      "basic": 0.77,
+      "urgent": 0.6,
+      "custom": 0.61
+    }
+  },
+  {
+    "userId": "user_009",
+    "riskScore": 38,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 6,
+        "clicked": 1,
+        "opened": 5
+      },
+      "urgent": {
+        "total": 4,
+        "clicked": 0,
+        "opened": 2
+      },
+      "custom": {
+        "total": 9,
+        "clicked": 1,
+        "opened": 8
+      }
+    },
+    "recentTrend": {
+      "clickRate": 11.11,
+      "openRate": 72.4,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 19,
+      "clickRate": 10.53,
+      "openRate": 78.95
+    },
+    "department": "IT",
+    "group": "Managers",
+    "susceptibility": {
+      "basic": 0.31,
+      "urgent": 0.5,
+      "custom": 0.7
+    }
+  },
+  {
+    "userId": "user_010",
+    "riskScore": 33,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 9,
+        "clicked": 0,
+        "opened": 1
+      },
+      "urgent": {
+        "total": 8,
+        "clicked": 0,
+        "opened": 0
+      },
+      "custom": {
+        "total": 16,
+        "clicked": 0,
+        "opened": 3
+      }
+    },
+    "recentTrend": {
+      "clickRate": 0,
+      "openRate": 12.1,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 33,
+      "clickRate": 0.0,
+      "openRate": 12.12
+    },
+    "department": "IT",
+    "group": "Support",
+    "susceptibility": {
+      "basic": 0.23,
+      "urgent": 0.65,
+      "custom": 0.31
+    }
+  },
+  {
+    "userId": "user_011",
+    "riskScore": 23,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 9,
+        "clicked": 0,
+        "opened": 3
+      },
+      "urgent": {
+        "total": 4,
+        "clicked": 0,
+        "opened": 2
+      },
+      "custom": {
+        "total": 15,
+        "clicked": 1,
+        "opened": 15
+      }
+    },
+    "recentTrend": {
+      "clickRate": 2.81,
+      "openRate": 71.61,
+      "trend": "decreasing"
+    },
+    "summary": {
+      "totalCampaigns": 28,
+      "clickRate": 3.57,
+      "openRate": 71.43
+    },
+    "department": "Engineering",
+    "group": "Contractors",
+    "susceptibility": {
+      "basic": 0.48,
+      "urgent": 0.54,
+      "custom": 0.58
+    }
+  },
+  {
+    "userId": "user_012",
+    "riskScore": 56,
+    "riskCategory": "Yüksek",
+    "campaignStats": {
+      "basic": {
+        "total": 13,
+        "clicked": 0,
+        "opened": 1
+      },
+      "urgent": {
+        "total": 12,
+        "clicked": 0,
+        "opened": 0
+      },
+      "custom": {
+        "total": 16,
+        "clicked": 5,
+        "opened": 12
+      }
+    },
+    "recentTrend": {
+      "clickRate": 17.52,
+      "openRate": 31.86,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 41,
+      "clickRate": 12.2,
+      "openRate": 31.71
+    },
+    "department": "Legal",
+    "group": "Executives",
+    "susceptibility": {
+      "basic": 0.66,
+      "urgent": 0.8,
+      "custom": 0.72
+    }
+  },
+  {
+    "userId": "user_013",
+    "riskScore": 43,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 12,
+        "clicked": 3,
+        "opened": 7
+      },
+      "urgent": {
+        "total": 5,
+        "clicked": 1,
+        "opened": 4
+      },
+      "custom": {
+        "total": 17,
+        "clicked": 0,
+        "opened": 1
+      }
+    },
+    "recentTrend": {
+      "clickRate": 12.13,
+      "openRate": 32.38,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 34,
+      "clickRate": 11.76,
+      "openRate": 35.29
+    },
+    "department": "IT",
+    "group": "Contractors",
+    "susceptibility": {
+      "basic": 0.6,
+      "urgent": 0.52,
+      "custom": 0.54
+    }
+  },
+  {
+    "userId": "user_014",
+    "riskScore": 32,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 15,
+        "clicked": 1,
+        "opened": 6
+      },
+      "urgent": {
+        "total": 8,
+        "clicked": 1,
+        "opened": 3
+      },
+      "custom": {
+        "total": 8,
+        "clicked": 0,
+        "opened": 1
+      }
+    },
+    "recentTrend": {
+      "clickRate": 7.63,
+      "openRate": 35.25,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 31,
+      "clickRate": 6.45,
+      "openRate": 32.26
+    },
+    "department": "Operations",
+    "group": "Executives",
+    "susceptibility": {
+      "basic": 0.29,
+      "urgent": 0.64,
+      "custom": 0.26
+    }
+  },
+  {
+    "userId": "user_015",
+    "riskScore": 1,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 17,
+        "clicked": 2,
+        "opened": 12
+      },
+      "urgent": {
+        "total": 14,
+        "clicked": 0,
+        "opened": 1
+      },
+      "custom": {
+        "total": 13,
+        "clicked": 0,
+        "opened": 13
+      }
+    },
+    "recentTrend": {
+      "clickRate": 4.06,
+      "openRate": 62.62,
+      "trend": "decreasing"
+    },
+    "summary": {
+      "totalCampaigns": 44,
+      "clickRate": 4.55,
+      "openRate": 59.09
+    },
+    "department": "HR",
+    "group": "Managers",
+    "susceptibility": {
+      "basic": 0.69,
+      "urgent": 0.85,
+      "custom": 0.66
+    }
+  },
+  {
+    "userId": "user_016",
+    "riskScore": 89,
+    "riskCategory": "Kritik",
+    "campaignStats": {
+      "basic": {
+        "total": 7,
+        "clicked": 2,
+        "opened": 3
+      },
+      "urgent": {
+        "total": 14,
+        "clicked": 2,
+        "opened": 3
+      },
+      "custom": {
+        "total": 18,
+        "clicked": 13,
+        "opened": 18
+      }
+    },
+    "recentTrend": {
+      "clickRate": 56.94,
+      "openRate": 63.31,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 39,
+      "clickRate": 43.59,
+      "openRate": 61.54
+    },
+    "department": "Sales",
+    "group": "Interns",
+    "susceptibility": {
+      "basic": 0.65,
+      "urgent": 0.88,
+      "custom": 0.42
+    }
+  },
+  {
+    "userId": "user_017",
+    "riskScore": 1,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 7,
+        "clicked": 0,
+        "opened": 1
+      },
+      "urgent": {
+        "total": 5,
+        "clicked": 0,
+        "opened": 3
+      },
+      "custom": {
+        "total": 17,
+        "clicked": 0,
+        "opened": 1
+      }
+    },
+    "recentTrend": {
+      "clickRate": 0,
+      "openRate": 17.91,
+      "trend": "decreasing"
+    },
+    "summary": {
+      "totalCampaigns": 29,
+      "clickRate": 0.0,
+      "openRate": 17.24
+    },
+    "department": "Engineering",
+    "group": "Contractors",
+    "susceptibility": {
+      "basic": 0.6,
+      "urgent": 0.51,
+      "custom": 0.35
+    }
+  },
+  {
+    "userId": "user_018",
+    "riskScore": 38,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 5,
+        "clicked": 1,
+        "opened": 3
+      },
+      "urgent": {
+        "total": 5,
+        "clicked": 1,
+        "opened": 4
+      },
+      "custom": {
+        "total": 7,
+        "clicked": 0,
+        "opened": 3
+      }
+    },
+    "recentTrend": {
+      "clickRate": 10.84,
+      "openRate": 54.01,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 17,
+      "clickRate": 11.76,
+      "openRate": 58.82
+    },
+    "department": "Legal",
+    "group": "Interns",
+    "susceptibility": {
+      "basic": 0.72,
+      "urgent": 0.71,
+      "custom": 0.44
+    }
+  },
+  {
+    "userId": "user_019",
+    "riskScore": 91,
+    "riskCategory": "Kritik",
+    "campaignStats": {
+      "basic": {
+        "total": 8,
+        "clicked": 6,
+        "opened": 8
+      },
+      "urgent": {
+        "total": 4,
+        "clicked": 2,
+        "opened": 3
+      },
+      "custom": {
+        "total": 18,
+        "clicked": 9,
+        "opened": 18
+      }
+    },
+    "recentTrend": {
+      "clickRate": 74.66,
+      "openRate": 104.99,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 30,
+      "clickRate": 56.67,
+      "openRate": 96.67
+    },
+    "department": "Marketing",
+    "group": "Executives",
+    "susceptibility": {
+      "basic": 0.77,
+      "urgent": 0.72,
+      "custom": 0.47
+    }
+  },
+  {
+    "userId": "user_020",
+    "riskScore": 17,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 11,
+        "clicked": 0,
+        "opened": 3
+      },
+      "urgent": {
+        "total": 10,
+        "clicked": 0,
+        "opened": 9
+      },
+      "custom": {
+        "total": 6,
+        "clicked": 0,
+        "opened": 4
+      }
+    },
+    "recentTrend": {
+      "clickRate": 0,
+      "openRate": 58.53,
+      "trend": "decreasing"
+    },
+    "summary": {
+      "totalCampaigns": 27,
+      "clickRate": 0.0,
+      "openRate": 59.26
+    },
+    "department": "HR",
+    "group": "Interns",
+    "susceptibility": {
+      "basic": 0.46,
+      "urgent": 0.56,
+      "custom": 0.43
+    }
+  },
+  {
+    "userId": "user_021",
+    "riskScore": 46,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 16,
+        "clicked": 7,
+        "opened": 16
+      },
+      "urgent": {
+        "total": 7,
+        "clicked": 0,
+        "opened": 0
+      },
+      "custom": {
+        "total": 12,
+        "clicked": 3,
+        "opened": 11
+      }
+    },
+    "recentTrend": {
+      "clickRate": 33.52,
+      "openRate": 73.94,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 35,
+      "clickRate": 28.57,
+      "openRate": 77.14
+    },
+    "department": "Marketing",
+    "group": "Developers",
+    "susceptibility": {
+      "basic": 0.74,
+      "urgent": 0.76,
+      "custom": 0.44
+    }
+  },
+  {
+    "userId": "user_022",
+    "riskScore": 31,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 20,
+        "clicked": 1,
+        "opened": 3
+      },
+      "urgent": {
+        "total": 15,
+        "clicked": 0,
+        "opened": 0
+      },
+      "custom": {
+        "total": 16,
+        "clicked": 5,
+        "opened": 15
+      }
+    },
+    "recentTrend": {
+      "clickRate": 13.69,
+      "openRate": 37.74,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 51,
+      "clickRate": 11.76,
+      "openRate": 35.29
+    },
+    "department": "Marketing",
+    "group": "Analysts",
+    "susceptibility": {
+      "basic": 0.66,
+      "urgent": 0.83,
+      "custom": 0.3
+    }
+  },
+  {
+    "userId": "user_023",
+    "riskScore": 58,
+    "riskCategory": "Yüksek",
+    "campaignStats": {
+      "basic": {
+        "total": 6,
+        "clicked": 4,
+        "opened": 6
+      },
+      "urgent": {
+        "total": 4,
+        "clicked": 0,
+        "opened": 0
+      },
+      "custom": {
+        "total": 8,
+        "clicked": 0,
+        "opened": 0
+      }
+    },
+    "recentTrend": {
+      "clickRate": 25.53,
+      "openRate": 33.4,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 18,
+      "clickRate": 22.22,
+      "openRate": 33.33
+    },
+    "department": "Legal",
+    "group": "Analysts",
+    "susceptibility": {
+      "basic": 0.33,
+      "urgent": 0.39,
+      "custom": 0.47
+    }
+  },
+  {
+    "userId": "user_024",
+    "riskScore": 17,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 13,
+        "clicked": 0,
+        "opened": 4
+      },
+      "urgent": {
+        "total": 14,
+        "clicked": 1,
+        "opened": 4
+      },
+      "custom": {
+        "total": 9,
+        "clicked": 0,
+        "opened": 1
+      }
+    },
+    "recentTrend": {
+      "clickRate": 2.77,
+      "openRate": 25.29,
+      "trend": "decreasing"
+    },
+    "summary": {
+      "totalCampaigns": 36,
+      "clickRate": 2.78,
+      "openRate": 25.0
+    },
+    "department": "Legal",
+    "group": "Analysts",
+    "susceptibility": {
+      "basic": 0.5,
+      "urgent": 0.63,
+      "custom": 0.53
+    }
+  },
+  {
+    "userId": "user_025",
+    "riskScore": 28,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 16,
+        "clicked": 5,
+        "opened": 13
+      },
+      "urgent": {
+        "total": 15,
+        "clicked": 5,
+        "opened": 10
+      },
+      "custom": {
+        "total": 5,
+        "clicked": 1,
+        "opened": 4
+      }
+    },
+    "recentTrend": {
+      "clickRate": 34.04,
+      "openRate": 69.93,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 36,
+      "clickRate": 30.56,
+      "openRate": 75.0
+    },
+    "department": "Engineering",
+    "group": "Interns",
+    "susceptibility": {
+      "basic": 0.72,
+      "urgent": 0.38,
+      "custom": 0.39
+    }
+  },
+  {
+    "userId": "user_026",
+    "riskScore": 38,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 9,
+        "clicked": 1,
+        "opened": 7
+      },
+      "urgent": {
+        "total": 8,
+        "clicked": 4,
+        "opened": 8
+      },
+      "custom": {
+        "total": 16,
+        "clicked": 1,
+        "opened": 5
+      }
+    },
+    "recentTrend": {
+      "clickRate": 21.55,
+      "openRate": 63.51,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 33,
+      "clickRate": 18.18,
+      "openRate": 60.61
+    },
+    "department": "Finance",
+    "group": "Managers",
+    "susceptibility": {
+      "basic": 0.28,
+      "urgent": 0.71,
+      "custom": 0.27
+    }
+  },
+  {
+    "userId": "user_027",
+    "riskScore": 8,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 17,
+        "clicked": 0,
+        "opened": 17
+      },
+      "urgent": {
+        "total": 13,
+        "clicked": 0,
+        "opened": 2
+      },
+      "custom": {
+        "total": 7,
+        "clicked": 0,
+        "opened": 3
+      }
+    },
+    "recentTrend": {
+      "clickRate": 0,
+      "openRate": 61.19,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 37,
+      "clickRate": 0.0,
+      "openRate": 59.46
+    },
+    "department": "Engineering",
+    "group": "Analysts",
+    "susceptibility": {
+      "basic": 0.34,
+      "urgent": 0.42,
+      "custom": 0.62
+    }
+  },
+  {
+    "userId": "user_028",
+    "riskScore": 26,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 17,
+        "clicked": 4,
+        "opened": 11
+      },
+      "urgent": {
+        "total": 12,
+        "clicked": 0,
+        "opened": 1
+      },
+      "custom": {
+        "total": 6,
+        "clicked": 0,
+        "opened": 4
+      }
+    },
+    "recentTrend": {
+      "clickRate": 10.47,
+      "openRate": 48.55,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 35,
+      "clickRate": 11.43,
+      "openRate": 45.71
+    },
+    "department": "Operations",
+    "group": "Interns",
+    "susceptibility": {
+      "basic": 0.65,
+      "urgent": 0.6,
+      "custom": 0.75
+    }
+  },
+  {
+    "userId": "user_029",
+    "riskScore": 61,
+    "riskCategory": "Yüksek",
+    "campaignStats": {
+      "basic": {
+        "total": 7,
+        "clicked": 4,
+        "opened": 6
+      },
+      "urgent": {
+        "total": 5,
+        "clicked": 0,
+        "opened": 0
+      },
+      "custom": {
+        "total": 4,
+        "clicked": 0,
+        "opened": 1
+      }
+    },
+    "recentTrend": {
+      "clickRate": 34.2,
+      "openRate": 44.26,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 16,
+      "clickRate": 25.0,
+      "openRate": 43.75
+    },
+    "department": "Operations",
+    "group": "Developers",
+    "susceptibility": {
+      "basic": 0.42,
+      "urgent": 0.57,
+      "custom": 0.56
+    }
+  },
+  {
+    "userId": "user_030",
+    "riskScore": 9,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 12,
+        "clicked": 0,
+        "opened": 1
+      },
+      "urgent": {
+        "total": 9,
+        "clicked": 1,
+        "opened": 5
+      },
+      "custom": {
+        "total": 12,
+        "clicked": 0,
+        "opened": 5
+      }
+    },
+    "recentTrend": {
+      "clickRate": 2.38,
+      "openRate": 31.5,
+      "trend": "decreasing"
+    },
+    "summary": {
+      "totalCampaigns": 33,
+      "clickRate": 3.03,
+      "openRate": 33.33
+    },
+    "department": "Engineering",
+    "group": "Developers",
+    "susceptibility": {
+      "basic": 0.74,
+      "urgent": 0.43,
+      "custom": 0.51
+    }
+  },
+  {
+    "userId": "user_031",
+    "riskScore": 23,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 15,
+        "clicked": 0,
+        "opened": 8
+      },
+      "urgent": {
+        "total": 14,
+        "clicked": 0,
+        "opened": 8
+      },
+      "custom": {
+        "total": 14,
+        "clicked": 0,
+        "opened": 8
+      }
+    },
+    "recentTrend": {
+      "clickRate": 0,
+      "openRate": 55.27,
+      "trend": "decreasing"
+    },
+    "summary": {
+      "totalCampaigns": 43,
+      "clickRate": 0.0,
+      "openRate": 55.81
+    },
+    "department": "HR",
+    "group": "Support",
+    "susceptibility": {
+      "basic": 0.23,
+      "urgent": 0.43,
+      "custom": 0.48
+    }
+  },
+  {
+    "userId": "user_032",
+    "riskScore": 43,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 6,
+        "clicked": 0,
+        "opened": 2
+      },
+      "urgent": {
+        "total": 13,
+        "clicked": 4,
+        "opened": 11
+      },
+      "custom": {
+        "total": 16,
+        "clicked": 1,
+        "opened": 3
+      }
+    },
+    "recentTrend": {
+      "clickRate": 14.26,
+      "openRate": 44.28,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 35,
+      "clickRate": 14.29,
+      "openRate": 45.71
+    },
+    "department": "IT",
+    "group": "Interns",
+    "susceptibility": {
+      "basic": 0.27,
+      "urgent": 0.35,
+      "custom": 0.65
+    }
+  },
+  {
+    "userId": "user_033",
+    "riskScore": 31,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 11,
+        "clicked": 2,
+        "opened": 9
+      },
+      "urgent": {
+        "total": 9,
+        "clicked": 3,
+        "opened": 9
+      },
+      "custom": {
+        "total": 12,
+        "clicked": 0,
+        "opened": 1
+      }
+    },
+    "recentTrend": {
+      "clickRate": 16.67,
+      "openRate": 61.54,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 32,
+      "clickRate": 15.62,
+      "openRate": 59.38
+    },
+    "department": "Operations",
+    "group": "Contractors",
+    "susceptibility": {
+      "basic": 0.69,
+      "urgent": 0.48,
+      "custom": 0.7
+    }
+  },
+  {
+    "userId": "user_034",
+    "riskScore": 14,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 7,
+        "clicked": 0,
+        "opened": 7
+      },
+      "urgent": {
+        "total": 14,
+        "clicked": 0,
+        "opened": 3
+      },
+      "custom": {
+        "total": 13,
+        "clicked": 0,
+        "opened": 7
+      }
+    },
+    "recentTrend": {
+      "clickRate": 0,
+      "openRate": 48.1,
+      "trend": "decreasing"
+    },
+    "summary": {
+      "totalCampaigns": 34,
+      "clickRate": 0.0,
+      "openRate": 50.0
+    },
+    "department": "Engineering",
+    "group": "Interns",
+    "susceptibility": {
+      "basic": 0.52,
+      "urgent": 0.76,
+      "custom": 0.65
+    }
+  },
+  {
+    "userId": "user_035",
+    "riskScore": 25,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 19,
+        "clicked": 1,
+        "opened": 9
+      },
+      "urgent": {
+        "total": 7,
+        "clicked": 0,
+        "opened": 3
+      },
+      "custom": {
+        "total": 12,
+        "clicked": 0,
+        "opened": 6
+      }
+    },
+    "recentTrend": {
+      "clickRate": 2.05,
+      "openRate": 44.98,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 38,
+      "clickRate": 2.63,
+      "openRate": 47.37
+    },
+    "department": "HR",
+    "group": "Executives",
+    "susceptibility": {
+      "basic": 0.41,
+      "urgent": 0.52,
+      "custom": 0.59
+    }
+  },
+  {
+    "userId": "user_036",
+    "riskScore": 0,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 9,
+        "clicked": 0,
+        "opened": 5
+      },
+      "urgent": {
+        "total": 9,
+        "clicked": 0,
+        "opened": 4
+      },
+      "custom": {
+        "total": 16,
+        "clicked": 0,
+        "opened": 16
+      }
+    },
+    "recentTrend": {
+      "clickRate": 0,
+      "openRate": 78.9,
+      "trend": "decreasing"
+    },
+    "summary": {
+      "totalCampaigns": 34,
+      "clickRate": 0.0,
+      "openRate": 73.53
+    },
+    "department": "Engineering",
+    "group": "Developers",
+    "susceptibility": {
+      "basic": 0.54,
+      "urgent": 0.59,
+      "custom": 0.32
+    }
+  },
+  {
+    "userId": "user_037",
+    "riskScore": 24,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 14,
+        "clicked": 0,
+        "opened": 4
+      },
+      "urgent": {
+        "total": 9,
+        "clicked": 1,
+        "opened": 8
+      },
+      "custom": {
+        "total": 18,
+        "clicked": 0,
+        "opened": 5
+      }
+    },
+    "recentTrend": {
+      "clickRate": 1.98,
+      "openRate": 37.84,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 41,
+      "clickRate": 2.44,
+      "openRate": 41.46
+    },
+    "department": "IT",
+    "group": "Analysts",
+    "susceptibility": {
+      "basic": 0.34,
+      "urgent": 0.5,
+      "custom": 0.66
+    }
+  },
+  {
+    "userId": "user_038",
+    "riskScore": 21,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 8,
+        "clicked": 1,
+        "opened": 7
+      },
+      "urgent": {
+        "total": 9,
+        "clicked": 0,
+        "opened": 7
+      },
+      "custom": {
+        "total": 6,
+        "clicked": 0,
+        "opened": 1
+      }
+    },
+    "recentTrend": {
+      "clickRate": 4.16,
+      "openRate": 65.72,
+      "trend": "decreasing"
+    },
+    "summary": {
+      "totalCampaigns": 23,
+      "clickRate": 4.35,
+      "openRate": 65.22
+    },
+    "department": "Operations",
+    "group": "Developers",
+    "susceptibility": {
+      "basic": 0.72,
+      "urgent": 0.73,
+      "custom": 0.36
+    }
+  },
+  {
+    "userId": "user_039",
+    "riskScore": 61,
+    "riskCategory": "Yüksek",
+    "campaignStats": {
+      "basic": {
+        "total": 7,
+        "clicked": 0,
+        "opened": 0
+      },
+      "urgent": {
+        "total": 14,
+        "clicked": 8,
+        "opened": 12
+      },
+      "custom": {
+        "total": 16,
+        "clicked": 0,
+        "opened": 2
+      }
+    },
+    "recentTrend": {
+      "clickRate": 29.51,
+      "openRate": 39.61,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 37,
+      "clickRate": 21.62,
+      "openRate": 37.84
+    },
+    "department": "Engineering",
+    "group": "Managers",
+    "susceptibility": {
+      "basic": 0.31,
+      "urgent": 0.78,
+      "custom": 0.3
+    }
+  },
+  {
+    "userId": "user_040",
+    "riskScore": 21,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 16,
+        "clicked": 0,
+        "opened": 11
+      },
+      "urgent": {
+        "total": 15,
+        "clicked": 0,
+        "opened": 6
+      },
+      "custom": {
+        "total": 11,
+        "clicked": 0,
+        "opened": 1
+      }
+    },
+    "recentTrend": {
+      "clickRate": 0,
+      "openRate": 40.77,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 42,
+      "clickRate": 0.0,
+      "openRate": 42.86
+    },
+    "department": "Legal",
+    "group": "Developers",
+    "susceptibility": {
+      "basic": 0.64,
+      "urgent": 0.84,
+      "custom": 0.71
+    }
+  },
+  {
+    "userId": "user_041",
+    "riskScore": 2,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 8,
+        "clicked": 0,
+        "opened": 5
+      },
+      "urgent": {
+        "total": 5,
+        "clicked": 1,
+        "opened": 3
+      },
+      "custom": {
+        "total": 5,
+        "clicked": 0,
+        "opened": 5
+      }
+    },
+    "recentTrend": {
+      "clickRate": 4.51,
+      "openRate": 73.69,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 18,
+      "clickRate": 5.56,
+      "openRate": 72.22
+    },
+    "department": "HR",
+    "group": "Contractors",
+    "susceptibility": {
+      "basic": 0.3,
+      "urgent": 0.82,
+      "custom": 0.28
+    }
+  },
+  {
+    "userId": "user_042",
+    "riskScore": 3,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 10,
+        "clicked": 0,
+        "opened": 0
+      },
+      "urgent": {
+        "total": 14,
+        "clicked": 1,
+        "opened": 4
+      },
+      "custom": {
+        "total": 5,
+        "clicked": 0,
+        "opened": 1
+      }
+    },
+    "recentTrend": {
+      "clickRate": 2.55,
+      "openRate": 17.66,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 29,
+      "clickRate": 3.45,
+      "openRate": 17.24
+    },
+    "department": "Marketing",
+    "group": "Executives",
+    "susceptibility": {
+      "basic": 0.66,
+      "urgent": 0.31,
+      "custom": 0.28
+    }
+  },
+  {
+    "userId": "user_043",
+    "riskScore": 16,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 10,
+        "clicked": 0,
+        "opened": 0
+      },
+      "urgent": {
+        "total": 8,
+        "clicked": 1,
+        "opened": 7
+      },
+      "custom": {
+        "total": 6,
+        "clicked": 0,
+        "opened": 6
+      }
+    },
+    "recentTrend": {
+      "clickRate": 3.51,
+      "openRate": 59.57,
+      "trend": "decreasing"
+    },
+    "summary": {
+      "totalCampaigns": 24,
+      "clickRate": 4.17,
+      "openRate": 54.17
+    },
+    "department": "Sales",
+    "group": "Support",
+    "susceptibility": {
+      "basic": 0.32,
+      "urgent": 0.45,
+      "custom": 0.6
+    }
+  },
+  {
+    "userId": "user_044",
+    "riskScore": 28,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 10,
+        "clicked": 2,
+        "opened": 6
+      },
+      "urgent": {
+        "total": 4,
+        "clicked": 0,
+        "opened": 0
+      },
+      "custom": {
+        "total": 9,
+        "clicked": 2,
+        "opened": 8
+      }
+    },
+    "recentTrend": {
+      "clickRate": 16.25,
+      "openRate": 65.6,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 23,
+      "clickRate": 17.39,
+      "openRate": 60.87
+    },
+    "department": "Engineering",
+    "group": "Developers",
+    "susceptibility": {
+      "basic": 0.34,
+      "urgent": 0.52,
+      "custom": 0.54
+    }
+  },
+  {
+    "userId": "user_045",
+    "riskScore": 17,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 6,
+        "clicked": 0,
+        "opened": 1
+      },
+      "urgent": {
+        "total": 9,
+        "clicked": 0,
+        "opened": 3
+      },
+      "custom": {
+        "total": 14,
+        "clicked": 0,
+        "opened": 5
+      }
+    },
+    "recentTrend": {
+      "clickRate": 0,
+      "openRate": 28.61,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 29,
+      "clickRate": 0.0,
+      "openRate": 31.03
+    },
+    "department": "Marketing",
+    "group": "Support",
+    "susceptibility": {
+      "basic": 0.29,
+      "urgent": 0.5,
+      "custom": 0.27
+    }
+  },
+  {
+    "userId": "user_046",
+    "riskScore": 22,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 14,
+        "clicked": 0,
+        "opened": 3
+      },
+      "urgent": {
+        "total": 10,
+        "clicked": 0,
+        "opened": 1
+      },
+      "custom": {
+        "total": 9,
+        "clicked": 0,
+        "opened": 9
+      }
+    },
+    "recentTrend": {
+      "clickRate": 0,
+      "openRate": 35.77,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 33,
+      "clickRate": 0.0,
+      "openRate": 39.39
+    },
+    "department": "Finance",
+    "group": "Managers",
+    "susceptibility": {
+      "basic": 0.45,
+      "urgent": 0.7,
+      "custom": 0.29
+    }
+  },
+  {
+    "userId": "user_047",
+    "riskScore": 36,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 11,
+        "clicked": 1,
+        "opened": 4
+      },
+      "urgent": {
+        "total": 6,
+        "clicked": 0,
+        "opened": 1
+      },
+      "custom": {
+        "total": 16,
+        "clicked": 1,
+        "opened": 7
+      }
+    },
+    "recentTrend": {
+      "clickRate": 6.87,
+      "openRate": 33.55,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 33,
+      "clickRate": 6.06,
+      "openRate": 36.36
+    },
+    "department": "HR",
+    "group": "Contractors",
+    "susceptibility": {
+      "basic": 0.47,
+      "urgent": 0.67,
+      "custom": 0.52
+    }
+  },
+  {
+    "userId": "user_048",
+    "riskScore": 23,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 8,
+        "clicked": 0,
+        "opened": 4
+      },
+      "urgent": {
+        "total": 12,
+        "clicked": 3,
+        "opened": 11
+      },
+      "custom": {
+        "total": 11,
+        "clicked": 0,
+        "opened": 5
+      }
+    },
+    "recentTrend": {
+      "clickRate": 6.82,
+      "openRate": 62.82,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 31,
+      "clickRate": 9.68,
+      "openRate": 64.52
+    },
+    "department": "Sales",
+    "group": "Support",
+    "susceptibility": {
+      "basic": 0.62,
+      "urgent": 0.56,
+      "custom": 0.61
+    }
+  },
+  {
+    "userId": "user_049",
+    "riskScore": 62,
+    "riskCategory": "Yüksek",
+    "campaignStats": {
+      "basic": {
+        "total": 17,
+        "clicked": 2,
+        "opened": 5
+      },
+      "urgent": {
+        "total": 4,
+        "clicked": 0,
+        "opened": 0
+      },
+      "custom": {
+        "total": 7,
+        "clicked": 3,
+        "opened": 6
+      }
+    },
+    "recentTrend": {
+      "clickRate": 25.1,
+      "openRate": 40.3,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 28,
+      "clickRate": 17.86,
+      "openRate": 39.29
+    },
+    "department": "IT",
+    "group": "Support",
+    "susceptibility": {
+      "basic": 0.3,
+      "urgent": 0.56,
+      "custom": 0.69
+    }
+  },
+  {
+    "userId": "user_050",
+    "riskScore": 9,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 5,
+        "clicked": 0,
+        "opened": 3
+      },
+      "urgent": {
+        "total": 12,
+        "clicked": 0,
+        "opened": 1
+      },
+      "custom": {
+        "total": 18,
+        "clicked": 1,
+        "opened": 8
+      }
+    },
+    "recentTrend": {
+      "clickRate": 2.18,
+      "openRate": 37.5,
+      "trend": "decreasing"
+    },
+    "summary": {
+      "totalCampaigns": 35,
+      "clickRate": 2.86,
+      "openRate": 34.29
+    },
+    "department": "Legal",
+    "group": "Analysts",
+    "susceptibility": {
+      "basic": 0.75,
+      "urgent": 0.89,
+      "custom": 0.45
+    }
+  },
+  {
+    "userId": "user_051",
+    "riskScore": 4,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 7,
+        "clicked": 0,
+        "opened": 2
+      },
+      "urgent": {
+        "total": 13,
+        "clicked": 0,
+        "opened": 8
+      },
+      "custom": {
+        "total": 11,
+        "clicked": 0,
+        "opened": 1
+      }
+    },
+    "recentTrend": {
+      "clickRate": 0,
+      "openRate": 34.83,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 31,
+      "clickRate": 0.0,
+      "openRate": 35.48
+    },
+    "department": "IT",
+    "group": "Interns",
+    "susceptibility": {
+      "basic": 0.6,
+      "urgent": 0.43,
+      "custom": 0.7
+    }
+  },
+  {
+    "userId": "user_052",
+    "riskScore": 86,
+    "riskCategory": "Kritik",
+    "campaignStats": {
+      "basic": {
+        "total": 8,
+        "clicked": 3,
+        "opened": 6
+      },
+      "urgent": {
+        "total": 5,
+        "clicked": 4,
+        "opened": 5
+      },
+      "custom": {
+        "total": 6,
+        "clicked": 1,
+        "opened": 3
+      }
+    },
+    "recentTrend": {
+      "clickRate": 55.12,
+      "openRate": 81.03,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 19,
+      "clickRate": 42.11,
+      "openRate": 73.68
+    },
+    "department": "HR",
+    "group": "Support",
+    "susceptibility": {
+      "basic": 0.51,
+      "urgent": 0.39,
+      "custom": 0.33
+    }
+  },
+  {
+    "userId": "user_053",
+    "riskScore": 58,
+    "riskCategory": "Yüksek",
+    "campaignStats": {
+      "basic": {
+        "total": 19,
+        "clicked": 7,
+        "opened": 16
+      },
+      "urgent": {
+        "total": 11,
+        "clicked": 6,
+        "opened": 8
+      },
+      "custom": {
+        "total": 12,
+        "clicked": 4,
+        "opened": 8
+      }
+    },
+    "recentTrend": {
+      "clickRate": 55.63,
+      "openRate": 82.61,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 42,
+      "clickRate": 40.48,
+      "openRate": 76.19
+    },
+    "department": "HR",
+    "group": "Executives",
+    "susceptibility": {
+      "basic": 0.44,
+      "urgent": 0.84,
+      "custom": 0.39
+    }
+  },
+  {
+    "userId": "user_054",
+    "riskScore": 24,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 7,
+        "clicked": 0,
+        "opened": 3
+      },
+      "urgent": {
+        "total": 3,
+        "clicked": 0,
+        "opened": 3
+      },
+      "custom": {
+        "total": 10,
+        "clicked": 0,
+        "opened": 8
+      }
+    },
+    "recentTrend": {
+      "clickRate": 0,
+      "openRate": 72.19,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 20,
+      "clickRate": 0.0,
+      "openRate": 70.0
+    },
+    "department": "Finance",
+    "group": "Interns",
+    "susceptibility": {
+      "basic": 0.76,
+      "urgent": 0.69,
+      "custom": 0.43
+    }
+  },
+  {
+    "userId": "user_055",
+    "riskScore": 49,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 11,
+        "clicked": 3,
+        "opened": 11
+      },
+      "urgent": {
+        "total": 14,
+        "clicked": 4,
+        "opened": 11
+      },
+      "custom": {
+        "total": 17,
+        "clicked": 4,
+        "opened": 14
+      }
+    },
+    "recentTrend": {
+      "clickRate": 29.28,
+      "openRate": 90.51,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 42,
+      "clickRate": 26.19,
+      "openRate": 85.71
+    },
+    "department": "Marketing",
+    "group": "Developers",
+    "susceptibility": {
+      "basic": 0.65,
+      "urgent": 0.36,
+      "custom": 0.73
+    }
+  },
+  {
+    "userId": "user_056",
+    "riskScore": 61,
+    "riskCategory": "Yüksek",
+    "campaignStats": {
+      "basic": {
+        "total": 14,
+        "clicked": 3,
+        "opened": 6
+      },
+      "urgent": {
+        "total": 5,
+        "clicked": 0,
+        "opened": 1
+      },
+      "custom": {
+        "total": 12,
+        "clicked": 2,
+        "opened": 5
+      }
+    },
+    "recentTrend": {
+      "clickRate": 18.7,
+      "openRate": 39.52,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 31,
+      "clickRate": 16.13,
+      "openRate": 38.71
+    },
+    "department": "Sales",
+    "group": "Contractors",
+    "susceptibility": {
+      "basic": 0.53,
+      "urgent": 0.35,
+      "custom": 0.67
+    }
+  },
+  {
+    "userId": "user_057",
+    "riskScore": 55,
+    "riskCategory": "Yüksek",
+    "campaignStats": {
+      "basic": {
+        "total": 9,
+        "clicked": 3,
+        "opened": 6
+      },
+      "urgent": {
+        "total": 8,
+        "clicked": 1,
+        "opened": 2
+      },
+      "custom": {
+        "total": 9,
+        "clicked": 2,
+        "opened": 4
+      }
+    },
+    "recentTrend": {
+      "clickRate": 26.11,
+      "openRate": 47.13,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 26,
+      "clickRate": 23.08,
+      "openRate": 46.15
+    },
+    "department": "Finance",
+    "group": "Managers",
+    "susceptibility": {
+      "basic": 0.42,
+      "urgent": 0.87,
+      "custom": 0.64
+    }
+  },
+  {
+    "userId": "user_058",
+    "riskScore": 55,
+    "riskCategory": "Yüksek",
+    "campaignStats": {
+      "basic": {
+        "total": 7,
+        "clicked": 0,
+        "opened": 1
+      },
+      "urgent": {
+        "total": 11,
+        "clicked": 1,
+        "opened": 3
+      },
+      "custom": {
+        "total": 13,
+        "clicked": 1,
+        "opened": 3
+      }
+    },
+    "recentTrend": {
+      "clickRate": 8.1,
+      "openRate": 24.69,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 31,
+      "clickRate": 6.45,
+      "openRate": 22.58
+    },
+    "department": "Marketing",
+    "group": "Executives",
+    "susceptibility": {
+      "basic": 0.45,
+      "urgent": 0.7,
+      "custom": 0.27
+    }
+  },
+  {
+    "userId": "user_059",
+    "riskScore": 50,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 16,
+        "clicked": 0,
+        "opened": 2
+      },
+      "urgent": {
+        "total": 7,
+        "clicked": 2,
+        "opened": 5
+      },
+      "custom": {
+        "total": 8,
+        "clicked": 0,
+        "opened": 7
+      }
+    },
+    "recentTrend": {
+      "clickRate": 7.44,
+      "openRate": 41.24,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 31,
+      "clickRate": 6.45,
+      "openRate": 45.16
+    },
+    "department": "Operations",
+    "group": "Support",
+    "susceptibility": {
+      "basic": 0.53,
+      "urgent": 0.41,
+      "custom": 0.55
+    }
+  },
+  {
+    "userId": "user_060",
+    "riskScore": 31,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 9,
+        "clicked": 2,
+        "opened": 8
+      },
+      "urgent": {
+        "total": 15,
+        "clicked": 5,
+        "opened": 10
+      },
+      "custom": {
+        "total": 9,
+        "clicked": 3,
+        "opened": 9
+      }
+    },
+    "recentTrend": {
+      "clickRate": 34.71,
+      "openRate": 84.77,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 33,
+      "clickRate": 30.3,
+      "openRate": 81.82
+    },
+    "department": "Marketing",
+    "group": "Support",
+    "susceptibility": {
+      "basic": 0.49,
+      "urgent": 0.79,
+      "custom": 0.55
+    }
+  },
+  {
+    "userId": "user_061",
+    "riskScore": 7,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 14,
+        "clicked": 0,
+        "opened": 6
+      },
+      "urgent": {
+        "total": 4,
+        "clicked": 0,
+        "opened": 3
+      },
+      "custom": {
+        "total": 12,
+        "clicked": 0,
+        "opened": 5
+      }
+    },
+    "recentTrend": {
+      "clickRate": 0,
+      "openRate": 46.63,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 30,
+      "clickRate": 0.0,
+      "openRate": 46.67
+    },
+    "department": "Legal",
+    "group": "Support",
+    "susceptibility": {
+      "basic": 0.44,
+      "urgent": 0.39,
+      "custom": 0.4
+    }
+  },
+  {
+    "userId": "user_062",
+    "riskScore": 97,
+    "riskCategory": "Kritik",
+    "campaignStats": {
+      "basic": {
+        "total": 7,
+        "clicked": 1,
+        "opened": 2
+      },
+      "urgent": {
+        "total": 4,
+        "clicked": 1,
+        "opened": 2
+      },
+      "custom": {
+        "total": 4,
+        "clicked": 0,
+        "opened": 0
+      }
+    },
+    "recentTrend": {
+      "clickRate": 14.7,
+      "openRate": 27.87,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 15,
+      "clickRate": 13.33,
+      "openRate": 26.67
+    },
+    "department": "IT",
+    "group": "Managers",
+    "susceptibility": {
+      "basic": 0.57,
+      "urgent": 0.86,
+      "custom": 0.68
+    }
+  },
+  {
+    "userId": "user_063",
+    "riskScore": 7,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 7,
+        "clicked": 0,
+        "opened": 0
+      },
+      "urgent": {
+        "total": 14,
+        "clicked": 3,
+        "opened": 9
+      },
+      "custom": {
+        "total": 7,
+        "clicked": 0,
+        "opened": 2
+      }
+    },
+    "recentTrend": {
+      "clickRate": 10.4,
+      "openRate": 36.66,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 28,
+      "clickRate": 10.71,
+      "openRate": 39.29
+    },
+    "department": "Finance",
+    "group": "Executives",
+    "susceptibility": {
+      "basic": 0.68,
+      "urgent": 0.8,
+      "custom": 0.63
+    }
+  },
+  {
+    "userId": "user_064",
+    "riskScore": 23,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 17,
+        "clicked": 0,
+        "opened": 10
+      },
+      "urgent": {
+        "total": 13,
+        "clicked": 2,
+        "opened": 11
+      },
+      "custom": {
+        "total": 17,
+        "clicked": 0,
+        "opened": 7
+      }
+    },
+    "recentTrend": {
+      "clickRate": 3.88,
+      "openRate": 54.19,
+      "trend": "decreasing"
+    },
+    "summary": {
+      "totalCampaigns": 47,
+      "clickRate": 4.26,
+      "openRate": 59.57
+    },
+    "department": "Marketing",
+    "group": "Managers",
+    "susceptibility": {
+      "basic": 0.3,
+      "urgent": 0.46,
+      "custom": 0.28
+    }
+  },
+  {
+    "userId": "user_065",
+    "riskScore": 11,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 12,
+        "clicked": 0,
+        "opened": 4
+      },
+      "urgent": {
+        "total": 10,
+        "clicked": 0,
+        "opened": 0
+      },
+      "custom": {
+        "total": 5,
+        "clicked": 0,
+        "opened": 2
+      }
+    },
+    "recentTrend": {
+      "clickRate": 0,
+      "openRate": 23.1,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 27,
+      "clickRate": 0.0,
+      "openRate": 22.22
+    },
+    "department": "HR",
+    "group": "Analysts",
+    "susceptibility": {
+      "basic": 0.33,
+      "urgent": 0.4,
+      "custom": 0.38
+    }
+  },
+  {
+    "userId": "user_066",
+    "riskScore": 45,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 18,
+        "clicked": 4,
+        "opened": 10
+      },
+      "urgent": {
+        "total": 15,
+        "clicked": 8,
+        "opened": 14
+      },
+      "custom": {
+        "total": 15,
+        "clicked": 0,
+        "opened": 1
+      }
+    },
+    "recentTrend": {
+      "clickRate": 24.12,
+      "openRate": 48.55,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 48,
+      "clickRate": 25.0,
+      "openRate": 52.08
+    },
+    "department": "HR",
+    "group": "Support",
+    "susceptibility": {
+      "basic": 0.35,
+      "urgent": 0.39,
+      "custom": 0.25
+    }
+  },
+  {
+    "userId": "user_067",
+    "riskScore": 6,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 6,
+        "clicked": 0,
+        "opened": 1
+      },
+      "urgent": {
+        "total": 10,
+        "clicked": 1,
+        "opened": 7
+      },
+      "custom": {
+        "total": 6,
+        "clicked": 0,
+        "opened": 1
+      }
+    },
+    "recentTrend": {
+      "clickRate": 4.54,
+      "openRate": 37.6,
+      "trend": "decreasing"
+    },
+    "summary": {
+      "totalCampaigns": 22,
+      "clickRate": 4.55,
+      "openRate": 40.91
+    },
+    "department": "Sales",
+    "group": "Analysts",
+    "susceptibility": {
+      "basic": 0.74,
+      "urgent": 0.83,
+      "custom": 0.35
+    }
+  },
+  {
+    "userId": "user_068",
+    "riskScore": 59,
+    "riskCategory": "Yüksek",
+    "campaignStats": {
+      "basic": {
+        "total": 7,
+        "clicked": 0,
+        "opened": 2
+      },
+      "urgent": {
+        "total": 13,
+        "clicked": 10,
+        "opened": 13
+      },
+      "custom": {
+        "total": 11,
+        "clicked": 2,
+        "opened": 4
+      }
+    },
+    "recentTrend": {
+      "clickRate": 57.82,
+      "openRate": 58.05,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 31,
+      "clickRate": 38.71,
+      "openRate": 61.29
+    },
+    "department": "Operations",
+    "group": "Interns",
+    "susceptibility": {
+      "basic": 0.3,
+      "urgent": 0.44,
+      "custom": 0.35
+    }
+  },
+  {
+    "userId": "user_069",
+    "riskScore": 21,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 16,
+        "clicked": 4,
+        "opened": 14
+      },
+      "urgent": {
+        "total": 8,
+        "clicked": 0,
+        "opened": 0
+      },
+      "custom": {
+        "total": 10,
+        "clicked": 1,
+        "opened": 7
+      }
+    },
+    "recentTrend": {
+      "clickRate": 13.77,
+      "openRate": 64.95,
+      "trend": "decreasing"
+    },
+    "summary": {
+      "totalCampaigns": 34,
+      "clickRate": 14.71,
+      "openRate": 61.76
+    },
+    "department": "HR",
+    "group": "Developers",
+    "susceptibility": {
+      "basic": 0.79,
+      "urgent": 0.79,
+      "custom": 0.52
+    }
+  },
+  {
+    "userId": "user_070",
+    "riskScore": 26,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 17,
+        "clicked": 4,
+        "opened": 11
+      },
+      "urgent": {
+        "total": 8,
+        "clicked": 1,
+        "opened": 4
+      },
+      "custom": {
+        "total": 4,
+        "clicked": 0,
+        "opened": 2
+      }
+    },
+    "recentTrend": {
+      "clickRate": 18.67,
+      "openRate": 63.66,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 29,
+      "clickRate": 17.24,
+      "openRate": 58.62
+    },
+    "department": "Sales",
+    "group": "Analysts",
+    "susceptibility": {
+      "basic": 0.33,
+      "urgent": 0.5,
+      "custom": 0.27
+    }
+  },
+  {
+    "userId": "user_071",
+    "riskScore": 27,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 9,
+        "clicked": 1,
+        "opened": 5
+      },
+      "urgent": {
+        "total": 12,
+        "clicked": 0,
+        "opened": 1
+      },
+      "custom": {
+        "total": 6,
+        "clicked": 0,
+        "opened": 4
+      }
+    },
+    "recentTrend": {
+      "clickRate": 3.49,
+      "openRate": 36.27,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 27,
+      "clickRate": 3.7,
+      "openRate": 37.04
+    },
+    "department": "HR",
+    "group": "Managers",
+    "susceptibility": {
+      "basic": 0.26,
+      "urgent": 0.72,
+      "custom": 0.45
+    }
+  },
+  {
+    "userId": "user_072",
+    "riskScore": 39,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 15,
+        "clicked": 4,
+        "opened": 9
+      },
+      "urgent": {
+        "total": 5,
+        "clicked": 0,
+        "opened": 3
+      },
+      "custom": {
+        "total": 5,
+        "clicked": 0,
+        "opened": 3
+      }
+    },
+    "recentTrend": {
+      "clickRate": 16.11,
+      "openRate": 58.86,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 25,
+      "clickRate": 16.0,
+      "openRate": 60.0
+    },
+    "department": "Engineering",
+    "group": "Managers",
+    "susceptibility": {
+      "basic": 0.27,
+      "urgent": 0.44,
+      "custom": 0.4
+    }
+  },
+  {
+    "userId": "user_073",
+    "riskScore": 15,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 6,
+        "clicked": 0,
+        "opened": 4
+      },
+      "urgent": {
+        "total": 10,
+        "clicked": 2,
+        "opened": 8
+      },
+      "custom": {
+        "total": 11,
+        "clicked": 1,
+        "opened": 11
+      }
+    },
+    "recentTrend": {
+      "clickRate": 7.99,
+      "openRate": 78.65,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 27,
+      "clickRate": 11.11,
+      "openRate": 85.19
+    },
+    "department": "Finance",
+    "group": "Support",
+    "susceptibility": {
+      "basic": 0.53,
+      "urgent": 0.41,
+      "custom": 0.51
+    }
+  },
+  {
+    "userId": "user_074",
+    "riskScore": 4,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 7,
+        "clicked": 0,
+        "opened": 4
+      },
+      "urgent": {
+        "total": 15,
+        "clicked": 1,
+        "opened": 9
+      },
+      "custom": {
+        "total": 5,
+        "clicked": 0,
+        "opened": 2
+      }
+    },
+    "recentTrend": {
+      "clickRate": 3.36,
+      "openRate": 56.76,
+      "trend": "decreasing"
+    },
+    "summary": {
+      "totalCampaigns": 27,
+      "clickRate": 3.7,
+      "openRate": 55.56
+    },
+    "department": "Finance",
+    "group": "Contractors",
+    "susceptibility": {
+      "basic": 0.68,
+      "urgent": 0.33,
+      "custom": 0.63
+    }
+  },
+  {
+    "userId": "user_075",
+    "riskScore": 78,
+    "riskCategory": "Kritik",
+    "campaignStats": {
+      "basic": {
+        "total": 5,
+        "clicked": 0,
+        "opened": 0
+      },
+      "urgent": {
+        "total": 3,
+        "clicked": 2,
+        "opened": 3
+      },
+      "custom": {
+        "total": 14,
+        "clicked": 8,
+        "opened": 11
+      }
+    },
+    "recentTrend": {
+      "clickRate": 50.35,
+      "openRate": 64.12,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 22,
+      "clickRate": 45.45,
+      "openRate": 63.64
+    },
+    "department": "Marketing",
+    "group": "Developers",
+    "susceptibility": {
+      "basic": 0.48,
+      "urgent": 0.53,
+      "custom": 0.28
+    }
+  },
+  {
+    "userId": "user_076",
+    "riskScore": 56,
+    "riskCategory": "Yüksek",
+    "campaignStats": {
+      "basic": {
+        "total": 16,
+        "clicked": 1,
+        "opened": 2
+      },
+      "urgent": {
+        "total": 7,
+        "clicked": 5,
+        "opened": 7
+      },
+      "custom": {
+        "total": 8,
+        "clicked": 1,
+        "opened": 3
+      }
+    },
+    "recentTrend": {
+      "clickRate": 25.31,
+      "openRate": 36.81,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 31,
+      "clickRate": 22.58,
+      "openRate": 38.71
+    },
+    "department": "HR",
+    "group": "Contractors",
+    "susceptibility": {
+      "basic": 0.25,
+      "urgent": 0.37,
+      "custom": 0.3
+    }
+  },
+  {
+    "userId": "user_077",
+    "riskScore": 65,
+    "riskCategory": "Yüksek",
+    "campaignStats": {
+      "basic": {
+        "total": 15,
+        "clicked": 8,
+        "opened": 13
+      },
+      "urgent": {
+        "total": 4,
+        "clicked": 0,
+        "opened": 1
+      },
+      "custom": {
+        "total": 13,
+        "clicked": 1,
+        "opened": 3
+      }
+    },
+    "recentTrend": {
+      "clickRate": 31.18,
+      "openRate": 56.16,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 32,
+      "clickRate": 28.12,
+      "openRate": 53.12
+    },
+    "department": "Operations",
+    "group": "Managers",
+    "susceptibility": {
+      "basic": 0.38,
+      "urgent": 0.36,
+      "custom": 0.45
+    }
+  },
+  {
+    "userId": "user_078",
+    "riskScore": 40,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 14,
+        "clicked": 2,
+        "opened": 10
+      },
+      "urgent": {
+        "total": 5,
+        "clicked": 0,
+        "opened": 2
+      },
+      "custom": {
+        "total": 10,
+        "clicked": 1,
+        "opened": 3
+      }
+    },
+    "recentTrend": {
+      "clickRate": 9.73,
+      "openRate": 50.15,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 29,
+      "clickRate": 10.34,
+      "openRate": 51.72
+    },
+    "department": "Finance",
+    "group": "Developers",
+    "susceptibility": {
+      "basic": 0.46,
+      "urgent": 0.69,
+      "custom": 0.63
+    }
+  },
+  {
+    "userId": "user_079",
+    "riskScore": 87,
+    "riskCategory": "Kritik",
+    "campaignStats": {
+      "basic": {
+        "total": 12,
+        "clicked": 0,
+        "opened": 1
+      },
+      "urgent": {
+        "total": 14,
+        "clicked": 6,
+        "opened": 7
+      },
+      "custom": {
+        "total": 11,
+        "clicked": 4,
+        "opened": 8
+      }
+    },
+    "recentTrend": {
+      "clickRate": 33.49,
+      "openRate": 47.52,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 37,
+      "clickRate": 27.03,
+      "openRate": 43.24
+    },
+    "department": "IT",
+    "group": "Analysts",
+    "susceptibility": {
+      "basic": 0.63,
+      "urgent": 0.87,
+      "custom": 0.35
+    }
+  },
+  {
+    "userId": "user_080",
+    "riskScore": 2,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 11,
+        "clicked": 0,
+        "opened": 3
+      },
+      "urgent": {
+        "total": 4,
+        "clicked": 0,
+        "opened": 0
+      },
+      "custom": {
+        "total": 13,
+        "clicked": 1,
+        "opened": 9
+      }
+    },
+    "recentTrend": {
+      "clickRate": 3.46,
+      "openRate": 43.29,
+      "trend": "decreasing"
+    },
+    "summary": {
+      "totalCampaigns": 28,
+      "clickRate": 3.57,
+      "openRate": 42.86
+    },
+    "department": "Operations",
+    "group": "Contractors",
+    "susceptibility": {
+      "basic": 0.25,
+      "urgent": 0.36,
+      "custom": 0.33
+    }
+  },
+  {
+    "userId": "user_081",
+    "riskScore": 47,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 6,
+        "clicked": 0,
+        "opened": 1
+      },
+      "urgent": {
+        "total": 7,
+        "clicked": 1,
+        "opened": 2
+      },
+      "custom": {
+        "total": 11,
+        "clicked": 1,
+        "opened": 10
+      }
+    },
+    "recentTrend": {
+      "clickRate": 7.94,
+      "openRate": 56.29,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 24,
+      "clickRate": 8.33,
+      "openRate": 54.17
+    },
+    "department": "Operations",
+    "group": "Developers",
+    "susceptibility": {
+      "basic": 0.43,
+      "urgent": 0.49,
+      "custom": 0.36
+    }
+  },
+  {
+    "userId": "user_082",
+    "riskScore": 23,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 10,
+        "clicked": 1,
+        "opened": 9
+      },
+      "urgent": {
+        "total": 15,
+        "clicked": 1,
+        "opened": 7
+      },
+      "custom": {
+        "total": 7,
+        "clicked": 0,
+        "opened": 0
+      }
+    },
+    "recentTrend": {
+      "clickRate": 6.14,
+      "openRate": 46.19,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 32,
+      "clickRate": 6.25,
+      "openRate": 50.0
+    },
+    "department": "Legal",
+    "group": "Contractors",
+    "susceptibility": {
+      "basic": 0.35,
+      "urgent": 0.55,
+      "custom": 0.31
+    }
+  },
+  {
+    "userId": "user_083",
+    "riskScore": 68,
+    "riskCategory": "Yüksek",
+    "campaignStats": {
+      "basic": {
+        "total": 15,
+        "clicked": 2,
+        "opened": 5
+      },
+      "urgent": {
+        "total": 10,
+        "clicked": 3,
+        "opened": 5
+      },
+      "custom": {
+        "total": 13,
+        "clicked": 0,
+        "opened": 2
+      }
+    },
+    "recentTrend": {
+      "clickRate": 14.81,
+      "openRate": 29.8,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 38,
+      "clickRate": 13.16,
+      "openRate": 31.58
+    },
+    "department": "Finance",
+    "group": "Executives",
+    "susceptibility": {
+      "basic": 0.35,
+      "urgent": 0.85,
+      "custom": 0.5
+    }
+  },
+  {
+    "userId": "user_084",
+    "riskScore": 46,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 20,
+        "clicked": 2,
+        "opened": 6
+      },
+      "urgent": {
+        "total": 8,
+        "clicked": 2,
+        "opened": 5
+      },
+      "custom": {
+        "total": 15,
+        "clicked": 3,
+        "opened": 8
+      }
+    },
+    "recentTrend": {
+      "clickRate": 15.27,
+      "openRate": 41.4,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 43,
+      "clickRate": 16.28,
+      "openRate": 44.19
+    },
+    "department": "Finance",
+    "group": "Developers",
+    "susceptibility": {
+      "basic": 0.47,
+      "urgent": 0.5,
+      "custom": 0.65
+    }
+  },
+  {
+    "userId": "user_085",
+    "riskScore": 71,
+    "riskCategory": "Yüksek",
+    "campaignStats": {
+      "basic": {
+        "total": 14,
+        "clicked": 4,
+        "opened": 8
+      },
+      "urgent": {
+        "total": 5,
+        "clicked": 3,
+        "opened": 5
+      },
+      "custom": {
+        "total": 8,
+        "clicked": 2,
+        "opened": 4
+      }
+    },
+    "recentTrend": {
+      "clickRate": 43.51,
+      "openRate": 60.83,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 27,
+      "clickRate": 33.33,
+      "openRate": 62.96
+    },
+    "department": "Finance",
+    "group": "Managers",
+    "susceptibility": {
+      "basic": 0.74,
+      "urgent": 0.8,
+      "custom": 0.49
+    }
+  },
+  {
+    "userId": "user_086",
+    "riskScore": 45,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 13,
+        "clicked": 2,
+        "opened": 6
+      },
+      "urgent": {
+        "total": 7,
+        "clicked": 0,
+        "opened": 3
+      },
+      "custom": {
+        "total": 14,
+        "clicked": 1,
+        "opened": 5
+      }
+    },
+    "recentTrend": {
+      "clickRate": 10.06,
+      "openRate": 41.32,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 34,
+      "clickRate": 8.82,
+      "openRate": 41.18
+    },
+    "department": "Marketing",
+    "group": "Support",
+    "susceptibility": {
+      "basic": 0.28,
+      "urgent": 0.66,
+      "custom": 0.29
+    }
+  },
+  {
+    "userId": "user_087",
+    "riskScore": 20,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 10,
+        "clicked": 1,
+        "opened": 5
+      },
+      "urgent": {
+        "total": 15,
+        "clicked": 0,
+        "opened": 9
+      },
+      "custom": {
+        "total": 8,
+        "clicked": 0,
+        "opened": 3
+      }
+    },
+    "recentTrend": {
+      "clickRate": 2.89,
+      "openRate": 51.89,
+      "trend": "decreasing"
+    },
+    "summary": {
+      "totalCampaigns": 33,
+      "clickRate": 3.03,
+      "openRate": 51.52
+    },
+    "department": "Finance",
+    "group": "Executives",
+    "susceptibility": {
+      "basic": 0.33,
+      "urgent": 0.58,
+      "custom": 0.46
+    }
+  },
+  {
+    "userId": "user_088",
+    "riskScore": 96,
+    "riskCategory": "Kritik",
+    "campaignStats": {
+      "basic": {
+        "total": 7,
+        "clicked": 5,
+        "opened": 7
+      },
+      "urgent": {
+        "total": 4,
+        "clicked": 0,
+        "opened": 0
+      },
+      "custom": {
+        "total": 17,
+        "clicked": 4,
+        "opened": 8
+      }
+    },
+    "recentTrend": {
+      "clickRate": 41.48,
+      "openRate": 57.92,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 28,
+      "clickRate": 32.14,
+      "openRate": 53.57
+    },
+    "department": "Finance",
+    "group": "Managers",
+    "susceptibility": {
+      "basic": 0.8,
+      "urgent": 0.56,
+      "custom": 0.7
+    }
+  },
+  {
+    "userId": "user_089",
+    "riskScore": 46,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 7,
+        "clicked": 1,
+        "opened": 6
+      },
+      "urgent": {
+        "total": 4,
+        "clicked": 1,
+        "opened": 4
+      },
+      "custom": {
+        "total": 16,
+        "clicked": 0,
+        "opened": 1
+      }
+    },
+    "recentTrend": {
+      "clickRate": 8.82,
+      "openRate": 36.95,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 27,
+      "clickRate": 7.41,
+      "openRate": 40.74
+    },
+    "department": "Finance",
+    "group": "Analysts",
+    "susceptibility": {
+      "basic": 0.23,
+      "urgent": 0.75,
+      "custom": 0.54
+    }
+  },
+  {
+    "userId": "user_090",
+    "riskScore": 26,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 17,
+        "clicked": 3,
+        "opened": 14
+      },
+      "urgent": {
+        "total": 5,
+        "clicked": 1,
+        "opened": 4
+      },
+      "custom": {
+        "total": 5,
+        "clicked": 0,
+        "opened": 3
+      }
+    },
+    "recentTrend": {
+      "clickRate": 14.18,
+      "openRate": 85.12,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 27,
+      "clickRate": 14.81,
+      "openRate": 77.78
+    },
+    "department": "Marketing",
+    "group": "Contractors",
+    "susceptibility": {
+      "basic": 0.73,
+      "urgent": 0.37,
+      "custom": 0.42
+    }
+  },
+  {
+    "userId": "user_091",
+    "riskScore": 12,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 20,
+        "clicked": 0,
+        "opened": 6
+      },
+      "urgent": {
+        "total": 10,
+        "clicked": 0,
+        "opened": 2
+      },
+      "custom": {
+        "total": 4,
+        "clicked": 0,
+        "opened": 4
+      }
+    },
+    "recentTrend": {
+      "clickRate": 0,
+      "openRate": 36.27,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 34,
+      "clickRate": 0.0,
+      "openRate": 35.29
+    },
+    "department": "Engineering",
+    "group": "Analysts",
+    "susceptibility": {
+      "basic": 0.79,
+      "urgent": 0.41,
+      "custom": 0.67
+    }
+  },
+  {
+    "userId": "user_092",
+    "riskScore": 72,
+    "riskCategory": "Yüksek",
+    "campaignStats": {
+      "basic": {
+        "total": 7,
+        "clicked": 3,
+        "opened": 6
+      },
+      "urgent": {
+        "total": 9,
+        "clicked": 2,
+        "opened": 3
+      },
+      "custom": {
+        "total": 15,
+        "clicked": 1,
+        "opened": 3
+      }
+    },
+    "recentTrend": {
+      "clickRate": 24.43,
+      "openRate": 34.94,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 31,
+      "clickRate": 19.35,
+      "openRate": 38.71
+    },
+    "department": "Sales",
+    "group": "Developers",
+    "susceptibility": {
+      "basic": 0.37,
+      "urgent": 0.72,
+      "custom": 0.59
+    }
+  },
+  {
+    "userId": "user_093",
+    "riskScore": 85,
+    "riskCategory": "Kritik",
+    "campaignStats": {
+      "basic": {
+        "total": 7,
+        "clicked": 0,
+        "opened": 1
+      },
+      "urgent": {
+        "total": 8,
+        "clicked": 1,
+        "opened": 2
+      },
+      "custom": {
+        "total": 7,
+        "clicked": 1,
+        "opened": 3
+      }
+    },
+    "recentTrend": {
+      "clickRate": 12.27,
+      "openRate": 27.93,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 22,
+      "clickRate": 9.09,
+      "openRate": 27.27
+    },
+    "department": "Legal",
+    "group": "Contractors",
+    "susceptibility": {
+      "basic": 0.39,
+      "urgent": 0.7,
+      "custom": 0.34
+    }
+  },
+  {
+    "userId": "user_094",
+    "riskScore": 61,
+    "riskCategory": "Yüksek",
+    "campaignStats": {
+      "basic": {
+        "total": 16,
+        "clicked": 0,
+        "opened": 0
+      },
+      "urgent": {
+        "total": 9,
+        "clicked": 3,
+        "opened": 6
+      },
+      "custom": {
+        "total": 16,
+        "clicked": 0,
+        "opened": 1
+      }
+    },
+    "recentTrend": {
+      "clickRate": 8.59,
+      "openRate": 15.81,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 41,
+      "clickRate": 7.32,
+      "openRate": 17.07
+    },
+    "department": "HR",
+    "group": "Executives",
+    "susceptibility": {
+      "basic": 0.67,
+      "urgent": 0.39,
+      "custom": 0.49
+    }
+  },
+  {
+    "userId": "user_095",
+    "riskScore": 59,
+    "riskCategory": "Yüksek",
+    "campaignStats": {
+      "basic": {
+        "total": 8,
+        "clicked": 4,
+        "opened": 7
+      },
+      "urgent": {
+        "total": 8,
+        "clicked": 2,
+        "opened": 5
+      },
+      "custom": {
+        "total": 15,
+        "clicked": 0,
+        "opened": 1
+      }
+    },
+    "recentTrend": {
+      "clickRate": 25.82,
+      "openRate": 45.41,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 31,
+      "clickRate": 19.35,
+      "openRate": 41.94
+    },
+    "department": "Sales",
+    "group": "Managers",
+    "susceptibility": {
+      "basic": 0.48,
+      "urgent": 0.6,
+      "custom": 0.46
+    }
+  },
+  {
+    "userId": "user_096",
+    "riskScore": 20,
+    "riskCategory": "Düşük",
+    "campaignStats": {
+      "basic": {
+        "total": 5,
+        "clicked": 0,
+        "opened": 4
+      },
+      "urgent": {
+        "total": 6,
+        "clicked": 2,
+        "opened": 6
+      },
+      "custom": {
+        "total": 12,
+        "clicked": 0,
+        "opened": 4
+      }
+    },
+    "recentTrend": {
+      "clickRate": 6.93,
+      "openRate": 62.29,
+      "trend": "decreasing"
+    },
+    "summary": {
+      "totalCampaigns": 23,
+      "clickRate": 8.7,
+      "openRate": 60.87
+    },
+    "department": "HR",
+    "group": "Analysts",
+    "susceptibility": {
+      "basic": 0.73,
+      "urgent": 0.63,
+      "custom": 0.4
+    }
+  },
+  {
+    "userId": "user_097",
+    "riskScore": 83,
+    "riskCategory": "Kritik",
+    "campaignStats": {
+      "basic": {
+        "total": 15,
+        "clicked": 0,
+        "opened": 0
+      },
+      "urgent": {
+        "total": 14,
+        "clicked": 10,
+        "opened": 12
+      },
+      "custom": {
+        "total": 12,
+        "clicked": 2,
+        "opened": 4
+      }
+    },
+    "recentTrend": {
+      "clickRate": 36.06,
+      "openRate": 36.71,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 41,
+      "clickRate": 29.27,
+      "openRate": 39.02
+    },
+    "department": "IT",
+    "group": "Executives",
+    "susceptibility": {
+      "basic": 0.34,
+      "urgent": 0.49,
+      "custom": 0.72
+    }
+  },
+  {
+    "userId": "user_098",
+    "riskScore": 30,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 18,
+        "clicked": 2,
+        "opened": 9
+      },
+      "urgent": {
+        "total": 10,
+        "clicked": 1,
+        "opened": 3
+      },
+      "custom": {
+        "total": 7,
+        "clicked": 1,
+        "opened": 6
+      }
+    },
+    "recentTrend": {
+      "clickRate": 12.66,
+      "openRate": 55.5,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 35,
+      "clickRate": 11.43,
+      "openRate": 51.43
+    },
+    "department": "Engineering",
+    "group": "Managers",
+    "susceptibility": {
+      "basic": 0.23,
+      "urgent": 0.31,
+      "custom": 0.55
+    }
+  },
+  {
+    "userId": "user_099",
+    "riskScore": 45,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 13,
+        "clicked": 3,
+        "opened": 13
+      },
+      "urgent": {
+        "total": 15,
+        "clicked": 7,
+        "opened": 14
+      },
+      "custom": {
+        "total": 17,
+        "clicked": 3,
+        "opened": 10
+      }
+    },
+    "recentTrend": {
+      "clickRate": 26.77,
+      "openRate": 77.11,
+      "trend": "stable"
+    },
+    "summary": {
+      "totalCampaigns": 45,
+      "clickRate": 28.89,
+      "openRate": 82.22
+    },
+    "department": "IT",
+    "group": "Managers",
+    "susceptibility": {
+      "basic": 0.67,
+      "urgent": 0.43,
+      "custom": 0.45
+    }
+  },
+  {
+    "userId": "user_100",
+    "riskScore": 26,
+    "riskCategory": "Orta",
+    "campaignStats": {
+      "basic": {
+        "total": 9,
+        "clicked": 4,
+        "opened": 9
+      },
+      "urgent": {
+        "total": 10,
+        "clicked": 4,
+        "opened": 9
+      },
+      "custom": {
+        "total": 16,
+        "clicked": 0,
+        "opened": 3
+      }
+    },
+    "recentTrend": {
+      "clickRate": 24.18,
+      "openRate": 54.27,
+      "trend": "increasing"
+    },
+    "summary": {
+      "totalCampaigns": 35,
+      "clickRate": 22.86,
+      "openRate": 60.0
+    },
+    "department": "Operations",
+    "group": "Contractors",
+    "susceptibility": {
+      "basic": 0.71,
+      "urgent": 0.68,
+      "custom": 0.51
+    }
+  }
+]

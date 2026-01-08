@@ -4,6 +4,7 @@ const Campaign = require('../models/Campaign');
 const User = require('../models/User');
 const { sendCampaignEmails } = require('../services/emailService');
 const { getCampaignQueueStatus, getQueueStats } = require('../services/queueService');
+const cacheService = require('../services/cacheService');
 const cron = require('node-cron');
 
 // Aktif cron job'ları saklamak için
@@ -73,6 +74,11 @@ router.post('/', async (req, res) => {
     }
     
     const campaign = await Campaign.create(campaignData);
+    
+    // Cache'i invalidate et (yeni kampanya tüm kullanıcıları etkileyebilir)
+    cacheService.invalidateAll().catch(err => 
+      console.error('Cache invalidation hatası:', err.message)
+    );
     
     res.status(201).json({
       success: true,
@@ -190,6 +196,11 @@ router.post('/:id/send', async (req, res) => {
       campaign.status = 'scheduled';
       await campaign.save();
       
+      // Cache'i invalidate et (periyodik kampanya zamanlandı)
+      cacheService.invalidateAll().catch(err => 
+        console.error('Cache invalidation hatası:', err.message)
+      );
+      
       res.json({
         success: true,
         message: 'Periyodik kampanya zamanlandı',
@@ -198,6 +209,11 @@ router.post('/:id/send', async (req, res) => {
     } else {
       // Tek seferlik gönderim
       const result = await sendCampaignEmails(campaign._id);
+      
+      // Cache'i invalidate et (kampanya gönderildi, tüm kullanıcılar etkilenebilir)
+      cacheService.invalidateAll().catch(err => 
+        console.error('Cache invalidation hatası:', err.message)
+      );
       
       // Güncellenmiş kampanyayı getir
       const updatedCampaign = await Campaign.findById(campaign._id)

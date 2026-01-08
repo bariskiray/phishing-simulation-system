@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Event = require('../models/Event');
 const Campaign = require('../models/Campaign');
+const cacheService = require('../services/cacheService');
 
 // 1x1 transparent pixel (GIF formatında)
 const TRACKING_PIXEL = Buffer.from(
@@ -51,6 +52,14 @@ router.get('/open/:campaignId/:userId', async (req, res) => {
         await Campaign.findByIdAndUpdate(campaignId, {
           $inc: { 'stats.opened': 1 }
         });
+        
+        // Cache'i invalidate et (async, blocking olmadan)
+        cacheService.invalidateUser(userId).catch(err => 
+          console.error('Cache invalidation hatası:', err.message)
+        );
+        cacheService.invalidateCampaign(campaignId).catch(err => 
+          console.error('Cache invalidation hatası:', err.message)
+        );
         
         console.log(`✅ Mail açıldı olarak kaydedildi - Campaign: ${campaignId}, User: ${userId}`);
       } else {
@@ -136,6 +145,14 @@ router.get('/click/:campaignId/:userId/:linkId', async (req, res) => {
         $inc: { 'stats.clicked': 1 }
       });
     }
+    
+    // Cache'i invalidate et (async, blocking olmadan)
+    cacheService.invalidateUser(userId).catch(err => 
+      console.error('Cache invalidation hatası:', err.message)
+    );
+    cacheService.invalidateCampaign(campaignId).catch(err => 
+      console.error('Cache invalidation hatası:', err.message)
+    );
     
     // Uyarı sayfası göster veya direkt yönlendir
     if (url) {

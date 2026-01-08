@@ -5,6 +5,7 @@ const connectDB = require('./config/database');
 const { initializeScheduledCampaigns } = require('./services/schedulerService');
 const { protect } = require('./middleware/auth');
 const { getQueueStats, hasQueue, closeQueue } = require('./services/queueService');
+const cacheService = require('./services/cacheService');
 
 const app = express();
 
@@ -51,6 +52,8 @@ app.use('/api/users', protect, require('./routes/users'));
 app.use('/api/campaigns', protect, require('./routes/campaigns'));
 app.use('/api/scheduled-campaigns', protect, require('./routes/scheduledCampaigns'));
 app.use('/api/reports', protect, require('./routes/reports'));
+app.use('/api/risk-analysis', protect, require('./routes/riskAnalysis'));
+app.use('/api/training', protect, require('./routes/training'));
 
 // Error handler middleware
 app.use((err, req, res, next) => {
@@ -79,11 +82,13 @@ app.listen(PORT, async () => {
 process.on('SIGTERM', async () => {
   console.log('SIGTERM sinyali alındı, kapatılıyor...');
   await closeQueue();
+  await cacheService.close();
   process.exit(0);
 });
 
 process.on('SIGINT', async () => {
   console.log('SIGINT sinyali alındı, kapatılıyor...');
   await closeQueue();
+  await cacheService.close();
   process.exit(0);
 });

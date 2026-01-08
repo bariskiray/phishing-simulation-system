@@ -85,4 +85,36 @@ export const startScheduledCampaign = (id) => api.post(`/scheduled-campaigns/${i
 export const stopScheduledCampaign = (id) => api.post(`/scheduled-campaigns/${id}/stop`);
 export const executeScheduledCampaign = (id) => api.post(`/scheduled-campaigns/${id}/execute`);
 
+// Risk Analysis API
+export const getRiskAnalysisUsers = (category) => {
+  const params = category ? { category } : {};
+  return api.get('/risk-analysis/users', { params });
+};
+export const getUserRiskAnalysis = (userId) => api.get(`/risk-analysis/user/${userId}`);
+export const getCampaignRiskAnalysis = (campaignId) => api.get(`/risk-analysis/campaign/${campaignId}`);
+export const getRiskAnalysisSummary = () => api.get('/risk-analysis/summary');
+export const calculateRiskScores = (userId) => api.post('/risk-analysis/calculate', userId ? { userId } : {});
+export const getSusceptibility = (userId) => {
+  const params = userId ? { userId } : {};
+  return api.get('/risk-analysis/susceptibility', { params });
+};
+export const exportTrainingData = (format = 'json') => 
+  api.get(`/risk-analysis/training-data?format=${format}`, { responseType: 'blob' });
+
+// Training API
+export const getTrainingNeeds = (userId) => api.get(`/training/needs/user/${userId}`);
+export const getCampaignTrainingNeeds = (campaignId) => api.get(`/training/needs/campaign/${campaignId}`);
+export const analyzeTrainingNeeds = (userIds, skipCache) => api.post('/training/needs/analyze', { userIds, skipCache });
+export const getTrainingNeedsSummary = () => api.get('/training/needs/summary');
+export const getTrainingRecommendations = (userId) => api.get(`/training/recommendations/${userId}`);
+export const updateTrainingRecommendations = (userId) => api.post('/training/recommendations/update', { userId });
+export const getTrainingContent = (params) => api.get('/training/content', { params });
+export const getTrainingContentDetail = (id) => api.get(`/training/content/${id}`);
+export const createTrainingContent = (data) => api.post('/training/content', data);
+export const updateTrainingContent = (id, data) => api.put(`/training/content/${id}`, data);
+export const deleteTrainingContent = (id) => api.delete(`/training/content/${id}`);
+export const completeTraining = (data) => api.post('/training/complete', data);
+export const getTrainingProgress = (userId) => api.get(`/training/progress/${userId}`);
+export const getTrainingHistory = (userId) => api.get(`/training/history/${userId}`);
+
 export default api;
