@@ -104,7 +104,7 @@ export const exportTrainingData = (format = 'json') =>
 // Training API
 export const getTrainingNeeds = (userId) => api.get(`/training/needs/user/${userId}`);
 export const getCampaignTrainingNeeds = (campaignId) => api.get(`/training/needs/campaign/${campaignId}`);
-export const analyzeTrainingNeeds = (userIds, skipCache) => api.post('/training/needs/analyze', { userIds, skipCache });
+export const analyzeTrainingNeeds = (userIds, skipCache, resetAll = false) => api.post('/training/needs/analyze', { userIds, skipCache, resetAll });
 export const getTrainingNeedsSummary = () => api.get('/training/needs/summary');
 export const getTrainingRecommendations = (userId) => api.get(`/training/recommendations/${userId}`);
 export const updateTrainingRecommendations = (userId) => api.post('/training/recommendations/update', { userId });

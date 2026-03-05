@@ -128,15 +128,62 @@ const getModelInfo = async () => {
 
 /**
  * Fallback öneriler (ML servisi down olduğunda)
- * Basit kural tabanlı öneriler
+ * Basit kural tabanlı öneriler - GERÇEK VERİYE DAYALI
  */
 const getFallbackRecommendations = (userData) => {
-  const { riskScore, riskCategory, campaignStats } = userData;
+  const { riskScore, riskCategory, campaignStats, summary } = userData;
   
   const trainingNeeds = [];
   let overallPriority = 0;
   
-  // Risk bazlı öneriler
+  // Toplam kampanya sayısını kontrol et
+  const totalCampaigns = summary?.totalCampaigns || 0;
+  const totalClicked = (campaignStats?.basic?.clicked || 0) + 
+                       (campaignStats?.urgent?.clicked || 0) + 
+                       (campaignStats?.custom?.clicked || 0);
+  
+  // Hiç kampanya yoksa veya hiç tıklama yoksa - düşük öncelik
+  if (totalCampaigns === 0) {
+    // Henüz test edilmemiş kullanıcı - çok düşük öncelik
+    trainingNeeds.push({
+      category: 'phishing-basics',
+      priority: 0.15,
+      reason: 'Henüz test edilmemiş - Genel farkındalık eğitimi önerilir',
+      estimatedDuration: 15,
+      riskBased: true
+    });
+    overallPriority = 0.15;
+    
+    return {
+      trainingNeeds,
+      overallPriority,
+      recommendedOrder: ['phishing-basics'],
+      modelVersion: 'fallback-1.0',
+      confidence: 0.50
+    };
+  }
+  
+  // Hiç tıklama yoksa - düşük öncelik
+  if (totalClicked === 0) {
+    trainingNeeds.push({
+      category: 'phishing-basics',
+      priority: 0.20,
+      reason: 'Düşük risk - Hiç phishing linkine tıklanmamış, koruyucu eğitim',
+      estimatedDuration: 15,
+      riskBased: true
+    });
+    overallPriority = 0.20;
+    
+    return {
+      trainingNeeds,
+      overallPriority,
+      recommendedOrder: ['phishing-basics'],
+      modelVersion: 'fallback-1.0',
+      confidence: 0.70
+    };
+  }
+  
+  // Gerçek tıklama verisi var - risk bazlı öneriler
   if (riskCategory === 'Kritik' || riskScore >= 76) {
     trainingNeeds.push({
       category: 'phishing-basics',
@@ -165,26 +212,26 @@ const getFallbackRecommendations = (userData) => {
   } else if (riskCategory === 'Orta' || riskScore >= 26) {
     trainingNeeds.push({
       category: 'phishing-basics',
-      priority: 0.60,
+      priority: 0.55,
       reason: 'Orta risk seviyesi - Önleyici eğitim önerilir',
       estimatedDuration: 20,
       riskBased: true
     });
-    overallPriority = 0.60;
+    overallPriority = 0.55;
   } else {
     trainingNeeds.push({
       category: 'phishing-basics',
-      priority: 0.40,
+      priority: 0.30,
       reason: 'Düşük risk - Temel farkındalık eğitimi',
       estimatedDuration: 15,
       riskBased: true
     });
-    overallPriority = 0.40;
+    overallPriority = 0.30;
   }
   
-  // Kampanya bazlı öneriler
+  // Kampanya bazlı öneriler - sadece gerçek tıklama varsa
   if (campaignStats) {
-    if (campaignStats.urgent && campaignStats.urgent.clicked > 0) {
+    if (campaignStats.urgent && campaignStats.urgent.clicked > 0 && campaignStats.urgent.total > 0) {
       const urgentClickRate = campaignStats.urgent.clicked / campaignStats.urgent.total;
       if (urgentClickRate > 0.3) {
         trainingNeeds.push({
@@ -198,17 +245,17 @@ const getFallbackRecommendations = (userData) => {
       }
     }
     
-    if (campaignStats.basic && campaignStats.basic.clicked > 0) {
+    if (campaignStats.basic && campaignStats.basic.clicked > 0 && campaignStats.basic.total > 0) {
       const basicClickRate = campaignStats.basic.clicked / campaignStats.basic.total;
       if (basicClickRate > 0.2) {
         trainingNeeds.push({
           category: 'phishing-basics',
-          priority: 0.75,
+          priority: 0.70,
           reason: 'Basic kampanyalara düşme tespit edildi',
           estimatedDuration: 30,
           campaignBased: true
         });
-        overallPriority = Math.max(overallPriority, 0.75);
+        overallPriority = Math.max(overallPriority, 0.70);
       }
     }
   }
@@ -224,7 +271,7 @@ const getFallbackRecommendations = (userData) => {
     overallPriority,
     recommendedOrder,
     modelVersion: 'fallback-1.0',
-    confidence: 0.70 // Fallback için düşük confidence
+    confidence: 0.70
   };
 };
 

@@ -10,8 +10,6 @@ import CampaignDetail from './pages/CampaignDetail';
 import ScheduledCampaigns from './pages/ScheduledCampaigns';
 import Reports from './pages/Reports';
 import RiskAnalysis from './pages/RiskAnalysis';
-import TrainingNeeds from './pages/TrainingNeeds';
-import TrainingRecommendations from './pages/TrainingRecommendations';
 import Login from './pages/Login';
 import './App.css';
 
@@ -90,26 +88,6 @@ function App() {
               <ProtectedRoute>
                 <Layout>
                   <RiskAnalysis />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/training/needs"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <TrainingNeeds />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/training/recommendations"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <TrainingRecommendations />
                 </Layout>
               </ProtectedRoute>
             }

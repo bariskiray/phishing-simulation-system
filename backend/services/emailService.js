@@ -464,9 +464,9 @@ const sendEmail = async (campaign, user) => {
     htmlContent = addTrackingPixel(htmlContent, campaign._id, user._id);
     htmlContent = makeLinksTrackable(htmlContent, campaign._id, user._id);
     
-    // Debug: Tracking URL'ini logla
-    console.log(`📧 Mail gönderiliyor - To: ${user.email}`);
-    console.log(`🔗 Tracking URL: ${process.env.TRACKING_URL}/track/open/${campaign._id}/${user._id}`);
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`📧 Mail gönderiliyor - To: ${user.email}`);
+    }
     
     const mailOptions = {
       from: process.env.SMTP_USER,

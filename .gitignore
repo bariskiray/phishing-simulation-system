@@ -2,10 +2,21 @@
 node_modules/
 frontend/node_modules/
 
-# Environment variables
+# Environment variables (asla commit etmeyin!)
 .env
-.env.production
-.env.development
+.env.*
+!.env.example
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Secrets & Certificates
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
 
 # Logs
 logs
@@ -29,4 +40,11 @@ npm-debug.log*
 # Build files
 frontend/build/
 dist/
+
+# Python
+ml-service/venv/
+ml-service/.venv/
+__pycache__/
+*.py[cod]
+*.pyo
 

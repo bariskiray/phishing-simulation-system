@@ -61,18 +61,6 @@ function Layout({ children }) {
               Risk Analizi
             </Link>
           </li>
-          <li>
-            <Link to="/training/needs" className={isActive('/training/needs')}>
-              <span className="icon">📚</span>
-              Eğitim Gereklilikleri
-            </Link>
-          </li>
-          <li>
-            <Link to="/training/recommendations" className={isActive('/training/recommendations')}>
-              <span className="icon">🎯</span>
-              Eğitim Önerileri
-            </Link>
-          </li>
         </ul>
         
         <div className="sidebar-footer">

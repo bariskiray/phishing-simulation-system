@@ -26,9 +26,10 @@ router.get('/open/:campaignId/:userId', async (req, res) => {
     const ipAddress = req.ip || req.connection.remoteAddress;
     const userAgent = req.get('user-agent');
     
-    console.log(`📧 Tracking pixel yüklendi - Campaign: ${campaignId}, User: ${userId}`);
-    console.log(`🔍 User-Agent: ${userAgent}`);
-    console.log(`🌐 IP Address: ${ipAddress}`);
+    // Production'da IP/User-Agent loglanmaz (KVKK/GDPR - kişisel veri)
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`📧 Tracking pixel - Campaign: ${campaignId}, User: ${userId}`);
+    }
     
     // Event kaydet (duplicate kontrolü ile - her açılış bir kere kaydedilir)
     try {

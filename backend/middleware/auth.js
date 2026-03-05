@@ -1,8 +1,11 @@
 const jwt = require('jsonwebtoken');
 const AdminUser = require('../models/AdminUser');
 
-// JWT Secret - production'da .env'den alınmalı
-const JWT_SECRET = process.env.JWT_SECRET || 'phishing-sim-secret-key-change-in-production';
+// JWT Secret - MUTLAKA .env'den alınmalı, fallback yok (güvenlik)
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET ortam değişkeni tanımlanmalı. .env dosyasını kontrol edin.');
+}
 const JWT_EXPIRE = process.env.JWT_EXPIRE || '7d';
 
 // Token oluştur

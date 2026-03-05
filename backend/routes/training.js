@@ -71,14 +71,22 @@ router.get('/needs/campaign/:campaignId', async (req, res) => {
  */
 router.post('/needs/analyze', async (req, res) => {
   try {
-    const { userIds, skipCache } = req.body;
+    const { userIds, skipCache, resetAll } = req.body;
+    
+    // Tüm verileri sıfırla ve yeniden analiz yap
+    if (resetAll) {
+      console.log('🗑️ Tüm TrainingNeed verileri siliniyor...');
+      await TrainingNeed.deleteMany({});
+      await cacheService.invalidateAll();
+      console.log('✅ Tüm TrainingNeed verileri silindi ve cache temizlendi');
+    }
     
     if (userIds && Array.isArray(userIds)) {
       // Belirli kullanıcılar için analiz
       const results = [];
       for (const userId of userIds) {
         try {
-          const analysis = await analyzeTrainingNeed(userId, skipCache);
+          const analysis = await analyzeTrainingNeed(userId, true); // Always skip cache
           results.push(analysis);
         } catch (error) {
           console.error(`Kullanıcı ${userId} analizi hatası:`, error.message);
@@ -92,7 +100,7 @@ router.post('/needs/analyze', async (req, res) => {
       });
     } else {
       // Tüm kullanıcılar için analiz
-      const results = await analyzeAllUsersTrainingNeed(skipCache);
+      const results = await analyzeAllUsersTrainingNeed(true); // Always skip cache
       
       res.json({
         success: true,

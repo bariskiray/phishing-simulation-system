@@ -4,7 +4,10 @@ import {
   getUserRiskAnalysis, 
   getRiskAnalysisSummary,
   calculateRiskScores,
-  exportTrainingData
+  exportTrainingData,
+  getTrainingNeedsSummary,
+  getTrainingNeeds,
+  analyzeTrainingNeeds
 } from '../services/api';
 import './RiskAnalysis.css';
 
@@ -16,6 +19,9 @@ function RiskAnalysis() {
   const [userDetails, setUserDetails] = useState(null);
   const [categoryFilter, setCategoryFilter] = useState('');
   const [calculating, setCalculating] = useState(false);
+  const [trainingNeedsSummary, setTrainingNeedsSummary] = useState(null);
+  const [userTrainingNeeds, setUserTrainingNeeds] = useState(null);
+  const [analyzing, setAnalyzing] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -24,13 +30,15 @@ function RiskAnalysis() {
   const loadData = async () => {
     try {
       setLoading(true);
-      const [usersRes, summaryRes] = await Promise.all([
+      const [usersRes, summaryRes, trainingSummaryRes] = await Promise.all([
         getRiskAnalysisUsers(categoryFilter || undefined),
-        getRiskAnalysisSummary()
+        getRiskAnalysisSummary(),
+        getTrainingNeedsSummary()
       ]);
 
       setUsers(usersRes.data.data);
       setSummary(summaryRes.data.data);
+      setTrainingNeedsSummary(trainingSummaryRes.data.data);
       setLoading(false);
     } catch (error) {
       console.error('Risk analizi yükleme hatası:', error);
@@ -40,8 +48,12 @@ function RiskAnalysis() {
 
   const handleUserClick = async (userId) => {
     try {
-      const res = await getUserRiskAnalysis(userId);
-      setUserDetails(res.data.data);
+      const [riskRes, trainingRes] = await Promise.all([
+        getUserRiskAnalysis(userId),
+        getTrainingNeeds(userId).catch(() => ({ data: { data: null } }))
+      ]);
+      setUserDetails(riskRes.data.data);
+      setUserTrainingNeeds(trainingRes.data.data);
       setSelectedUser(userId);
     } catch (error) {
       console.error('Kullanıcı detayları yükleme hatası:', error);
@@ -80,6 +92,25 @@ function RiskAnalysis() {
     }
   };
 
+  const handleAnalyzeAll = async () => {
+    try {
+      setAnalyzing(true);
+      // resetAll: true ile eski verileri sil ve yeniden analiz yap
+      await analyzeTrainingNeeds(null, true, true);
+      await loadData();
+      // Seçili kullanıcı varsa, onun verilerini de yenile
+      if (selectedUser) {
+        await handleUserClick(selectedUser);
+      }
+      setAnalyzing(false);
+      alert('Tüm kullanıcılar için eğitim gerekliliği analizi tamamlandı!');
+    } catch (error) {
+      console.error('Analiz hatası:', error);
+      setAnalyzing(false);
+      alert('Analiz sırasında bir hata oluştu.');
+    }
+  };
+
   const getCategoryColor = (category) => {
     switch (category) {
       case 'Kritik': return '#e74c3c';
@@ -98,6 +129,33 @@ function RiskAnalysis() {
       case 'Düşük': return '#f0f9f4';
       default: return '#f8f9fa';
     }
+  };
+
+  const getTrainingCategoryName = (category) => {
+    const names = {
+      'phishing-basics': 'Phishing Temelleri',
+      'urgent-emails': 'Acil E-posta Tanıma',
+      'link-security': 'Link Güvenliği',
+      'social-engineering': 'Sosyal Mühendislik',
+      'company-policies': 'Şirket Politikaları',
+      'advanced-threats': 'Gelişmiş Tehditler',
+      'time-based-threats': 'Zaman Bazlı Tehditler'
+    };
+    return names[category] || category;
+  };
+
+  const getPriorityColor = (priority) => {
+    if (priority >= 0.8) return '#e74c3c';
+    if (priority >= 0.6) return '#f39c12';
+    if (priority >= 0.35) return '#f1c40f';
+    return '#27ae60';
+  };
+
+  const getPriorityLabel = (priority) => {
+    if (priority >= 0.8) return 'Kritik';
+    if (priority >= 0.6) return 'Yüksek';
+    if (priority >= 0.35) return 'Orta';
+    return 'Düşük';
   };
 
   if (loading) {
@@ -119,6 +177,13 @@ function RiskAnalysis() {
           >
             {calculating ? 'Hesaplanıyor...' : 'Skorları Yeniden Hesapla'}
           </button>
+          <button 
+            className="btn btn-primary" 
+            onClick={handleAnalyzeAll}
+            disabled={analyzing}
+          >
+            {analyzing ? 'Analiz Yapılıyor...' : 'Tüm Kullanıcıları Analiz Et'}
+          </button>
           <div className="export-buttons">
             <button 
               className="btn btn-secondary" 
@@ -136,7 +201,7 @@ function RiskAnalysis() {
         </div>
       </div>
 
-      {/* Özet Kartlar */}
+      {/* Risk Özet Kartları */}
       {summary && (
         <div className="summary-cards">
           <div className="summary-card">
@@ -158,7 +223,29 @@ function RiskAnalysis() {
         </div>
       )}
 
-      {/* Kategori Dağılımı */}
+      {/* Eğitim Gereklilikleri Özet Kartları */}
+      {trainingNeedsSummary && (
+        <div className="summary-cards">
+          <div className="summary-card">
+            <h3>Toplam Kullanıcı (Eğitim)</h3>
+            <div className="summary-value">{trainingNeedsSummary.totalUsers || 0}</div>
+          </div>
+          <div className="summary-card">
+            <h3>Yüksek Öncelikli</h3>
+            <div className="summary-value">{trainingNeedsSummary.highPriorityUsers || 0}</div>
+          </div>
+          <div className="summary-card">
+            <h3>Orta Öncelikli</h3>
+            <div className="summary-value">{trainingNeedsSummary.mediumPriorityUsers || 0}</div>
+          </div>
+          <div className="summary-card">
+            <h3>Ortalama Öncelik</h3>
+            <div className="summary-value">{trainingNeedsSummary.avgPriority?.toFixed(2) || 0}</div>
+          </div>
+        </div>
+      )}
+
+      {/* Risk Kategori Dağılımı */}
       {summary && summary.categoryDistribution && (
         <div className="category-distribution">
           <h2>Risk Kategorisi Dağılımı</h2>
@@ -173,6 +260,21 @@ function RiskAnalysis() {
                 }}
               >
                 <div className="category-name">{category}</div>
+                <div className="category-count">{count}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Eğitim Kategori Dağılımı */}
+      {trainingNeedsSummary && trainingNeedsSummary.categoryDistribution && (
+        <div className="category-distribution">
+          <h2>Eğitim Kategorisi Dağılımı</h2>
+          <div className="category-grid">
+            {Object.entries(trainingNeedsSummary.categoryDistribution).map(([category, count]) => (
+              <div key={category} className="category-item">
+                <div className="category-name">{getTrainingCategoryName(category)}</div>
                 <div className="category-count">{count}</div>
               </div>
             ))}
@@ -381,6 +483,93 @@ function RiskAnalysis() {
                         <p>{rec.description}</p>
                       </div>
                     ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Eğitim Gereklilikleri */}
+              {userTrainingNeeds && (
+                <div className="detail-card">
+                  <h3>Eğitim Gereklilikleri</h3>
+                  <div className="user-header">
+                    <div>
+                      <strong>{userTrainingNeeds.user?.name}</strong>
+                      <span className="user-email">{userTrainingNeeds.user?.email}</span>
+                    </div>
+                    <div className="overall-priority">
+                      <span>Genel Öncelik:</span>
+                      <span 
+                        className="priority-badge"
+                        style={{ color: getPriorityColor(userTrainingNeeds.overallPriority) }}
+                      >
+                        {getPriorityLabel(userTrainingNeeds.overallPriority)}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="needs-list">
+                    {userTrainingNeeds.trainingNeeds
+                      .sort((a, b) => b.priority - a.priority)
+                      .map((need, index) => (
+                        <div key={index} className="need-card">
+                          <div className="need-header">
+                            <h4>{getTrainingCategoryName(need.category)}</h4>
+                            <span 
+                              className="priority-badge"
+                              style={{ 
+                                backgroundColor: getPriorityColor(need.priority) + '20',
+                                color: getPriorityColor(need.priority)
+                              }}
+                            >
+                              {getPriorityLabel(need.priority)}
+                            </span>
+                          </div>
+                          <p className="need-reason">{need.reason}</p>
+                          
+                          {need.campaignBased && (
+                            <span className="need-tag campaign-tag">Kampanya Bazlı</span>
+                          )}
+                          {need.riskBased && (
+                            <span className="need-tag risk-tag">Risk Bazlı</span>
+                          )}
+
+                          {need.modules && need.modules.length > 0 && (
+                            <div className="recommended-modules">
+                              <h5>Önerilen Eğitimler:</h5>
+                              <ul>
+                                {need.modules.map((module, idx) => (
+                                  <li key={idx}>
+                                    <strong>{module.title}</strong>
+                                    <span className="module-duration">{module.duration} dk</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          <div className="estimated-duration">
+                            Tahmini Süre: {need.estimatedDuration || 30} dakika
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+
+                  {userTrainingNeeds.recommendedOrder && userTrainingNeeds.recommendedOrder.length > 0 && (
+                    <div className="recommended-order">
+                      <h4>Önerilen Eğitim Sırası</h4>
+                      <ol>
+                        {userTrainingNeeds.recommendedOrder.map((category, idx) => (
+                          <li key={idx}>{getTrainingCategoryName(category)}</li>
+                        ))}
+                      </ol>
+                    </div>
+                  )}
+
+                  <div className="model-info">
+                    <small>
+                      Model Versiyonu: {userTrainingNeeds.modelVersion} | 
+                      Son Analiz: {new Date(userTrainingNeeds.lastAnalyzed).toLocaleString('tr-TR')}
+                    </small>
                   </div>
                 </div>
               )}
