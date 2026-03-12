@@ -1,422 +1,398 @@
-# Phishing Simülasyon Sistemi
+<p align="center">
+  <h1 align="center">PhishGuard</h1>
+  <p align="center">
+    <strong>Enterprise Phishing Simulation & Security Awareness Platform</strong>
+  </p>
+  <p align="center">
+    A full-stack platform for conducting controlled phishing simulations, tracking user behavior, assessing organizational risk, and delivering targeted security awareness training.
+  </p>
+</p>
 
-Güvenlik farkındalığı eğitimi için kapsamlı phishing simülasyon ve analiz platformu.
+<p align="center">
+  <a href="#features">Features</a> &nbsp;&bull;&nbsp;
+  <a href="#architecture">Architecture</a> &nbsp;&bull;&nbsp;
+  <a href="#getting-started">Getting Started</a> &nbsp;&bull;&nbsp;
+  <a href="#usage">Usage</a> &nbsp;&bull;&nbsp;
+  <a href="#api-reference">API Reference</a> &nbsp;&bull;&nbsp;
+  <a href="#troubleshooting">Troubleshooting</a>
+</p>
 
-## 🎯 Özellikler
+---
 
-- **Mail Gönderimi**: SMTP üzerinden özelleştirilebilir phishing e-postaları
-- **Tracking Sistemi**: Mail açılma ve link tıklama takibi
-- **Kampanya Yönetimi**: Birden fazla kullanıcıya kampanya oluşturma ve yönetme
-- **Detaylı Raporlama**: Kullanıcı ve kampanya bazlı analitik raporlar
-- **Risk Analizi**: Kullanıcı risk seviyesi belirleme
-- **Modern Dashboard**: React tabanlı kullanıcı dostu arayüz
-- **Periyodik Kampanyalar**: Otomatik tekrarlayan kampanya desteği
-- **JWT Authentication**: Güvenli admin girişi ve oturum yönetimi
+## Overview
 
-## 🏗️ Teknoloji Stack
+PhishGuard empowers security teams to proactively assess and improve their organization's resilience against phishing attacks. By simulating real-world phishing scenarios in a controlled environment, the platform identifies vulnerable users and provides data-driven training recommendations — powered by an optional machine learning engine.
 
-### Backend
-- Node.js & Express
-- MongoDB & Mongoose
-- Nodemailer (SMTP)
-- Node-cron (periyodik görevler)
-- JWT (JSON Web Token) Authentication
-- bcryptjs (şifre hashleme)
-- Redis (cache ve queue - opsiyonel)
-- node-cache (in-memory cache)
+> **Disclaimer:** This software is intended strictly for authorized security awareness testing. Unauthorized use against individuals or organizations without explicit consent is illegal and unethical.
 
-### Frontend
-- React 18
-- React Router
-- Axios
-- Chart.js
-- Modern CSS
+---
 
-### ML Servisi
-- Python 3.8+
-- Flask
-- scikit-learn
-- pandas & numpy
-- joblib
+## Features
 
-## 📋 Gereksinimler
+| Category | Capability |
+|---|---|
+| **Campaign Management** | Create, schedule, and manage phishing campaigns targeting specific user groups |
+| **Email Delivery** | Send customizable phishing emails via SMTP with HTML template support |
+| **Behavioral Tracking** | Track email opens and link clicks with pixel and redirect-based tracking |
+| **Risk Scoring** | Compute per-user risk scores based on historical interaction data |
+| **ML-Powered Analysis** | Predict training needs using a scikit-learn classification model (optional) |
+| **Training Recommendations** | Generate personalized security training plans per user |
+| **Scheduled Campaigns** | Automate recurring campaigns with cron-based scheduling |
+| **Analytics Dashboard** | Visualize campaign performance, risk distribution, and training progress |
+| **Export & Reporting** | Export reports in PDF and CSV formats |
+| **JWT Authentication** | Secure admin access with token-based authentication |
+| **Rate Limiting** | Protect API endpoints with configurable rate limiting |
+| **Caching** | In-memory and Redis-based caching for improved performance |
 
-- Node.js (v14 veya üzeri)
-- MongoDB (v4.4 veya üzeri)
-- Python 3.8+ (ML servisi için)
-- SMTP sunucu erişimi (Gmail, Outlook vb.)
-- Redis (opsiyonel - cache ve queue için)
+---
 
-## 🚀 Kurulum
+## Architecture
 
-### 1. Depoyu Klonlayın
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        PhishGuard Platform                      │
+├──────────────┬──────────────────┬──────────────┬────────────────┤
+│   Frontend   │     Backend      │  ML Service  │   Data Layer   │
+│              │                  │  (Optional)  │                │
+│  React 18    │  Node.js/Express │  Flask       │  MongoDB       │
+│  Chart.js    │  Nodemailer      │  scikit-learn│  Redis (opt.)  │
+│  React Router│  Bull Queue      │  pandas      │                │
+│  Axios       │  JWT Auth        │  numpy       │                │
+│              │  node-cron       │              │                │
+│  :3000       │  :5000           │  :8000       │  :27017/:6379  │
+└──────────────┴──────────────────┴──────────────┴────────────────┘
+```
+
+### Tech Stack
+
+**Backend** — Node.js, Express, Mongoose, Nodemailer, Bull (job queue), JWT, bcryptjs, node-cron, node-cache, express-rate-limit, PDFKit, json2csv
+
+**Frontend** — React 18, React Router v6, Axios, Chart.js, react-chartjs-2
+
+**ML Service** — Python 3.8+, Flask, scikit-learn, pandas, numpy, joblib
+
+**Infrastructure** — MongoDB 4.4+, Redis (optional)
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+| Requirement | Version |
+|---|---|
+| Node.js | v14+ |
+| MongoDB | v4.4+ |
+| Python | 3.8+ (only for ML service) |
+| Redis | Latest (optional) |
+
+### Installation
+
+**1. Clone the repository**
 
 ```bash
+git clone <repository-url>
 cd cyberSecurityProject
 ```
 
-### 2. Backend Kurulumu
+**2. Install backend dependencies**
 
 ```bash
-# Ana dizinde bağımlılıkları yükleyin
 npm install
 ```
 
-### 3. Frontend Kurulumu
+**3. Install frontend dependencies**
 
 ```bash
-# Frontend dizinine gidin
 cd frontend
 npm install
 cd ..
 ```
 
-### 4. ML Servisi Kurulumu (Opsiyonel)
+**4. Set up ML service (optional)**
 
 ```bash
-# ML servisi dizinine gidin
 cd ml-service
-
-# Python virtual environment oluşturun (önerilir)
 python3 -m venv venv
-
-# Virtual environment'ı aktifleştirin
-# macOS/Linux:
-source venv/bin/activate
-# Windows:
-# venv\Scripts\activate
-
-# Bağımlılıkları yükleyin
+source venv/bin/activate    # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-
-# Ana dizine geri dönün
 cd ..
 ```
 
-**Not**: ML servisi opsiyoneldir. Sistem ML servisi olmadan da çalışır (fallback modu ile).
+**5. Configure environment variables**
 
-### 5. MongoDB'yi Başlatın
+Copy the example environment file and update it with your credentials:
 
 ```bash
-# MongoDB'nin çalıştığından emin olun
-# macOS/Linux:
-sudo systemctl start mongod
-
-# veya Docker ile:
-docker run -d -p 27017:27017 --name mongodb mongo
+cp .env.example .env
 ```
 
-### 6. Ortam Değişkenlerini Ayarlayın
-
-`.env` dosyasını düzenleyin ve kendi bilgilerinizi girin:
+Edit `.env` with your configuration:
 
 ```env
-# MongoDB
+# Database
 MONGODB_URI=mongodb://localhost:27017/phishing-sim
 
 # Server
 PORT=5000
 NODE_ENV=development
 
-# SMTP (Gmail örneği)
+# SMTP Configuration
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_SECURE=false
-SMTP_USER=sizin-email@gmail.com
-SMTP_PASS=sizin-uygulama-sifreniz
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
 
-# URLs
+# Application URLs
 FRONTEND_URL=http://localhost:3000
 TRACKING_URL=http://localhost:5000
 
-# JWT Authentication
-JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+# Authentication
+JWT_SECRET=your-secret-key-change-in-production
 JWT_EXPIRE=7d
 
-# ML Servisi (Opsiyonel)
+# ML Service (Optional)
 ML_SERVICE_URL=http://localhost:8000
 ML_SERVICE_API_KEY=your-ml-service-api-key
 ML_SERVICE_TIMEOUT=10000
 
-# Redis (Opsiyonel - Cache için)
+# Redis (Optional)
 REDIS_HOST=localhost
 REDIS_PORT=6379
 REDIS_PASSWORD=
 ```
 
-**Not**: Gmail kullanıyorsanız, [App Password](https://support.google.com/accounts/answer/185833) oluşturmanız gerekir.
+> **Note:** If using Gmail, you must generate an [App Password](https://support.google.com/accounts/answer/185833) instead of your account password.
 
-## 💻 Kullanım
+---
 
-### 1. MongoDB'yi Başlatın
+## Usage
 
-MongoDB'nin çalıştığından emin olun:
+### Starting the Services
 
-```bash
-# macOS/Linux:
-sudo systemctl start mongod
+Start each service in a separate terminal window:
 
-# veya Docker ile:
-docker run -d -p 27017:27017 --name mongodb mongo
-```
+| Terminal | Service | Command | URL |
+|---|---|---|---|
+| 1 | MongoDB | `mongod` or `docker run -d -p 27017:27017 --name mongodb mongo` | `localhost:27017` |
+| 2 | ML Service (opt.) | `cd ml-service && source venv/bin/activate && python app.py` | `localhost:8000` |
+| 3 | Backend | `npm start` (or `npm run dev` for hot-reload) | `localhost:5000` |
+| 4 | Frontend | `cd frontend && npm start` | `localhost:3000` |
 
-### 2. ML Servisini Başlatın (Opsiyonel)
-
-Yeni bir terminal penceresinde:
-
-```bash
-cd ml-service
-
-# Virtual environment aktifse (yukarıda oluşturduysanız)
-source venv/bin/activate  # macOS/Linux
-# veya
-venv\Scripts\activate  # Windows
-
-# ML servisini başlatın
-python app.py
-```
-
-ML Servisi `http://localhost:8000` adresinde çalışacaktır.
-
-**Not**: ML servisi olmadan da sistem çalışır, ancak fallback (basit kural tabanlı) öneriler kullanılır.
-
-### 3. Backend'i Başlatın
-
-Yeni bir terminal penceresinde:
+**Quick start without ML service:**
 
 ```bash
-# Ana dizinde
-npm start
-# veya geliştirme modu için:
-npm run dev
-```
-
-Backend `http://localhost:5000` adresinde çalışacaktır.
-
-### 4. Frontend'i Başlatın
-
-Yeni bir terminal penceresinde:
-
-```bash
-cd frontend
-npm start
-```
-
-Frontend `http://localhost:3000` adresinde çalışacaktır.
-
-### Tüm Servisleri Sırayla Başlatma
-
-**Terminal 1 - MongoDB:**
-```bash
-# MongoDB zaten çalışıyorsa atlayın
-sudo systemctl start mongod
-```
-
-**Terminal 2 - ML Servisi (Opsiyonel):**
-```bash
-cd ml-service
-source venv/bin/activate  # veya venv\Scripts\activate (Windows)
-python app.py
-```
-
-**Terminal 3 - Backend:**
-```bash
-cd /path/to/cyberSecurityProject
-npm start
-```
-
-**Terminal 4 - Frontend:**
-```bash
-cd /path/to/cyberSecurityProject/frontend
-npm start
-```
-
-### Hızlı Başlatma (ML Servisi Olmadan)
-
-Sadece backend ve frontend:
-
-```bash
-# Terminal 1 - Backend
+# Terminal 1
 npm start
 
-# Terminal 2 - Frontend
+# Terminal 2
 cd frontend && npm start
 ```
 
-## 📖 Kullanım Kılavuzu
+**Full-stack development mode:**
 
-### Sistem Bileşenleri
-
-1. **Backend (Node.js)**: Ana API servisi, veritabanı işlemleri, kampanya yönetimi
-2. **Frontend (React)**: Kullanıcı arayüzü, dashboard, raporlar
-3. **ML Servisi (Python)**: Eğitim gerekliliği analizi için ML modeli (opsiyonel)
-4. **MongoDB**: Veritabanı
-5. **Redis**: Cache ve queue (opsiyonel)
-
-### 0. İlk Giriş (Admin Kaydı)
-
-Sistem ilk kez çalıştırıldığında:
-1. `http://localhost:3000` adresine gidin
-2. Henüz admin hesabı olmadığı için kayıt formu görünecektir
-3. Kullanıcı adı, e-posta ve şifre belirleyin
-4. "Hesap Oluştur" butonuna tıklayın
-5. Artık bu bilgilerle giriş yapabilirsiniz
-
-**Not**: Güvenlik için sadece bir admin hesabı oluşturulabilir.
-
-### 1. Kullanıcı Ekleme
-
-- Dashboard'da "Kullanıcılar" sekmesine gidin
-- "Yeni Kullanıcı" butonuna tıklayın
-- İsim, e-posta, grup bilgilerini girin
-
-### 2. Kampanya Oluşturma
-
-- "Kampanyalar" sekmesine gidin
-- "Yeni Kampanya" butonuna tıklayın
-- Kampanya detaylarını doldurun:
-  - Kampanya adı
-  - Mail konusu
-  - Mail içeriği (HTML destekli)
-  - Template seçimi
-  - Hedef kullanıcıları seçin
-
-### 3. Kampanya Gönderimi
-
-- Kampanya kartında "Gönder" butonuna tıklayın
-- Onay verdikten sonra sistem otomatik olarak mailleri gönderir
-- Tracking otomatik başlar
-
-### 4. Raporları İnceleme
-
-- "Raporlar" sekmesinde genel istatistikleri görün
-- Kampanya detay sayfasında kullanıcı bazlı analizleri inceleyin
-- Risk seviyesi yüksek kullanıcıları belirleyin
-
-### 5. Risk Analizi ve Eğitim Gereklilikleri
-
-- "Risk Analizi" sekmesinde kullanıcı risk skorlarını görün
-- "Eğitim Gereklilikleri" sekmesinde kampanya ve risk bazlı eğitim analizlerini inceleyin
-- "Eğitim Önerileri" sekmesinde kişiselleştirilmiş eğitim önerilerini görün
-- ML servisi aktifse daha doğru öneriler alırsınız
-
-## 🔒 Güvenlik Notları
-
-**ÖNEMLİ**: Bu sistem sadece eğitim ve farkındalık amaçlıdır!
-
-- ✅ Sadece yetkili kullanıcılara test maili gönderin
-- ✅ Kullanıcıları önceden bilgilendirin
-- ✅ SMTP bilgilerinizi güvende tutun
-- ✅ `.env` dosyasını asla paylaşmayın
-- ✅ Test verilerini gerçek production verilerinden ayırın
-
-## 📊 API Endpoints
-
-### Authentication
-- `POST /api/auth/register` - İlk admin kaydı (sadece admin yoksa)
-- `POST /api/auth/login` - Admin girişi (JWT token döner)
-- `GET /api/auth/me` - Mevcut kullanıcı bilgisi (token gerekli)
-- `GET /api/auth/check` - Admin var mı kontrol
-
-**Not**: Aşağıdaki tüm endpoint'ler JWT token gerektirir. Header'a `Authorization: Bearer <token>` ekleyin.
-
-### Kullanıcılar
-- `GET /api/users` - Tüm kullanıcıları listele
-- `POST /api/users` - Yeni kullanıcı ekle
-- `DELETE /api/users/:id` - Kullanıcı sil
-
-### Kampanyalar
-- `GET /api/campaigns` - Kampanyaları listele
-- `POST /api/campaigns` - Yeni kampanya oluştur
-- `POST /api/campaigns/:id/send` - Kampanya gönder
-- `GET /api/campaigns/:id` - Kampanya detayı
-
-### Raporlar
-- `GET /api/reports` - Genel rapor
-- `GET /api/reports/:campaignId` - Kampanya raporu
-- `GET /api/reports/:campaignId/events` - Event detayları
-
-### Risk Analizi
-- `GET /api/risk-analysis/users` - Risk skorlarına göre kullanıcılar
-- `GET /api/risk-analysis/user/:userId` - Kullanıcı risk analizi
-- `GET /api/risk-analysis/campaign/:campaignId` - Kampanya risk analizi
-- `POST /api/risk-analysis/calculate` - Risk skorlarını hesapla
-
-### Eğitim Gereklilikleri
-- `GET /api/training/needs/user/:userId` - Kullanıcı eğitim gereklilikleri
-- `GET /api/training/needs/campaign/:campaignId` - Kampanya bazlı eğitim gereklilikleri
-- `GET /api/training/recommendations/:userId` - Kişiselleştirilmiş eğitim önerileri
-- `GET /api/training/content` - Eğitim içerikleri
-- `POST /api/training/complete` - Eğitim tamamlama
-
-### Tracking
-- `GET /track/open/:campaignId/:userId` - Mail açılma
-- `GET /track/click/:campaignId/:userId/:linkId` - Link tıklama
-
-## 🎨 Ekran Görüntüleri
-
-Dashboard, kampanya yönetimi ve detaylı raporlama özellikleri modern ve kullanıcı dostu arayüz ile sunulmaktadır.
-
-## 🐛 Sorun Giderme
-
-### MongoDB Bağlantı Hatası
 ```bash
-# MongoDB'nin çalıştığından emin olun
-sudo systemctl status mongod
+npm run dev:full
 ```
 
-### SMTP Gönderim Hatası
-- SMTP bilgilerinin doğru olduğundan emin olun
-- Gmail kullanıyorsanız "Daha az güvenli uygulama erişimi" ayarını kontrol edin
-- App Password kullanın
+### Initial Setup
 
-### Port Zaten Kullanımda
+1. Navigate to `http://localhost:3000`
+2. On first launch, a registration form will appear — create your admin account
+3. Log in with your credentials to access the dashboard
+
+> Only one admin account can be registered. Subsequent admin accounts must be created through the database.
+
+### Workflow
+
+1. **Add Users** — Navigate to the Users tab and add target users with name, email, and group
+2. **Create Campaign** — Go to Campaigns, configure the email subject, body (HTML supported), and select a template
+3. **Launch Campaign** — Click Send on the campaign card and confirm delivery
+4. **Monitor Results** — View real-time tracking data in the Reports tab
+5. **Analyze Risk** — Check per-user risk scores and identify high-risk individuals
+6. **Assign Training** — Review ML-powered training recommendations and track completion
+
+---
+
+## API Reference
+
+All endpoints (except Auth) require a valid JWT token in the `Authorization: Bearer <token>` header.
+
+### Authentication
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/auth/register` | Register initial admin account |
+| `POST` | `/api/auth/login` | Authenticate and receive JWT token |
+| `GET` | `/api/auth/me` | Get current user profile |
+| `GET` | `/api/auth/check` | Check if admin account exists |
+
+### Users
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/users` | List all users |
+| `POST` | `/api/users` | Create a new user |
+| `DELETE` | `/api/users/:id` | Delete a user |
+
+### Campaigns
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/campaigns` | List all campaigns |
+| `POST` | `/api/campaigns` | Create a new campaign |
+| `GET` | `/api/campaigns/:id` | Get campaign details |
+| `POST` | `/api/campaigns/:id/send` | Send campaign emails |
+
+### Reports
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/reports` | Get aggregated report data |
+| `GET` | `/api/reports/:campaignId` | Get campaign-specific report |
+| `GET` | `/api/reports/:campaignId/events` | Get detailed event log |
+
+### Risk Analysis
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/risk-analysis/users` | List users ranked by risk score |
+| `GET` | `/api/risk-analysis/user/:userId` | Get individual risk analysis |
+| `GET` | `/api/risk-analysis/campaign/:campaignId` | Get campaign risk analysis |
+| `POST` | `/api/risk-analysis/calculate` | Trigger risk score recalculation |
+
+### Training
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/training/needs/user/:userId` | Get user training needs |
+| `GET` | `/api/training/needs/campaign/:campaignId` | Get campaign-based training needs |
+| `GET` | `/api/training/recommendations/:userId` | Get personalized recommendations |
+| `GET` | `/api/training/content` | List training content library |
+| `POST` | `/api/training/complete` | Mark training as completed |
+
+### Tracking
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/track/open/:campaignId/:userId` | Record email open event |
+| `GET` | `/track/click/:campaignId/:userId/:linkId` | Record link click event |
+
+---
+
+## Project Structure
+
+```
+cyberSecurityProject/
+├── backend/
+│   ├── config/          # Database configuration
+│   ├── middleware/       # Authentication middleware
+│   ├── models/           # Mongoose schemas (User, Campaign, Event, etc.)
+│   ├── routes/           # Express route handlers
+│   ├── services/         # Business logic (email, risk analysis, caching, etc.)
+│   ├── workers/          # Background job workers
+│   └── server.js         # Application entry point
+├── frontend/
+│   ├── public/           # Static assets
+│   └── src/
+│       ├── components/   # Reusable UI components
+│       ├── context/      # React context (AuthContext)
+│       ├── data/         # Email templates
+│       ├── pages/        # Page components (Dashboard, Campaigns, Reports, etc.)
+│       └── services/     # API client
+├── ml-service/
+│   ├── config/           # ML service configuration
+│   ├── data/             # Training data and preprocessing
+│   ├── models/           # ML model definitions and artifacts
+│   ├── training/         # Model training scripts
+│   └── app.py            # Flask application entry point
+├── .env.example          # Environment variable template
+├── package.json          # Backend dependencies
+└── README.md
+```
+
+---
+
+## Troubleshooting
+
+### MongoDB connection failure
+
 ```bash
-# Portu kullanan işlemi bulun ve durdurun
-# macOS/Linux:
-lsof -ti:5000 | xargs kill -9  # Backend
-lsof -ti:3000 | xargs kill -9  # Frontend
-lsof -ti:8000 | xargs kill -9  # ML Servisi
+# Verify MongoDB is running
+sudo systemctl status mongod
 
-# Windows:
+# Or start via Docker
+docker run -d -p 27017:27017 --name mongodb mongo
+```
+
+### SMTP delivery errors
+
+- Verify SMTP credentials in `.env`
+- For Gmail: use an [App Password](https://support.google.com/accounts/answer/185833), not your account password
+- Check that your SMTP host and port are correct
+- Ensure your network allows outbound SMTP traffic
+
+### Port already in use
+
+```bash
+# macOS / Linux
+lsof -ti:5000 | xargs kill -9   # Backend
+lsof -ti:3000 | xargs kill -9   # Frontend
+lsof -ti:8000 | xargs kill -9   # ML Service
+
+# Windows
 netstat -ano | findstr :5000
 taskkill /PID <PID> /F
 ```
 
-### ML Servisi Bağlantı Hatası
-- ML servisi çalışmıyorsa sistem fallback modunda çalışır
-- `.env` dosyasında `ML_SERVICE_URL` doğru olduğundan emin olun
-- ML servisi loglarını kontrol edin: `cd ml-service && python app.py`
+### ML service connection issues
 
-### Python/ML Servisi Kurulum Hatası
+The system operates in fallback mode (rule-based recommendations) when the ML service is unavailable. To debug:
+
+- Verify `ML_SERVICE_URL` in `.env` matches the running ML service address
+- Ensure the Python virtual environment is activated
+- Check ML service logs: `cd ml-service && python app.py`
+
+### Python / ML dependency errors
+
 ```bash
-# Python versiyonunu kontrol edin
-python3 --version  # 3.8+ olmalı
-
-# Virtual environment oluşturun
+python3 --version              # Requires 3.8+
 python3 -m venv venv
 source venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-## 📝 Lisans
+---
 
-Bu proje eğitim amaçlıdır. Ticari kullanım için lütfen iletişime geçin.
+## Security Considerations
 
-## 🤝 Katkıda Bulunma
-
-1. Fork edin
-2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
-3. Commit edin (`git commit -m 'Add amazing feature'`)
-4. Push edin (`git push origin feature/amazing-feature`)
-5. Pull Request açın
-
-## 📧 İletişim
-
-Sorularınız için lütfen iletişime geçin.
+- Never expose `.env` files or commit them to version control
+- Rotate `JWT_SECRET` periodically in production environments
+- Use HTTPS in production for all tracking URLs
+- Restrict SMTP credentials with least-privilege access
+- Ensure all simulation targets have provided explicit consent
+- Separate test data from production environments
 
 ---
 
-**Uyarı**: Bu sistem sadece yasal ve etik amaçlar için kullanılmalıdır. Yetkisiz kullanım yasalara aykırıdır.
+## Contributing
 
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/your-feature`)
+3. Commit your changes (`git commit -m 'Add your feature'`)
+4. Push to the branch (`git push origin feature/your-feature`)
+5. Open a Pull Request
+
+---
+
+## License
+
+This project is for educational and authorized security testing purposes only. For commercial licensing inquiries, please get in touch.
+
+---
+
+<p align="center">
+  <sub>Built for security teams who believe prevention starts with awareness.</sub>
+</p>
